@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .container {
+    @apply mx-auto max-w-6xl px-4 md:px-8 lg:px-8;
+  }
+
+  .button {
+    @apply px-4 py-2 rounded
+    text-black border border-black transition hover:bg-black
+    hover:text-white
+    disabled:bg-gray-200 disabled:text-gray-400;
+  }
+}

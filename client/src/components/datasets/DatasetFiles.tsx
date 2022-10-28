@@ -1,0 +1,102 @@
+import FileDropper from 'components/FileUpload';
+import {useAtom} from 'jotai';
+import React from 'react';
+import {filesAtom} from 'store';
+import {XCircle, Check, X, AlertTriangle} from 'react-feather';
+
+const TRANSCRIPTION_FORMATS = ['.eaf', '.txt'];
+const AUDIO_FORMATS = ['.wav'];
+
+const DatasetFiles: React.FC = () => {
+  const [files, setFiles] = useAtom(filesAtom);
+
+  const deleteFile = (name: string) =>
+    setFiles(files.filter(file => file.name !== name));
+
+  const transcriptionFiles = files.filter(file =>
+    TRANSCRIPTION_FORMATS.some(extension => file.name.endsWith(extension))
+  );
+  const audioFiles = files.filter(file =>
+    AUDIO_FORMATS.some(extension => file.name.endsWith(extension))
+  );
+  const unsupportedFiles = files.filter(
+    file => !transcriptionFiles.includes(file) && !audioFiles.includes(file)
+  );
+
+  const hasMatchingAudio = (transcriptionFile: File): boolean => {
+    const prefix = transcriptionFile.name.split('.').slice(0, -1).join('.');
+    const audioName = prefix + '.wav';
+    return audioFiles.some(file => file.name === audioName);
+  };
+  const hasMatchingTranscript = (audioFile: File): boolean => {
+    const prefix = audioFile.name.split('.').slice(0, -1).join('.');
+    const names = TRANSCRIPTION_FORMATS.map(extension => prefix + extension);
+    return transcriptionFiles.some(file => names.includes(file.name));
+  };
+
+  const fileRows = (
+    files: File[],
+    type: string,
+    hasMatch: (file: File) => boolean
+  ) =>
+    files.map((file, index) => (
+      <tr key={index} className="text-gray-600 text-sm">
+        <td>{file.name}</td>
+        <td>{type}</td>
+        <td>{hasMatch(file) ? <Check color="green" /> : <X color="red" />}</td>
+        <td>
+          <button className="px-2 py-1" onClick={() => deleteFile(file.name)}>
+            <XCircle color="red" />
+          </button>
+        </td>
+      </tr>
+    ));
+
+  return (
+    <div className="p-4 border rounded">
+      <h2 className="text-xl mb-2">Upload Dataset Files</h2>
+      <FileDropper callback={_files => setFiles([...files, ..._files])} />
+      <div className="p-4 mt-8 rounded border">
+        <p className="text-lg">Uploaded Files:</p>
+        <table className="w-full mt-2">
+          <thead className="text-sm">
+            <tr>
+              <th className="text-left">File name</th>
+              <th className="text-left">Type</th>
+              <th className="text-left">Has match</th>
+              <th className="text-left">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {fileRows(transcriptionFiles, 'Transcription', hasMatchingAudio)}
+            {fileRows(audioFiles, 'Audio', hasMatchingTranscript)}
+          </tbody>
+        </table>
+      </div>
+
+      {unsupportedFiles.length > 0 && (
+        <div className="mt-4 p-4 border border-orange-300 rounded">
+          <div className="flex space-x-2">
+            <AlertTriangle></AlertTriangle>
+            <p>Unsupported Files:</p>
+          </div>
+          <div className="mt-2 flex text-sm">
+            {unsupportedFiles.map(file => (
+              <p key={file.name}>{file.name}</p>
+            ))}
+          </div>
+          <button
+            className="mt-4 button text-sm"
+            onClick={() =>
+              unsupportedFiles.forEach(file => deleteFile(file.name))
+            }
+          >
+            Delete all Unsupported
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default DatasetFiles;

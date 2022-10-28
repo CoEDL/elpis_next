@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "server"
+version = "0.1.0"
+description = ""
+authors = ["Harry Keightley <harrykeightley@outlook.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Flask = "^2.2.2"
+elpis = "^0.1.1"
+Flask-Cors = "^3.0.10"
+pyhumps = "^3.8.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2"
+pyright = "^1.1.277"
+
+[tool.pyright]
+reportPrivateImportUsage = false
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
