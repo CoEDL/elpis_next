@@ -5,7 +5,7 @@ from pathlib import Path
 
 from flask import Flask
 
-from server.managers.dataset_manager import DatasetManager
+from server.managers import DatasetManager, ModelManager
 
 FALLBACK_PATH = Path("/tmp/elpis")
 INTERFACE_KEY = "INTERFACE"
@@ -18,7 +18,10 @@ class Interface:
     dataset_manager: DatasetManager = field(init=False)
 
     def __post_init__(self):
-        self.dataset_manager = DatasetManager(path=self.path, overwrite=self.overwrite)
+        self.dataset_manager = DatasetManager(
+            data_dir=self.path, overwrite=self.overwrite
+        )
+        self.model_manager = ModelManager(data_dir=self.path, overwrite=self.overwrite)
 
     @classmethod
     def from_app(cls, app: Flask):

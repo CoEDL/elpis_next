@@ -20,8 +20,8 @@ class DatasetManager(Manager):
 
     _datasets: Dict[str, Dataset] = {}
 
-    def __init__(self, path: Path, overwrite: bool = False) -> None:
-        super().__init__(ManagerType.DATASET.value, path, overwrite)
+    def __init__(self, data_dir: Path, overwrite: bool = False) -> None:
+        super().__init__(ManagerType.DATASET.value, data_dir, overwrite)
 
     def __contains__(self, name: str) -> bool:
         return name in self.datasets

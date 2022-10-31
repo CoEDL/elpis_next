@@ -26,21 +26,21 @@ class ManagerType(Enum):
 class Manager(ABC):
     """A manager handles operations over its child data type"""
 
-    def __init__(self, name: str, path: Path, overwrite: bool = False) -> None:
+    def __init__(self, name: str, data_dir: Path, overwrite: bool = False) -> None:
         self.name = name
-        self.path = path
-        self.path.mkdir(parents=True, exist_ok=True)
+        self.data_dir = data_dir
+        self.data_dir.mkdir(parents=True, exist_ok=True)
 
         if not overwrite and self.state_file.exists():
             self.load_state(self.state_file)
 
     @property
     def state_file(self) -> Path:
-        return self.path / (self.name + ".json")
+        return self.data_dir / (self.name + ".json")
 
     @property
     def folder(self) -> Path:
-        return self.path / self.name
+        return self.data_dir / self.name
 
     @abstractmethod
     def serialize(self) -> Any:
