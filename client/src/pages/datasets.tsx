@@ -20,16 +20,21 @@ const DatasetsPage: NextPage = () => {
     <div className="container py-8">
       <div className="flex space-x-8">
         <SideBar />
-        <div>
+        <div className="flex-1">
           <h1 className="text-3xl text-secondary">Datasets</h1>
           <p className="mt-2 text-gray-800">Blah blah blah</p>
 
           <p className="text-xl font-semibold mt-8">Your Datasets</p>
           <DatasetTable datasets={datasets} />
-          <div className="space-x-2 mt-2">
+          <div className="space-x-2 mt-2 flex justify-between">
             <Link href={urls.datasets.new}>
               <a>
                 <button className="button">Create new</button>
+              </a>
+            </Link>
+            <Link href={urls.datasets.new}>
+              <a>
+                <button className="button">Next</button>
               </a>
             </Link>
           </div>

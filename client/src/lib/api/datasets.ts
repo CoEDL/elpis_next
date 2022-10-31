@@ -1,10 +1,10 @@
 import urls, {server} from 'lib/urls';
 import {CleaningOptions, Dataset, ElanOptions} from 'types/Dataset';
 
-export async function getDatasets(): Promise<Map<string, Dataset>> {
+export async function getDatasets(): Promise<Dataset[]> {
   const response = await fetch(server + urls.api.datasets);
   const data = await response.json();
-  return data.datasets as Map<string, Dataset>;
+  return data.datasets as Dataset[];
 }
 
 export async function createDataset(

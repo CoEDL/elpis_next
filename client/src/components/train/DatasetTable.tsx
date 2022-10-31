@@ -13,7 +13,7 @@ const DatasetTable: React.FC<Props> = ({datasets}) => {
   }
 
   return (
-    <div className="p-4 border text-left">
+    <div className="p-4 border text-left w-full">
       <table className="w-full">
         <thead>
           <tr>
