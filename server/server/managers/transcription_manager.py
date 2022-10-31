@@ -39,12 +39,9 @@ class TranscriptionManager(Manager):
         pass
 
     @override
-    def clean(self) -> None:
-        return super().clean()
-
-    @override
     def reset(self) -> None:
-        return super().reset()
+        super().reset()
+        self.pipelines = {}
 
     def transcription_folder(self, model_location: str, audio_name: str) -> Path:
         return self.folder / model_location / audio_name

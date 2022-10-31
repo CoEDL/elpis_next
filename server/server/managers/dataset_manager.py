@@ -48,12 +48,9 @@ class DatasetManager(Manager):
         }
 
     @override
-    def clean(self) -> None:
-        return super().clean()
-
-    @override
     def reset(self) -> None:
-        return super().reset()
+        super().reset()
+        self.datasets = {}
 
     def dataset_folder(self, name: str, folder_type: FolderType) -> Path:
         return self.folder / name / folder_type.value

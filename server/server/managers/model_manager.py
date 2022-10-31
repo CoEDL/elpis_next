@@ -46,12 +46,9 @@ class ModelManager(Manager):
         }
 
     @override
-    def clean(self) -> None:
-        return super().clean()
-
-    @override
     def reset(self) -> None:
-        return super().reset()
+        super().reset()
+        self.models = {}
 
     def model_folder(self, model_name: str) -> Path:
         return self.folder / model_name

@@ -1,4 +1,5 @@
 import json
+import shutil
 from abc import ABC, abstractmethod
 from enum import Enum
 from functools import wraps
@@ -55,9 +56,6 @@ class Manager(ABC):
             json.dump(self.serialize(), state_file)
 
     @abstractmethod
-    def clean(self) -> None:
-        ...
-
-    @abstractmethod
     def reset(self) -> None:
-        ...
+        if self.folder.exists() and self.folder.is_dir():
+            shutil.rmtree(self.folder)

@@ -35,3 +35,5 @@ class Interface:
 
     def reset(self):
         self.dataset_manager.reset()
+        self.model_manager.reset()
+        self.transcription_manager.reset()
