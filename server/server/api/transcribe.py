@@ -22,7 +22,7 @@ def requires_model_and_audio(
     are preset on the request.
     """
 
-    @wraps
+    @wraps(route)
     def function_wrapper(model_location: str, audio_name: str) -> Response:
         if not model_location:
             return bad_request("Missing pretrained model location.")

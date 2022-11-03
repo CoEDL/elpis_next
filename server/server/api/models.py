@@ -29,7 +29,7 @@ def requires_model(route: Callable[[str], Response]) -> Callable[[str], Response
     request and exists in the model_manager.
     """
 
-    @wraps
+    @wraps(route)
     def function_wrapper(model_name: str) -> Response:
         if not model_name:
             return bad_request("Missing model name.")
