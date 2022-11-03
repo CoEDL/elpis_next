@@ -12,7 +12,14 @@ const DatasetsPage: NextPage = () => {
   const [datasets, setDatasets] = useAtom(datasetsAtom);
 
   useEffect(() => {
-    const fetchDatasets = async () => setDatasets(await getDatasets());
+    const fetchDatasets = async () => {
+      const response = await getDatasets();
+      if (response.ok) {
+        const {datasets} = await response.json();
+        setDatasets(datasets);
+      }
+      console.error("Couldn't download datasets!");
+    };
     fetchDatasets();
   }, [setDatasets]);
 
@@ -25,7 +32,7 @@ const DatasetsPage: NextPage = () => {
           <p className="mt-2 text-gray-800">Blah blah blah</p>
 
           <p className="text-xl font-semibold mt-8">Your Datasets</p>
-          <DatasetTable datasets={datasets} />
+          <DatasetTable />
           <div className="space-x-2 mt-2 flex justify-between">
             <Link href={urls.datasets.new}>
               <a>

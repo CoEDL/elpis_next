@@ -28,3 +28,5 @@ export enum ElanTierSelector {
   Name = 'tier_name',
   Type = 'tier_type',
 }
+
+export default Dataset;

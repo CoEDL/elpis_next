@@ -3,47 +3,38 @@ import {useAtom} from 'jotai';
 import React from 'react';
 import {filesAtom} from 'store';
 import {XCircle, Check, X, AlertTriangle} from 'react-feather';
-
-const TRANSCRIPTION_FORMATS = ['.eaf', '.txt'];
-const AUDIO_FORMATS = ['.wav'];
+import {FileType, hasMatch, parseFileType} from 'lib/dataset';
 
 const DatasetFiles: React.FC = () => {
   const [files, setFiles] = useAtom(filesAtom);
 
+  const fileTypes: FileType[] = [
+    FileType.Audio,
+    FileType.Transcription,
+    FileType.Unsupported,
+  ];
+  const [audioFiles, transcriptionFiles, unsupportedFiles] = fileTypes.map(
+    type => files.filter(file => parseFileType(file.name) === type)
+  );
+
   const deleteFile = (name: string) =>
     setFiles(files.filter(file => file.name !== name));
 
-  const transcriptionFiles = files.filter(file =>
-    TRANSCRIPTION_FORMATS.some(extension => file.name.endsWith(extension))
-  );
-  const audioFiles = files.filter(file =>
-    AUDIO_FORMATS.some(extension => file.name.endsWith(extension))
-  );
-  const unsupportedFiles = files.filter(
-    file => !transcriptionFiles.includes(file) && !audioFiles.includes(file)
-  );
-
-  const hasMatchingAudio = (transcriptionFile: File): boolean => {
-    const prefix = transcriptionFile.name.split('.').slice(0, -1).join('.');
-    const audioName = prefix + '.wav';
-    return audioFiles.some(file => file.name === audioName);
-  };
-  const hasMatchingTranscript = (audioFile: File): boolean => {
-    const prefix = audioFile.name.split('.').slice(0, -1).join('.');
-    const names = TRANSCRIPTION_FORMATS.map(extension => prefix + extension);
-    return transcriptionFiles.some(file => names.includes(file.name));
-  };
-
-  const fileRows = (
-    files: File[],
-    type: string,
-    hasMatch: (file: File) => boolean
-  ) =>
-    files.map((file, index) => (
+  const fileRows = (selectedFiles: File[], type: string) =>
+    selectedFiles.map((file, index) => (
       <tr key={index} className="text-gray-600 text-sm">
         <td>{file.name}</td>
         <td>{type}</td>
-        <td>{hasMatch(file) ? <Check color="green" /> : <X color="red" />}</td>
+        <td>
+          {hasMatch(
+            file.name,
+            files.map(file => file.name)
+          ) ? (
+            <Check color="green" />
+          ) : (
+            <X color="red" />
+          )}
+        </td>
         <td>
           <button className="px-2 py-1" onClick={() => deleteFile(file.name)}>
             <XCircle color="red" />
@@ -68,8 +59,8 @@ const DatasetFiles: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {fileRows(transcriptionFiles, 'Transcription', hasMatchingAudio)}
-            {fileRows(audioFiles, 'Audio', hasMatchingTranscript)}
+            {fileRows(transcriptionFiles, 'Transcription')}
+            {fileRows(audioFiles, 'Audio')}
           </tbody>
         </table>
       </div>
