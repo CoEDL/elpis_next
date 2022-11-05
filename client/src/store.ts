@@ -6,12 +6,10 @@ import {
   ElanOptions,
   ElanTierSelector,
 } from 'types/Dataset';
+import Model, {NewModelStage} from 'types/Model';
 import TrainingStage from 'types/TrainingStage';
 
-export const trainingStageAtom = atomWithReset(TrainingStage.CreateDataset);
-export const activeStageAtom = atomWithReset(TrainingStage.CreateDataset);
-
-// Datasets
+// ========= Datasets
 const DEFAULT_ELAN_OPTIONS: ElanOptions = {
   selectionMechanism: ElanTierSelector.Name,
   selectionValue: 'Phrase',
@@ -31,3 +29,19 @@ export const cleaningOptionsAtom = atomWithReset<CleaningOptions>(
 );
 export const datasetNameAtom = atomWithReset<string>(DEFAULT_DATASET_NAME);
 export const selectedDataset = atom<Dataset | null>(null);
+
+// =========== Models
+export const modelsAtom = atom<Model[]>([]);
+
+export const trainingStageAtom = atomWithReset(TrainingStage.CreateDataset);
+export const activeStageAtom = atomWithReset(TrainingStage.CreateDataset);
+
+export const newModelAtom = atomWithReset<Model | null>(null);
+export const newModelStageAtom = atomWithReset<NewModelStage>(
+  NewModelStage.Name
+);
+
+// ============ Transcription ============
+export const modelIsLocalAtom = atom<boolean>(true);
+export const modelLocationAtom = atom<string>('');
+export const transcriptionFilesAtom = atomWithReset<File[]>([]);

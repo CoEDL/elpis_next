@@ -4,14 +4,14 @@ import shutil
 from functools import wraps
 from http import HTTPStatus
 from pathlib import Path
-from typing import Callable
+from typing import Any, Callable, Dict
 
 from elpis.trainer import TrainingJob, TrainingOptions, TrainingStatus
 from elpis.trainer.job import BASE_MODEL, SAMPLING_RATE
 from flask import Blueprint, Response
 from flask import current_app as app
 from flask import jsonify, request, send_file
-from humps.main import decamelize
+from humps.main import camelize, decamelize
 from loguru import logger
 from werkzeug.utils import secure_filename
 
@@ -49,47 +49,28 @@ def requires_model(route: Callable[[str], Response]) -> Callable[[str], Response
 def get_models():
     interface = Interface.from_app(app)
     models = [model for (_, model) in interface.model_manager.models.items()]
-    data = [model.to_dict() for model in models]
-
-    return jsonify({"models": data})
+    data = camelize([model.to_dict() for model in models])
+    return jsonify(data)
 
 
 @model_bp.route("/", methods=["POST"])
 def create_model():
-    form = dict(request.form)
+    data = request.get_json(silent=True)
+    if data is None:
+        return bad_request("Request not json.")
+    logger.info(decamelize(data))
 
-    model_name = form.get("modelName")
-    dataset_name = form.get("datasetName")
-    options = form.get("options")
-    base_model = form.get("baseModel", BASE_MODEL)
-    sampling_rate = int(form.get("samplingRate", SAMPLING_RATE))
+    if not isinstance(data, dict):
+        return bad_request("Request data should be a model dictionary.")
 
-    # Check required options
-    if model_name is None:
-        return bad_request("Missing model name.")
-    if dataset_name is None:
-        return bad_request("Missing dataset name.")
-    if options is None:
-        return bad_request("Missing training options.")
-
-    # Attempt to convert from json
     try:
-        options = TrainingOptions.from_dict(decamelize(json.loads(options)))
-    except:
-        return bad_request(f"Error deserializing training options: {options}")
+        job = TrainingJob.from_dict(decamelize(data))
+    except Exception as e:
+        logger.error(e)
+        return bad_request("Failed to deserialize model")
 
     interface = Interface.from_app(app)
     manager = interface.model_manager
-
-    # Build and add our model
-    job = TrainingJob(
-        model_name=model_name,
-        dataset_name=dataset_name,
-        options=options,
-        base_model=base_model,
-        sampling_rate=sampling_rate,
-    )
-
     manager.add_job(job)
     return Response(status=HTTPStatus.NO_CONTENT)
 

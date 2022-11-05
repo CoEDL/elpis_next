@@ -26,11 +26,11 @@ class ModelManager(Manager):
 
     @property
     def models(self) -> Dict[str, TrainingJob]:
-        return ModelManager._datasets
+        return ModelManager._models
 
     @models.setter
     def models(self, value: Dict[str, TrainingJob]):
-        ModelManager._datasets = value
+        ModelManager._models = value
 
     @override
     def serialize(self):
@@ -60,6 +60,7 @@ class ModelManager(Manager):
 
         # Make sure folders exist
         self.model_folder(job.model_name).mkdir(exist_ok=True, parents=True)
+        self.models[job.model_name] = job
 
     @auto_save
     def delete_model(self, model_name: str) -> None:

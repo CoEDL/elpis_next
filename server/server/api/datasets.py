@@ -8,10 +8,11 @@ from elpis.datasets.dataset import CleaningOptions, ElanOptions
 from flask import Blueprint, Response
 from flask import current_app as app
 from flask import jsonify, request
-from humps.main import decamelize
+from humps.main import camelize, decamelize
 from loguru import logger
 from werkzeug.utils import secure_filename
 
+from server.api.utils import bad_request
 from server.interface import Interface
 from server.managers.dataset_manager import FolderType
 
@@ -22,8 +23,8 @@ dataset_bp = Blueprint("dataset_bp", __name__, url_prefix="/datasets")
 def get_datasets():
     interface = Interface.from_app(app)
     datasets = interface.dataset_manager.serialize()
-    logger.info(f"Returning all datasets: {datasets}")
-    return jsonify({"datasets": [dataset for dataset in datasets.values()]})
+    data = camelize([dataset for dataset in datasets.values()])
+    return jsonify(data)
 
 
 @dataset_bp.route("/<dataset_name>", methods=["GET"])
@@ -31,8 +32,11 @@ def get_dataset(dataset_name: str):
     interface = Interface.from_app(app)
     manager = interface.dataset_manager
 
+    if not dataset_name:
+        return bad_request("Missing dataset name")
+
     if (dataset_name) not in manager.datasets:
-        return Response(status=HTTPStatus.NOT_FOUND)
+        return Response("Dataset not found", status=HTTPStatus.NOT_FOUND)
 
     return jsonify({"dataset": manager.datasets[dataset_name]})
 
@@ -53,11 +57,9 @@ def create_dataset():
 
     # Check required options
     if dataset_name is None:
-        logger.error("Missing dataset name.")
-        return Response("Missing dataset name", status=HTTPStatus.BAD_REQUEST)
+        return bad_request("Missing dataset name.")
     if cleaning_options is None:
-        logger.error("Missing cleaning options.")
-        return Response("Missing cleaning_options", status=HTTPStatus.BAD_REQUEST)
+        return bad_request("Missing cleaning options.")
 
     # Attempt to convert from json
     try:
@@ -67,8 +69,7 @@ def create_dataset():
         if elan_options is not None:
             elan_options = ElanOptions.from_dict(decamelize(json.loads(elan_options)))
     except:
-        logger.error("Error converting options from json")
-        return Response("Bad options", status=HTTPStatus.BAD_REQUEST)
+        return bad_request("Error deserializing options")
 
     # Copy all files to dataset folder
     interface = Interface.from_app(app)
@@ -92,8 +93,7 @@ def create_dataset():
     )
 
     if not dataset.is_valid():
-        logger.error("Dataset found to be invalid")
-        return Response("Invalid Dataset", status=HTTPStatus.BAD_REQUEST)
+        return bad_request("Dataset Invalid")
 
     manager.add_dataset(dataset=dataset)
     return Response(status=HTTPStatus.NO_CONTENT)
@@ -105,7 +105,7 @@ def delete_dataset(dataset_name: str):
     manager = interface.dataset_manager
 
     if not dataset_name:
-        return Response("Missing dataset name", status=HTTPStatus.BAD_REQUEST)
+        return bad_request("Missing dataset name")
 
     if (dataset_name) not in manager.datasets:
         return Response(status=HTTPStatus.NOT_FOUND)

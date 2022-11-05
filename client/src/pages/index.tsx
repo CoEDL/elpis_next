@@ -4,19 +4,19 @@ import Link from 'next/link';
 
 const Home: NextPage = () => {
   return (
-    <div className="container py-8">
-      <h1 className="text-center text-3xl text-secondary">ELPIS</h1>
+    <div className="container">
+      <h1 className="text-center title">ELPIS</h1>
       <p className="text-center mt-2 text-gray-800">Blah blah blah</p>
 
       <p className="font-semibold text-center mt-12">Choose a Task</p>
       <div className="flex space-x-2 items-center justify-center mt-4">
         <TaskButton
-          url={urls.train}
+          url={urls.models.index}
           title={'Train'}
           cardClassName="bg-primary border-blue-300 text-white"
         />
         <TaskButton
-          url={urls.transcribe}
+          url={urls.transcriptions}
           title={'Transcribe'}
           cardClassName="bg-secondary text-white"
         />

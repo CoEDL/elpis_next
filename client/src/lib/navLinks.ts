@@ -1,17 +1,22 @@
-import MenuLink from "types/menuLink";
+import MenuLink from 'types/menuLink';
+import urls from './urls';
 
 export const navLinks: MenuLink[] = [
   {
-    name: "Home",
-    url: "/",
+    name: 'Home',
+    url: '/',
   },
   {
-    name: "Train",
-    url: "/train",
+    name: 'Datasets',
+    url: urls.datasets.index,
   },
   {
-    name: "Transcribe",
-    url: "/transcribe",
+    name: 'Models',
+    url: urls.models.index,
+  },
+  {
+    name: 'Transcribe',
+    url: urls.transcriptions.index,
   },
 ];
 

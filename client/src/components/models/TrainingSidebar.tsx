@@ -9,7 +9,7 @@ const STAGE_NAMES: Map<TrainingStage, string> = new Map([
   [TrainingStage.Evaluate, 'Evaluate'],
 ]);
 
-const Sidebar: React.FC = () => {
+const TrainingSidebar: React.FC = () => {
   const [trainingStage] = useAtom(trainingStageAtom);
   const [stage, setStage] = useAtom(activeStageAtom);
 
@@ -63,4 +63,4 @@ const StageDisplay: React.FC<DisplayProps> = ({
   );
 };
 
-export default Sidebar;
+export default TrainingSidebar;
