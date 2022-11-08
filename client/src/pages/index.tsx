@@ -13,7 +13,7 @@ const Home: NextPage = () => {
         <TaskButton
           url={urls.models.index}
           title={'Train'}
-          cardClassName="bg-primary border-blue-300 text-white"
+          cardClassName="bg-primary text-white"
         />
         <TaskButton
           url={urls.transcriptions.index}

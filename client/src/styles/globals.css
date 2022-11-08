@@ -19,6 +19,10 @@
   }
 
   .section {
-    @apply p-4 border;
+    @apply p-4 border rounded;
+  }
+
+  .info {
+    @apply text-gray-800 font-semibold;
   }
 }

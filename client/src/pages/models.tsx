@@ -35,7 +35,9 @@ const TrainPage: NextPage = () => {
           <ModelTable />
           <div className="space-x-2 mt-2">
             <Link href={urls.models.new}>
-              <button className="button">Create new</button>
+              <a>
+                <button className="button">Create new</button>
+              </a>
             </Link>
           </div>
           <UploadModel />

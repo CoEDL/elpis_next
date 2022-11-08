@@ -1,8 +1,10 @@
 import {useAtom} from 'jotai';
 import fileDownload from 'js-file-download';
 import {deleteModel, downloadModel, trainModel} from 'lib/api/models';
+import urls from 'lib/urls';
+import Link from 'next/link';
 import React from 'react';
-import {XCircle, Eye, Target, Download} from 'react-feather';
+import {XCircle, Eye, Target, Download, Check} from 'react-feather';
 import {modelsAtom} from 'store';
 import {TrainingStatus} from 'types/Model';
 
@@ -83,9 +85,14 @@ const ModelTable: React.FC = () => {
               </td>
               <td>{model.status}</td>
               <td>
-                <button onClick={() => _trainModel(index)}>
-                  <Target color="green" />
-                </button>
+                {model.status !== TrainingStatus.Training &&
+                model.status !== TrainingStatus.Finished ? (
+                  <button onClick={() => _trainModel(index)}>
+                    <Target color="green" />
+                  </button>
+                ) : (
+                  <Check />
+                )}
               </td>
               <td>
                 <button
@@ -96,9 +103,11 @@ const ModelTable: React.FC = () => {
                 </button>
               </td>
               <td>
-                <button>
-                  <Eye color="blue" />
-                </button>
+                <Link href={urls.models.view + '/' + model.modelName}>
+                  <a>
+                    <Eye color="blue" />
+                  </a>
+                </Link>
               </td>
               <td>
                 <button onClick={() => _deleteModel(model.modelName)}>
