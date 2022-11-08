@@ -28,7 +28,7 @@ export default function TranscriptionsPage() {
       <h1 className="title">Transcriptions</h1>
 
       <div className="mt-8">
-        <h2 className="text-xl font-semibold">Your Transcriptions</h2>
+        <h2 className="mb-2 text-xl font-semibold">Your Transcriptions</h2>
         <TranscriptionsTable />
       </div>
       <div className="mt-4">

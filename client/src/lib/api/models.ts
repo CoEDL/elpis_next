@@ -37,7 +37,7 @@ export async function uploadModel(modelZip: File): Promise<Response> {
   const formData = new FormData();
   formData.append('file', modelZip);
 
-  return fetch(url, {
+  return fetch(`${url}upload`, {
     method: 'POST',
     mode: 'cors',
     body: formData,

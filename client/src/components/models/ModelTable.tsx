@@ -1,7 +1,8 @@
 import {useAtom} from 'jotai';
-import {deleteModel, trainModel} from 'lib/api/models';
+import fileDownload from 'js-file-download';
+import {deleteModel, downloadModel, trainModel} from 'lib/api/models';
 import React from 'react';
-import {XCircle, Eye, Target} from 'react-feather';
+import {XCircle, Eye, Target, Download} from 'react-feather';
 import {modelsAtom} from 'store';
 import {TrainingStatus} from 'types/Model';
 
@@ -26,6 +27,16 @@ const ModelTable: React.FC = () => {
       nextModel,
       ...models.slice(index + 1),
     ]);
+  };
+
+  const download = async (modelName: string) => {
+    const response = await downloadModel(modelName);
+    if (response.ok) {
+      const blob = await response.blob();
+      fileDownload(blob, modelName + '.zip');
+    } else {
+      console.error("Couldn't download model :(");
+    }
   };
 
   const _trainModel = async (index: number) => {
@@ -55,6 +66,7 @@ const ModelTable: React.FC = () => {
             <th>Base Model</th>
             <th>Status</th>
             <th>Train</th>
+            <th>Download</th>
             <th>View</th>
             <th>Delete</th>
           </tr>
@@ -71,23 +83,25 @@ const ModelTable: React.FC = () => {
               </td>
               <td>{model.status}</td>
               <td>
-                <button
-                  className="px-2 py-1"
-                  onClick={() => _trainModel(index)}
-                >
+                <button onClick={() => _trainModel(index)}>
                   <Target color="green" />
                 </button>
               </td>
               <td>
-                <button className="px-2 py-1">
+                <button
+                  onClick={() => download(model.modelName)}
+                  disabled={model.status !== TrainingStatus.Finished}
+                >
+                  <Download />
+                </button>
+              </td>
+              <td>
+                <button>
                   <Eye color="blue" />
                 </button>
               </td>
               <td>
-                <button
-                  className="px-2 py-1"
-                  onClick={() => _deleteModel(model.modelName)}
-                >
+                <button onClick={() => _deleteModel(model.modelName)}>
                   <XCircle color="red" />
                 </button>
               </td>

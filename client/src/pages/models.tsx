@@ -6,6 +6,7 @@ import {useEffect} from 'react';
 import {getModels} from 'lib/api/models';
 import Link from 'next/link';
 import urls from 'lib/urls';
+import UploadModel from 'components/models/UploadModel';
 
 const TrainPage: NextPage = () => {
   const [, setModels] = useAtom(modelsAtom);
@@ -37,6 +38,7 @@ const TrainPage: NextPage = () => {
               <button className="button">Create new</button>
             </Link>
           </div>
+          <UploadModel />
         </div>
       </div>
     </div>
