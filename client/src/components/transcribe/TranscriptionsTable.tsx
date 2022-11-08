@@ -1,6 +1,8 @@
 import {useAtom} from 'jotai';
+import fileDownload from 'js-file-download';
 import {
   deleteTranscription,
+  downloadFiles,
   resetTranscriptions,
   transcribe,
 } from 'lib/api/transcribe';
@@ -27,6 +29,8 @@ const DatasetTable: React.FC = () => {
   };
 
   const _transcribe = async (transcription: Transcription) => {
+    transcription.status = TranscriptionStatus.Transcribing;
+    updateTranscription(transcription);
     const response = await transcribe(
       transcription.modelLocation,
       transcription.audioName
@@ -84,6 +88,16 @@ const DatasetTable: React.FC = () => {
     const response = await resetTranscriptions();
     if (response.ok) {
       setTranscriptions([]);
+    }
+  };
+
+  const downloadAllTranscriptions = async () => {
+    const response = await downloadFiles();
+    if (response.ok) {
+      const blob = await response.blob();
+      fileDownload(blob, 'transcription_files.zip');
+    } else {
+      console.error('Error downloading transcription files');
     }
   };
 
@@ -150,9 +164,30 @@ const DatasetTable: React.FC = () => {
           </tbody>
         </table>
       </div>
-      <div className="mt-2">
-        <div className="flex justify-end space-x-2">
-          <button className="button" onClick={transcribeEverything}>
+      <div className="mt-2 flex justify-between">
+        <button
+          className="button"
+          disabled={
+            transcriptions.filter(
+              transcription =>
+                transcription.status === TranscriptionStatus.Finished
+            ).length === 0
+          }
+          onClick={downloadAllTranscriptions}
+        >
+          Download All Transcriptions
+        </button>
+        <div className="space-x-2">
+          <button
+            className="button"
+            onClick={transcribeEverything}
+            disabled={
+              transcriptions.filter(
+                transcription =>
+                  transcription.status !== TranscriptionStatus.Finished
+              ).length === 0
+            }
+          >
             Transcribe All
           </button>
           <button className="button" onClick={removeAll}>
