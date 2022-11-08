@@ -23,7 +23,7 @@ export default function ChooseHuggingFaceModel() {
           onChange={e => setModelLocation(e.target.value)}
         />
         <button className="button" onClick={() => setModelLocation(BASE_MODEL)}>
-          Reset
+          Default
         </button>
       </div>
     </div>

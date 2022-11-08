@@ -2,6 +2,10 @@ import urls, {server} from 'lib/urls';
 
 const url = server + urls.api.transcriptions;
 
+export async function resetTranscriptions(): Promise<Response> {
+  return fetch(url + 'reset');
+}
+
 export async function getTranscriptions(): Promise<Response> {
   return fetch(url);
 }

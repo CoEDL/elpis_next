@@ -1,5 +1,9 @@
 import {useAtom} from 'jotai';
-import {deleteTranscription, transcribe} from 'lib/api/transcribe';
+import {
+  deleteTranscription,
+  resetTranscriptions,
+  transcribe,
+} from 'lib/api/transcribe';
 import React from 'react';
 import {Check, Target, XCircle} from 'react-feather';
 import {transcriptionsAtom} from 'store';
@@ -13,7 +17,8 @@ const DatasetTable: React.FC = () => {
     return <p>No current transcriptions!</p>;
   }
 
-  const updateTranscription = (index: number, transcription: Transcription) => {
+  const updateTranscription = (transcription: Transcription) => {
+    const index = transcriptions.indexOf(transcription);
     setTranscriptions([
       ...transcriptions.slice(0, index),
       transcription,
@@ -21,8 +26,7 @@ const DatasetTable: React.FC = () => {
     ]);
   };
 
-  const _transcribe = async (index: number) => {
-    const transcription = transcriptions[index];
+  const _transcribe = async (transcription: Transcription) => {
     const response = await transcribe(
       transcription.modelLocation,
       transcription.audioName
@@ -33,15 +37,31 @@ const DatasetTable: React.FC = () => {
       transcription.status = TranscriptionStatus.Error;
       console.error('Could not train transcription!');
     }
-    updateTranscription(index, transcription);
+    updateTranscription(transcription);
   };
 
-  const transcribeEverything = () => {
-    transcriptions.forEach((transcription, index) => {
-      if (transcription.status !== 'finished') {
-        _transcribe(index);
+  const transcribeEverything = async () => {
+    // Group by model and transcribe the first transcription of each model
+    // first, to take better advantage of the caching performed by the server.
+    // The rest can be transcribed asynchronously
+    let groupedByModel: {[key: string]: Transcription[]} = {};
+    groupedByModel = transcriptions.reduce((result, transcription) => {
+      if (!Object.keys(result).includes(transcription.modelLocation)) {
+        return {...result, [transcription.modelLocation]: [transcription]};
       }
+      const modelTranscriptions = [
+        ...result[transcription.modelLocation],
+        transcription,
+      ];
+      return {...result, [transcription.modelLocation]: modelTranscriptions};
+    }, groupedByModel);
+
+    const promises = Object.keys(groupedByModel).map(async modelLocation => {
+      await _transcribe(groupedByModel[modelLocation][0]);
+      // Can transcribe the rest without waiting now that we've cached the first.
+      groupedByModel[modelLocation].slice(1).forEach(_transcribe);
     });
+    return await Promise.all(promises);
   };
 
   const removeTranscription = async (index: number) => {
@@ -61,11 +81,10 @@ const DatasetTable: React.FC = () => {
   };
 
   const removeAll = async () => {
-    const responses = transcriptions.map(transcription =>
-      deleteTranscription(transcription.modelLocation, transcription.audioName)
-    );
-    await Promise.all(responses);
-    setTranscriptions([]);
+    const response = await resetTranscriptions();
+    if (response.ok) {
+      setTranscriptions([]);
+    }
   };
 
   return (
@@ -106,7 +125,7 @@ const DatasetTable: React.FC = () => {
                 <td>
                   <button
                     className="px-2 py-1"
-                    onClick={() => _transcribe(index)}
+                    onClick={() => _transcribe(transcription)}
                     disabled={
                       transcription.status === TranscriptionStatus.Finished
                     }

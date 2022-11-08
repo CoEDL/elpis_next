@@ -48,6 +48,15 @@ def get_transcriptions():
     return jsonify(camelize(transcription_manager.serialize()))
 
 
+@transcription_bp.route("/reset", methods=["GET", "POST"])
+def reset_transcriptions():
+    interface = Interface.from_app(app)
+    transcription_manager = interface.transcription_manager
+    transcription_manager.reset()
+    logger.info("Resetting transcription manager.")
+    return Response(status=HTTPStatus.NO_CONTENT)
+
+
 @transcription_bp.route("/", methods=["POST"])
 def create_transcription_jobs():
     files = request.files.getlist("file")

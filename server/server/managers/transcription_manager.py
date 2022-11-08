@@ -57,6 +57,7 @@ class TranscriptionManager(Manager):
 
         self.transcriptions = {job.key: job for job in jobs}
 
+    @auto_save
     @override
     def reset(self) -> None:
         super().reset()

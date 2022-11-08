@@ -31,7 +31,7 @@ export default function TranscriptionsPage() {
         <h2 className="text-xl font-semibold">Your Transcriptions</h2>
         <TranscriptionsTable />
       </div>
-      <div>
+      <div className="mt-4">
         <Link href={urls.transcriptions.new}>
           <a>
             <button className="button">Create New</button>

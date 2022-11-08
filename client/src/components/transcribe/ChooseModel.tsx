@@ -11,7 +11,7 @@ export default function ChooseModel() {
 
   if (!models.some(model => model.status === TrainingStatus.Finished)) {
     return (
-      <div className="section">
+      <div className="section space-y-2">
         <h2 className="text-xl">Choose Trained Model</h2>
         <p>
           No trained models available! Before performing inference on an audio
