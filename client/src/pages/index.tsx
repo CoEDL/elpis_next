@@ -16,7 +16,7 @@ const Home: NextPage = () => {
           cardClassName="bg-primary border-blue-300 text-white"
         />
         <TaskButton
-          url={urls.transcriptions}
+          url={urls.transcriptions.index}
           title={'Transcribe'}
           cardClassName="bg-secondary text-white"
         />

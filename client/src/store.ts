@@ -7,6 +7,7 @@ import {
   ElanTierSelector,
 } from 'types/Dataset';
 import Model, {NewModelStage} from 'types/Model';
+import Transcription from 'types/Transcription';
 import TrainingStage from 'types/TrainingStage';
 
 // ========= Datasets
@@ -45,3 +46,4 @@ export const newModelStageAtom = atomWithReset<NewModelStage>(
 export const modelIsLocalAtom = atom<boolean>(true);
 export const modelLocationAtom = atom<string>('');
 export const transcriptionFilesAtom = atomWithReset<File[]>([]);
+export const transcriptionsAtom = atom<Transcription[]>([]);
