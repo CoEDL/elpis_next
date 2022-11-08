@@ -5,6 +5,7 @@ import {getTranscriptions} from 'lib/api/transcribe';
 import TranscriptionsTable from 'components/transcribe/TranscriptionsTable';
 import Link from 'next/link';
 import urls from 'lib/urls';
+import Transcription from 'types/Transcription';
 
 export default function TranscriptionsPage() {
   const [, setTranscriptions] = useAtom(transcriptionsAtom);
@@ -13,7 +14,7 @@ export default function TranscriptionsPage() {
     const fetchTranscriptions = async () => {
       const response = await getTranscriptions();
       if (response.ok) {
-        const transcriptions = await response.json();
+        const transcriptions: Transcription[] = await response.json();
         setTranscriptions(transcriptions);
       } else {
         console.error("Couldn't download transcriptions!");
@@ -26,7 +27,7 @@ export default function TranscriptionsPage() {
     <div className="container">
       <h1 className="title">Transcriptions</h1>
 
-      <div className="section">
+      <div className="mt-8">
         <h2 className="text-xl font-semibold">Your Transcriptions</h2>
         <TranscriptionsTable />
       </div>

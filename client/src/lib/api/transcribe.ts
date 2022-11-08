@@ -6,6 +6,20 @@ export async function getTranscriptions(): Promise<Response> {
   return fetch(url);
 }
 
+export async function deleteTranscription(
+  modelLocation: string,
+  audioName: string
+): Promise<Response> {
+  const params = new URLSearchParams({
+    modelLocation,
+    audioName,
+  });
+  return fetch(`${url}?${params}`, {
+    method: 'DELETE',
+    mode: 'cors',
+  });
+}
+
 export async function createTranscriptionJobs(
   files: File[],
   modelLocation: string
@@ -28,28 +42,44 @@ export async function transcribe(
   modelLocation: string,
   audioName: string
 ): Promise<Response> {
-  return fetch(`${url}transcribe/${modelLocation}/${audioName}`);
+  const params = new URLSearchParams({
+    modelLocation,
+    audioName,
+  });
+  return fetch(`${url}transcribe?${params}`);
 }
 
 export async function getTranscriptionStatus(
   modelLocation: string,
   audioName: string
 ): Promise<Response> {
-  return fetch(`${url}status/${modelLocation}/${audioName}`);
+  const params = new URLSearchParams({
+    modelLocation,
+    audioName,
+  });
+  return fetch(`${url}status?${params}`);
 }
 
 export async function getText(
   modelLocation: string,
   audioName: string
 ): Promise<Response> {
-  return fetch(`${url}text/${modelLocation}/${audioName}`, {});
+  const params = new URLSearchParams({
+    modelLocation,
+    audioName,
+  });
+  return fetch(`${url}text?${params}`);
 }
 
 export async function getElan(
   modelLocation: string,
   audioName: string
 ): Promise<Response> {
-  return fetch(`${url}elan/${modelLocation}/${audioName}`, {});
+  const params = new URLSearchParams({
+    modelLocation,
+    audioName,
+  });
+  return fetch(`${url}elan?${params}`);
 }
 
 export async function downloadFiles(): Promise<Response> {

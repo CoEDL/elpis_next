@@ -25,7 +25,9 @@ class Interface:
         )
         self.model_manager = ModelManager(data_dir=self.path, overwrite=self.overwrite)
         self.transcription_manager = TranscriptionManager(
-            data_dir=self.path, overwrite=self.overwrite
+            data_dir=self.path,
+            models_dir=self.model_manager.folder,
+            overwrite=self.overwrite,
         )
 
     @classmethod

@@ -9,17 +9,22 @@ import {createTranscriptionJobs} from 'lib/api/transcribe';
 import ChooseModel from 'components/transcribe/ChooseModel';
 import ChooseHuggingFaceModel from 'components/transcribe/ChooseHuggingFaceModel';
 import TranscriptionFileUpload from 'components/transcribe/TranscriptionFileUpload';
+import {useRouter} from 'next/router';
+import urls from 'lib/urls';
 
 export default function TranscribePage() {
+  const router = useRouter();
   const [files, setFiles] = useAtom(transcriptionFilesAtom);
-  const [modelLocation] = useAtom(modelLocationAtom);
+  const [modelLocation, setModelLocation] = useAtom(modelLocationAtom);
   const [isLocal, setIsLocal] = useAtom(modelIsLocalAtom);
   const [error, setError] = useState('');
 
-  const _transcribe = async () => {
+  const _createTranscriptions = async () => {
     const response = await createTranscriptionJobs(files, modelLocation);
     if (response.ok) {
-      console.log('success!');
+      setModelLocation('');
+      setFiles([]);
+      router.push(urls.transcriptions.index);
     } else {
       const text = await response.text();
       setError(text);
@@ -48,10 +53,11 @@ export default function TranscribePage() {
           </label>
         </div>
       </div>
+
       {isLocal ? <ChooseModel /> : <ChooseHuggingFaceModel />}
       <TranscriptionFileUpload />
       <div className="flex justify-end">
-        <button className="button" onClick={_transcribe}>
+        <button className="button" onClick={_createTranscriptions}>
           Transcribe
         </button>
       </div>

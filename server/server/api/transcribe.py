@@ -13,6 +13,7 @@ from werkzeug.utils import secure_filename
 
 from server.api.utils import bad_request
 from server.interface import Interface
+from server.managers.transcription_manager import TranscriptionJob, TranscriptionStatus
 
 transcription_bp = Blueprint("transcription_bp", __name__, url_prefix="/transcriptions")
 
@@ -25,7 +26,10 @@ def requires_model_and_audio(
     """
 
     @wraps(route)
-    def function_wrapper(model_location: str, audio_name: str) -> Response:
+    def function_wrapper() -> Response:
+        model_location = request.args.get("modelLocation")
+        audio_name = request.args.get("audioName")
+
         if not model_location:
             return bad_request("Missing pretrained model location.")
 
@@ -41,7 +45,7 @@ def requires_model_and_audio(
 def get_transcriptions():
     interface = Interface.from_app(app)
     transcription_manager = interface.transcription_manager
-    return jsonify(transcription_manager.transcriptions.keys())
+    return jsonify(camelize(transcription_manager.serialize()))
 
 
 @transcription_bp.route("/", methods=["POST"])
@@ -61,43 +65,59 @@ def create_transcription_jobs():
     transcription_manager = interface.transcription_manager
 
     # Convert to path if it's a local model
-    is_local = False
-    if model_location in model_manager.models:
-        is_local = True
-        model_location = str(model_manager.model_folder(model_location))
+    is_local = True if model_location in model_manager.models else False
 
+    # NOTE HK: I think this section needs improvement but the API is icky
     for audio_file in files:
         file_name = secure_filename(str(audio_file.filename))
-        folder = transcription_manager.transcription_folder(
-            model_location, Path(file_name).stem
-        )
-        folder.mkdir(exist_ok=True, parents=True)
+        audio_name = Path(file_name).stem
+        job = TranscriptionJob(model_location, audio_name, is_local)
+
+        transcription_folder = job.transcription_folder(transcription_manager.folder)
+        transcription_folder.mkdir(exist_ok=True, parents=True)
+
         # Save raw audio
-        audio_path = folder / file_name
+        audio_path = transcription_folder / file_name
         audio_file.save(audio_path)
 
-        transcription_manager.add_transcription_job(
-            model_location, audio_path, is_local
-        )
+        transcription_manager.add_transcription_job(job)
 
     return Response(status=HTTPStatus.NO_CONTENT)
 
 
-@transcription_bp.route(
-    "/transcribe/<model_location>/<audio_name>", methods=["GET", "POST"]
-)
+@transcription_bp.route("/transcribe", methods=["GET", "POST"])
 @requires_model_and_audio
 def transcribe(model_location: str, audio_name: str):
     interface = Interface.from_app(app)
     manager = interface.transcription_manager
-    if (model_location, audio_name) not in manager.transcriptions:
+
+    if manager.get_transcription_job(model_location, audio_name) is None:
         return bad_request("Model Location and Audio name pair not found.")
 
-    manager.transcribe(model_location, audio_name)
+    status = manager.transcribe(model_location, audio_name)
+    if status != TranscriptionStatus.FINISHED:
+        return Response(
+            "Transcription failed.", status=HTTPStatus.INTERNAL_SERVER_ERROR
+        )
+
     return Response(status=HTTPStatus.NO_CONTENT)
 
 
-@transcription_bp.route("/status/<model_location>/<audio_name>", methods=["GET"])
+@transcription_bp.route("/", methods=["DELETE"])
+@requires_model_and_audio
+def delete_transcription(model_location: str, audio_name: str):
+    interface = Interface.from_app(app)
+    manager = interface.transcription_manager
+
+    job = manager.get_transcription_job(model_location, audio_name)
+    if job is None:
+        return bad_request("Model Location and Audio name pair not found.")
+
+    manager.remove_job(job)
+    return Response(status=HTTPStatus.NO_CONTENT)
+
+
+@transcription_bp.route("/status", methods=["GET"])
 @requires_model_and_audio
 def get_transcription_status(model_location: str, audio_name: str):
     interface = Interface.from_app(app)
@@ -105,34 +125,42 @@ def get_transcription_status(model_location: str, audio_name: str):
     return jsonify(completed=manager.has_completed(model_location, audio_name))
 
 
-@transcription_bp.route("/text/<model_location>/<audio_name>", methods=["GET"])
+@transcription_bp.route("/text", methods=["GET"])
 @requires_model_and_audio
 def get_text(model_location: str, audio_name: str):
     interface = Interface.from_app(app)
     manager = interface.transcription_manager
 
+    job = manager.get_transcription_job(model_location, audio_name)
+    if job is None:
+        return bad_request("No transcription job for supplied parameters")
+
     completed = manager.has_completed(model_location, audio_name)
     if not completed:
         return bad_request("Asked for text before transcription finished")
 
-    folder = manager.transcription_folder(model_location, audio_name)
+    folder = manager.transcription_folder(job)
     with open(folder / f"{audio_name}.txt") as text_file:
         text = text_file.read()
 
-    return jsonify(text=text)
+    return jsonify(text)
 
 
-@transcription_bp.route("/elan/<model_location>/<audio_name>", methods=["GET"])
+@transcription_bp.route("/elan", methods=["GET"])
 @requires_model_and_audio
 def get_elan(model_location: str, audio_name: str):
     interface = Interface.from_app(app)
     manager = interface.transcription_manager
 
+    job = manager.get_transcription_job(model_location, audio_name)
+    if job is None:
+        return bad_request("No transcription job for supplied parameters")
+
     completed = manager.has_completed(model_location, audio_name)
     if not completed:
-        return bad_request("Asked for elan before transcription finished")
+        return bad_request("Asked for text before transcription finished")
 
-    folder = manager.transcription_folder(model_location, audio_name)
+    folder = manager.transcription_folder(job)
     return send_file(folder / f"{audio_name}.eaf", as_attachment=True)
 
 
