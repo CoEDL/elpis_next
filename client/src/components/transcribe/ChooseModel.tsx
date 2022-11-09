@@ -11,8 +11,8 @@ export default function ChooseModel() {
 
   if (!models.some(model => model.status === TrainingStatus.Finished)) {
     return (
-      <div className="section space-y-2">
-        <h2 className="text-xl">Choose Trained Model</h2>
+      <div className="space-y-2">
+        <h2 className="text-lg font-light">Choose Trained Model</h2>
         <p>
           No trained models available! Before performing inference on an audio
           file, you must create and train a model.
@@ -26,9 +26,9 @@ export default function ChooseModel() {
   }
 
   return (
-    <div className="section">
-      <h2 className="text-xl">Select Trained Model</h2>
-      <p className="mt-2 text-sm text-gray-700">
+    <div>
+      <h2 className="text-lg font-light">Select Trained Model</h2>
+      <p className="mt-2 text-sm text-gray-700 italic">
         This only displays models which have finished training.
       </p>
       <div className="mt-4 flex space-x-4">

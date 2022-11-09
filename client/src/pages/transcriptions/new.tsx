@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {
   modelIsLocalAtom,
   modelLocationAtom,
+  modelsAtom,
   transcriptionFilesAtom,
 } from 'store';
 import {createTranscriptionJobs} from 'lib/api/transcribe';
@@ -11,11 +12,13 @@ import ChooseHuggingFaceModel from 'components/transcribe/ChooseHuggingFaceModel
 import TranscriptionFileUpload from 'components/transcribe/TranscriptionFileUpload';
 import {useRouter} from 'next/router';
 import urls from 'lib/urls';
+import {FileType, parseFileType} from 'lib/dataset';
 
 export default function TranscribePage() {
   const router = useRouter();
   const [files, setFiles] = useAtom(transcriptionFilesAtom);
   const [modelLocation, setModelLocation] = useAtom(modelLocationAtom);
+  const [models] = useAtom(modelsAtom);
   const [isLocal, setIsLocal] = useAtom(modelIsLocalAtom);
   const [error, setError] = useState('');
 
@@ -32,6 +35,12 @@ export default function TranscribePage() {
     }
   };
 
+  const canAddTranscriptions =
+    files.length > 0 &&
+    files.every(file => parseFileType(file.name) === FileType.Audio) &&
+    modelLocation.length > 0 &&
+    (!isLocal || models.map(model => model.modelName).includes(modelLocation));
+
   return (
     <div className="container flex flex-col space-y-4">
       <div>
@@ -39,8 +48,8 @@ export default function TranscribePage() {
         <p className="">blah</p>
       </div>
 
-      <div className="section">
-        <h2 className="text-xl">Choose model location</h2>
+      <div className="section space-y-4">
+        <h2 className="subtitle">1. Choose model location</h2>
         <div className="mt-4 flex space-x-2 items-center">
           <input
             type={'checkbox'}
@@ -52,12 +61,17 @@ export default function TranscribePage() {
             Use Local Model?
           </label>
         </div>
+        {isLocal ? <ChooseModel /> : <ChooseHuggingFaceModel />}
       </div>
 
-      {isLocal ? <ChooseModel /> : <ChooseHuggingFaceModel />}
       <TranscriptionFileUpload />
+
       <div className="flex justify-end">
-        <button className="button" onClick={_createTranscriptions}>
+        <button
+          className="button"
+          onClick={_createTranscriptions}
+          disabled={!canAddTranscriptions}
+        >
           Transcribe
         </button>
       </div>

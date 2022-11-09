@@ -7,8 +7,8 @@ export default function ChooseHuggingFaceModel() {
   const [modelLocation, setModelLocation] = useAtom(modelLocationAtom);
 
   return (
-    <div className="section">
-      <h2 className="text-xl">HuggingFace Model Name</h2>
+    <div className="">
+      <h2 className="text-lg font-light">HuggingFace Model Name</h2>
       <p className="mt-2 text-sm text-gray-700">Description</p>
 
       <div className="mt-4 text-sm flex items-center space-x-4">

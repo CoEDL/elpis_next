@@ -24,7 +24,7 @@
   }
 
   .table {
-    @apply border border-slate-200;
+    @apply border border-slate-200 text-left;
   }
 
   .table th {

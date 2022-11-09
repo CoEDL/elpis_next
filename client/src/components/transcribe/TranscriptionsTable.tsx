@@ -45,11 +45,19 @@ const DatasetTable: React.FC = () => {
   };
 
   const transcribeEverything = async () => {
+    const readyTranscriptions = transcriptions.filter(
+      transcription =>
+        ![
+          TranscriptionStatus.Transcribing,
+          TranscriptionStatus.Finished,
+        ].includes(transcription.status)
+    );
+
     // Group by model and transcribe the first transcription of each model
     // first, to take better advantage of the caching performed by the server.
     // The rest can be transcribed asynchronously
     let groupedByModel: {[key: string]: Transcription[]} = {};
-    groupedByModel = transcriptions.reduce((result, transcription) => {
+    groupedByModel = readyTranscriptions.reduce((result, transcription) => {
       if (!Object.keys(result).includes(transcription.modelLocation)) {
         return {...result, [transcription.modelLocation]: [transcription]};
       }
