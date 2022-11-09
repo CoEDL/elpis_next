@@ -6,10 +6,10 @@ import {useEffect} from 'react';
 import {getModels} from 'lib/api/models';
 import Link from 'next/link';
 import urls from 'lib/urls';
-import UploadModel from 'components/models/UploadModel';
+import {TrainingStatus} from 'types/Model';
 
 const TrainPage: NextPage = () => {
-  const [, setModels] = useAtom(modelsAtom);
+  const [models, setModels] = useAtom(modelsAtom);
 
   useEffect(() => {
     const fetchModels = async () => {
@@ -31,16 +31,35 @@ const TrainPage: NextPage = () => {
           <h1 className="title">Models</h1>
           <p className="mt-2 text-gray-800">Blah blah blah</p>
 
-          <p className="text-xl font-semibold mt-8">Your Models</p>
-          <ModelTable />
-          <div className="space-x-2 mt-2">
-            <Link href={urls.models.new}>
-              <a>
-                <button className="button">Create new</button>
-              </a>
-            </Link>
+          <div className="space-y-4">
+            <h2 className="subtitle mt-8 mb-2">Your Models</h2>
+            <ModelTable />
+            <div className="flex items-center justify-between">
+              <div className="space-x-2">
+                <Link href={urls.models.new}>
+                  <a>
+                    <button className="button">Create New</button>
+                  </a>
+                </Link>
+                <Link href={urls.models.upload}>
+                  <a>
+                    <button className="button">Upload Model</button>
+                  </a>
+                </Link>
+              </div>
+
+              {models.filter(model => model.status === TrainingStatus.Finished)
+                .length > 0 && (
+                <div>
+                  <Link href={urls.transcriptions.index}>
+                    <a>
+                      <button className="button">Transcribe Audio</button>
+                    </a>
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
-          <UploadModel />
         </div>
       </div>
     </div>

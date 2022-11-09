@@ -22,8 +22,8 @@ const DatasetTable: React.FC = () => {
   }
 
   return (
-    <div className="p-4 border text-left w-full">
-      <table className="w-full">
+    <div className="text-left w-full">
+      <table className="w-full table">
         <thead>
           <tr>
             <th>Name</th>

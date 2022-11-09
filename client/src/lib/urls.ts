@@ -6,6 +6,7 @@ export const urls = {
     new: '/models/new',
     train: '/models/train',
     view: '/models/view',
+    upload: '/models/upload',
   },
   datasets: {
     index: '/datasets',

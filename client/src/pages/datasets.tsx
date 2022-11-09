@@ -8,7 +8,7 @@ import Link from 'next/link';
 import urls from 'lib/urls';
 
 const DatasetsPage: NextPage = () => {
-  const [, setDatasets] = useAtom(datasetsAtom);
+  const [datasets, setDatasets] = useAtom(datasetsAtom);
 
   useEffect(() => {
     const fetchDatasets = async () => {
@@ -28,19 +28,23 @@ const DatasetsPage: NextPage = () => {
       <h1 className="title">Datasets</h1>
       <p className="mt-2 text-gray-800">Blah blah blah</p>
 
-      <p className="text-xl font-semibold mt-8">Your Datasets</p>
-      <DatasetTable />
-      <div className="space-x-2 mt-2 flex justify-between">
-        <Link href={urls.datasets.new}>
-          <a>
-            <button className="button">Create new</button>
-          </a>
-        </Link>
-        <Link href={urls.models.index}>
-          <a>
-            <button className="button">Train Model</button>
-          </a>
-        </Link>
+      <div className="mt-8 space-y-4">
+        <p className="subtitle">Your Datasets</p>
+        <DatasetTable />
+        <div className="space-x-2 mt-2 flex justify-between">
+          <Link href={urls.datasets.new}>
+            <a>
+              <button className="button">Create new</button>
+            </a>
+          </Link>
+          {datasets.length > 0 && (
+            <Link href={urls.models.index}>
+              <a>
+                <button className="button">Train Model</button>
+              </a>
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -47,23 +47,25 @@ const DatasetFiles: React.FC = () => {
     <div className="p-4 border rounded">
       <h2 className="text-xl mb-2">Upload Dataset Files</h2>
       <FileDropper callback={_files => setFiles([...files, ..._files])} />
-      <div className="p-4 mt-8 rounded border">
-        <p className="text-lg">Uploaded Files:</p>
-        <table className="w-full mt-2">
-          <thead className="text-sm">
-            <tr>
-              <th className="text-left">File name</th>
-              <th className="text-left">Type</th>
-              <th className="text-left">Has match</th>
-              <th className="text-left">Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fileRows(transcriptionFiles, 'Transcription')}
-            {fileRows(audioFiles, 'Audio')}
-          </tbody>
-        </table>
-      </div>
+      {files.length > 0 && (
+        <div className="p-4 mt-8 rounded border">
+          <p className="text-lg">Uploaded Files:</p>
+          <table className="w-full mt-2">
+            <thead className="text-sm">
+              <tr>
+                <th className="text-left">File name</th>
+                <th className="text-left">Type</th>
+                <th className="text-left">Has match</th>
+                <th className="text-left">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fileRows(transcriptionFiles, 'Transcription')}
+              {fileRows(audioFiles, 'Audio')}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {unsupportedFiles.length > 0 && (
         <div className="mt-4 p-4 border border-orange-300 rounded">

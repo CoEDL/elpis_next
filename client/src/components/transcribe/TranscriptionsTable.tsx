@@ -103,8 +103,39 @@ const DatasetTable: React.FC = () => {
 
   return (
     <>
-      <div className="p-4 border text-left w-full">
-        <table className="w-full">
+      <div className="mt-2 text-sm flex justify-between">
+        <button
+          className="button"
+          disabled={
+            transcriptions.filter(
+              transcription =>
+                transcription.status === TranscriptionStatus.Finished
+            ).length === 0
+          }
+          onClick={downloadAllTranscriptions}
+        >
+          Download All Transcriptions
+        </button>
+        <div className="space-x-2">
+          <button
+            className="button"
+            onClick={transcribeEverything}
+            disabled={
+              transcriptions.filter(
+                transcription =>
+                  transcription.status !== TranscriptionStatus.Finished
+              ).length === 0
+            }
+          >
+            Transcribe All
+          </button>
+          <button className="button" onClick={removeAll}>
+            Delete All
+          </button>
+        </div>
+      </div>
+      <div className="text-left w-full">
+        <table className="w-full table">
           <thead>
             <tr>
               <th>Model Name</th>
@@ -163,37 +194,6 @@ const DatasetTable: React.FC = () => {
             ))}
           </tbody>
         </table>
-      </div>
-      <div className="mt-2 flex justify-between">
-        <button
-          className="button"
-          disabled={
-            transcriptions.filter(
-              transcription =>
-                transcription.status === TranscriptionStatus.Finished
-            ).length === 0
-          }
-          onClick={downloadAllTranscriptions}
-        >
-          Download All Transcriptions
-        </button>
-        <div className="space-x-2">
-          <button
-            className="button"
-            onClick={transcribeEverything}
-            disabled={
-              transcriptions.filter(
-                transcription =>
-                  transcription.status !== TranscriptionStatus.Finished
-              ).length === 0
-            }
-          >
-            Transcribe All
-          </button>
-          <button className="button" onClick={removeAll}>
-            Delete All
-          </button>
-        </div>
       </div>
     </>
   );
