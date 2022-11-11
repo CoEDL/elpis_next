@@ -18,19 +18,23 @@ export async function createModel(model: Model): Promise<Response> {
   });
 }
 
-export async function deleteModel(name: string): Promise<Response> {
-  return fetch(`${url}${name}`, {
+export async function deleteModel(modelName: string): Promise<Response> {
+  return fetch(`${url}${modelName}`, {
     mode: 'cors',
     method: 'DELETE',
   });
 }
 
-export async function trainModel(name: string): Promise<Response> {
-  return fetch(`${url}train/${name}`);
+export async function trainModel(modelName: string): Promise<Response> {
+  return fetch(`${url}train/${modelName}`);
 }
 
-export async function getModelStatus(name: string): Promise<Response> {
-  return fetch(`${url}status/${name}`);
+export async function getModelLogs(modelName: string): Promise<Response> {
+  return fetch(`${url}logs/${modelName}`);
+}
+
+export async function getModelStatus(modelName: string): Promise<Response> {
+  return fetch(`${url}status/${modelName}`);
 }
 
 export async function uploadModel(modelZip: File): Promise<Response> {
@@ -44,6 +48,6 @@ export async function uploadModel(modelZip: File): Promise<Response> {
   });
 }
 
-export async function downloadModel(name: string): Promise<Response> {
-  return fetch(`${url}download/${name}`);
+export async function downloadModel(modelName: string): Promise<Response> {
+  return fetch(`${url}download/${modelName}`);
 }

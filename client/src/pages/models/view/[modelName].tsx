@@ -1,4 +1,5 @@
 import ViewModelInfo from 'components/models/ViewModelInfo';
+import ViewTraining from 'components/models/ViewTraining';
 import {useAtom} from 'jotai';
 import urls from 'lib/urls';
 import Link from 'next/link';
@@ -50,6 +51,8 @@ export default function ViewModelPage() {
       <button className="button mt-2" onClick={() => setShowInfo(!showInfo)}>
         {showInfo ? 'Hide Model Info' : 'Show Model Info'}
       </button>
+
+      <ViewTraining model={model} />
     </div>
   );
 }

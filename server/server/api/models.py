@@ -1,13 +1,11 @@
-import json
 import os
 import shutil
 from functools import wraps
 from http import HTTPStatus
 from pathlib import Path
-from typing import Any, Callable, Dict
+from typing import Callable
 
 from elpis.trainer import TrainingJob, TrainingOptions, TrainingStatus
-from elpis.trainer.job import BASE_MODEL, SAMPLING_RATE
 from flask import Blueprint, Response
 from flask import current_app as app
 from flask import jsonify, request, send_file
@@ -96,6 +94,22 @@ def train_model(model_name: str):
     return Response(status=HTTPStatus.NO_CONTENT)
 
 
+@model_bp.route("/logs/<model_name>", methods=["GET"])
+@requires_model
+def get_model_logs(model_name: str):
+    interface = Interface.from_app(app)
+
+    status = interface.model_manager.status(model_name)
+    if status is None:
+        return Response("Missing model.", status=HTTPStatus.NOT_FOUND)
+
+    log_file = interface.model_manager.logs_path(model_name)
+    if not log_file.exists():
+        return Response("No logs found for training job.", status=HTTPStatus.NOT_FOUND)
+
+    return send_file(log_file, as_attachment=True)
+
+
 @model_bp.route("/status/<model_name>", methods=["GET"])
 @requires_model
 def get_model_status(model_name: str):
@@ -104,7 +118,7 @@ def get_model_status(model_name: str):
     if status is None:
         return Response("Missing model.", status=HTTPStatus.NOT_FOUND)
 
-    return jsonify({"status": status.value})
+    return jsonify(status.value)
 
 
 @model_bp.route("/save/<model_name>", methods=["GET"])

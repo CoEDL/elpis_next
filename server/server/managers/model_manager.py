@@ -53,6 +53,9 @@ class ModelManager(Manager):
     def model_folder(self, model_name: str) -> Path:
         return self.folder / model_name
 
+    def logs_path(self, model_name: str) -> Path:
+        return self.model_folder(model_name) / "logs.txt"
+
     @auto_save
     def add_job(self, job: TrainingJob, overwrite=True) -> None:
         if overwrite and job.model_name in self:
@@ -88,6 +91,7 @@ class ModelManager(Manager):
                 job,
                 output_dir=self.model_folder(model_name),
                 dataset_dir=processed_dataset_path,
+                log_file=self.logs_path(model_name),
             )
         except:
             logger.error(f"Error in training model: {model_name}")
