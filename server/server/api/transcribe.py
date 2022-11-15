@@ -103,12 +103,15 @@ def transcribe(model_location: str, audio_name: str):
     if manager.get_transcription_job(model_location, audio_name) is None:
         return bad_request("Model Location and Audio name pair not found.")
 
+    logger.info(f"Starting transcription job: {model_location} - {audio_name}.wav")
     status = manager.transcribe(model_location, audio_name)
     if status != TranscriptionStatus.FINISHED:
+        logger.error(f"Error with transcription: {model_location} - {audio_name}")
         return Response(
             "Transcription failed.", status=HTTPStatus.INTERNAL_SERVER_ERROR
         )
 
+    logger.info(f"Finished transcription: {model_location} - {audio_name}")
     return Response(status=HTTPStatus.NO_CONTENT)
 
 

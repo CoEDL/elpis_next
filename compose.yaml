@@ -3,6 +3,10 @@ services:
   server:
     build: ./server
     container_name: server
+    deploy:
+      resources:
+        limits:
+          memory: 8gb
     ports:
       - 5000:5000
     environment:
@@ -14,21 +18,11 @@ services:
         target: /data
         bind:
           create_host_path: true
-    networks:
-      - backend
+    restart: on-failure
 
   client:
     build: ./client
     container_name: client
     ports:
       - 3000:3000
-    networks:
-      - frontend
-      - backend
-
-networks:
-  hostnet:
-    name: host
-    external: true
-  frontend:
-  backend:
+    restart: on-failure
