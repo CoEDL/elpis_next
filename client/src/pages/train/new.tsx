@@ -1,12 +1,12 @@
 import React from 'react';
 import {newModelStageAtom} from 'store';
 import {useAtom} from 'jotai';
-import ChooseModelName from 'components/models/ChooseModelName';
-import ChooseTrainingOptions from 'components/models/ChooseTrainingOptions';
+import ChooseModelName from 'components/train/ChooseModelName';
+import ChooseTrainingOptions from 'components/train/ChooseTrainingOptions';
 import {NewModelStage} from 'types/Model';
-import NewModelSidebar from 'components/models/NewModelSidebar';
-import ChooseDataset from 'components/models/ChooseDataset';
-import ChooseModelOptions from 'components/models/ChooseModelOptions';
+import NewModelSidebar from 'components/train/NewModelSidebar';
+import ChooseDataset from 'components/train/ChooseDataset';
+import ChooseModelOptions from 'components/train/ChooseModelOptions';
 
 const NewModelPage: React.FC = () => {
   const [stage] = useAtom(newModelStageAtom);

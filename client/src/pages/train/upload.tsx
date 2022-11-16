@@ -17,7 +17,7 @@ export default function UploadModelPage() {
     if (response.ok) {
       setUploading(false);
       setFile(null);
-      router.push(urls.models.index);
+      router.push(urls.train.index);
     } else {
       console.error('Error uploading model.');
       setError('Error uploading model.');

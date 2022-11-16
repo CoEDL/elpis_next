@@ -103,7 +103,7 @@ const ModelTable: React.FC = () => {
                 </button>
               </td>
               <td>
-                <Link href={urls.models.view + '/' + model.modelName}>
+                <Link href={urls.train.view + '/' + model.modelName}>
                   <a>
                     <Eye color="blue" />
                   </a>

@@ -1,12 +1,12 @@
 export const server = 'http://localhost:5000';
 
 export const urls = {
-  models: {
-    index: '/models',
-    new: '/models/new',
-    train: '/models/train',
-    view: '/models/view',
-    upload: '/models/upload',
+  train: {
+    index: '/train',
+    new: '/train/new',
+    train: '/train/train',
+    view: '/train/view',
+    upload: '/train/upload',
   },
   datasets: {
     index: '/datasets',

@@ -18,7 +18,7 @@ export default function ChooseModel() {
           file, you must create and train a model.
         </p>
 
-        <Link href={urls.models.index}>
+        <Link href={urls.train.index}>
           <button className="button">Models Home</button>
         </Link>
       </div>

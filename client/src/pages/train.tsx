@@ -1,7 +1,7 @@
 import type {NextPage} from 'next';
 import {useAtom} from 'jotai';
 import {modelsAtom} from 'store';
-import ModelTable from 'components/models/ModelTable';
+import ModelTable from 'components/train/ModelTable';
 import {useEffect} from 'react';
 import {getModels} from 'lib/api/models';
 import Link from 'next/link';
@@ -28,7 +28,7 @@ const TrainPage: NextPage = () => {
     <div className="container">
       <div className="flex space-x-8">
         <div className="w-full">
-          <h1 className="title">Models</h1>
+          <h1 className="title">Train Models</h1>
           <p className="mt-2 text-gray-800">Blah blah blah</p>
 
           <div className="space-y-4">
@@ -36,12 +36,12 @@ const TrainPage: NextPage = () => {
             <ModelTable />
             <div className="flex items-center justify-between">
               <div className="space-x-2">
-                <Link href={urls.models.new}>
+                <Link href={urls.train.new}>
                   <a>
                     <button className="button">Create New</button>
                   </a>
                 </Link>
-                <Link href={urls.models.upload}>
+                <Link href={urls.train.upload}>
                   <a>
                     <button className="button">Upload Model</button>
                   </a>

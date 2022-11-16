@@ -11,8 +11,8 @@ export const navLinks: MenuLink[] = [
     url: urls.datasets.index,
   },
   {
-    name: 'Models',
-    url: urls.models.index,
+    name: 'Train',
+    url: urls.train.index,
   },
   {
     name: 'Transcribe',

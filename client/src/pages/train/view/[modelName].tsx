@@ -1,5 +1,5 @@
-import ViewModelInfo from 'components/models/ViewModelInfo';
-import ViewTraining from 'components/models/ViewTraining';
+import ViewModelInfo from 'components/train/ViewModelInfo';
+import ViewTraining from 'components/train/ViewTraining';
 import {useAtom} from 'jotai';
 import urls from 'lib/urls';
 import Link from 'next/link';
@@ -30,7 +30,7 @@ export default function ViewModelPage() {
           No model found with name {modelName}. Either create one or try visting
           the models page first:
         </p>
-        <Link href={urls.models.index}>
+        <Link href={urls.train.index}>
           <a>
             <button className="button mt-4">Models Page</button>
           </a>

@@ -30,7 +30,7 @@ export default function ChooseModelOptions() {
     if (response.ok) {
       resetModel();
       resetStage();
-      router.push(urls.models.index);
+      router.push(urls.train.index);
     } else {
       const data = await response.json();
       console.error(data);

@@ -12,7 +12,7 @@ const Home: NextPage = () => {
         <p className="subtitle text-center">Choose a Task</p>
         <div className="flex space-x-2 items-center justify-center mt-4">
           <TaskButton
-            url={urls.models.index}
+            url={urls.train.index}
             title={'Train a Model'}
             cardClassName="bg-primary text-white"
           />
