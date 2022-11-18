@@ -22,6 +22,7 @@ export const urls = {
     datasets: '/api/datasets/',
     models: '/api/models/',
     transcriptions: '/api/transcriptions/',
+    reset: '/api/reset/',
   },
 };
 

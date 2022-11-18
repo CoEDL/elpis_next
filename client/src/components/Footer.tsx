@@ -2,6 +2,7 @@ import navLinks from 'lib/navLinks';
 import Link from 'next/link';
 import React from 'react';
 import Logo from './Logo';
+import ResetButton from './ResetButton';
 
 const LINK_STYLE = 'font-display hover:underline';
 
@@ -11,7 +12,10 @@ export default function Footer() {
       <div className="container flex flex-col md:flex-row items-center justify-between py-4 text-gray-400">
         <LogoSection className="mb-4 h-12 w-24" />
 
-        <small className="text-center">©2022, CoEDL</small>
+        <div className="flex flex-col space-y-2">
+          <small className="text-center">©2022, CoEDL</small>
+          <ResetButton />
+        </div>
         <NavSection />
       </div>
     </div>
