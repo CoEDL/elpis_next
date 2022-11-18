@@ -134,7 +134,7 @@ class TranscriptionManager(Manager):
             if job.is_local:
                 safe_model_location = str(self._models_dir / job.model_location)
 
-            asr = build_pipeline(safe_model_location)
+            asr = build_pipeline(safe_model_location, cache_dir=self.cache)
             self._pipelines[job.model_location] = asr
 
         folder = self.transcription_folder(job)
