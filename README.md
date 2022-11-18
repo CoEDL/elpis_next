@@ -1,36 +1,44 @@
 # Elpis Next
-This is a slimmer rewrite of the [elpis project](https://github.com/CoEDL/elpis). 
+
+This is a slimmer rewrite of the [elpis project](https://github.com/CoEDL/elpis).
 
 ## Running the client and server
+
 - First, clone the repo: `git clone https://github.com/CoEDL/elpis_next.git`
 - `cd elpis_next`
 
 ### To run with docker:
-- `docker compose build`
-- `docker compose up` 
 
-This will spawn a client service at `https://localhost:3000` and the server at `https://localhost:5000`. 
+- `docker compose build`
+- `docker compose up`
+
+This will spawn a client service at `https://localhost:3000` and the server at `https://localhost:5001`.
 It will also create a data directory at `./data` in which to store the state of the application. This `data` directory is bound to the host machine,
 so you can inspect what's going on in the application without needing to open another terminal session inside the container.
 
 ### To run a development build locally (without docker):
+
 - `cd server`
 - `poetry install`
-- `poetry run python3 wsgi.py` 
+- `poetry run python3 wsgi.py`
 
 In another window:
+
 - `cd client`
 - `yarn && yarn dev`
 
 Note: For the server to work properly during training and transcription, you might need to install some additional local dependencies:
+
 - [ffmpeg](https://formulae.brew.sh/formula/ffmpeg) for resampling audio
 - [libsndfile](https://formulae.brew.sh/formula/libsndfile) for librosa to load datasets.
-If you have errors with libsndfile, you might want to see the troubleshooting section at the end of this document.
+  If you have errors with libsndfile, you might want to see the troubleshooting section at the end of this document.
 
 ## Using the application
+
 Now visit [localhost:3000](https://localhost:3000) and begin your transcription workflow!
 
 ### Troubleshooting `libsndfile` errors
+
 If you get an error message on Mac Os that reads along the lines of:
 
 ```
