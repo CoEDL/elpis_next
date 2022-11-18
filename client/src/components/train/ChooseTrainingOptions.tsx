@@ -43,13 +43,18 @@ export default function ChooseTrainingOptions() {
 
   if (!model) return <></>;
 
-  const numberOption = (name: string, option: keyof TrainingOptions) => (
+  const numberOption = (
+    name: string,
+    option: keyof TrainingOptions,
+    step = 1
+  ) => (
     <>
       <label htmlFor={option}>{name}:</label>
       <input
         type="number"
         onChange={updateOption(option, true)}
         min={0}
+        step={step}
         value={options[option] as number}
       />
     </>
@@ -62,7 +67,7 @@ export default function ChooseTrainingOptions() {
       <div className="grid grid-cols-2 gap-2 mt-8 items-center">
         {numberOption('Batch Size', 'batchSize')}
         {numberOption('Epochs', 'epochs')}
-        {numberOption('Learning Rate', 'learningRate')}
+        {numberOption('Learning Rate', 'learningRate', 0.0001)}
         {numberOption('Min epoch duration', 'minDuration')}
         {numberOption('Max epoch duration', 'maxDuration')}
 
