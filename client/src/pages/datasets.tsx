@@ -6,6 +6,7 @@ import {useEffect} from 'react';
 import {getDatasets} from 'lib/api/datasets';
 import Link from 'next/link';
 import urls from 'lib/urls';
+import ClientOnly from 'components/ClientOnly';
 
 const DatasetsPage: NextPage = () => {
   const [datasets, setDatasets] = useAtom(datasetsAtom);
@@ -28,7 +29,7 @@ const DatasetsPage: NextPage = () => {
       <h1 className="title">Datasets</h1>
       <p className="mt-2 text-gray-800">Blah blah blah</p>
 
-      <div className="mt-8 space-y-4">
+      <ClientOnly className="mt-8 space-y-4">
         <p className="subtitle">Your Datasets</p>
         <DatasetTable />
         <div className="space-x-2 mt-2 flex justify-between">
@@ -45,7 +46,7 @@ const DatasetsPage: NextPage = () => {
             </Link>
           )}
         </div>
-      </div>
+      </ClientOnly>
     </div>
   );
 };
