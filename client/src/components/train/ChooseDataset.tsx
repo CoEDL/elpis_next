@@ -1,8 +1,7 @@
-import {on} from 'events';
 import {useAtom} from 'jotai';
 import urls from 'lib/urls';
 import Link from 'next/link';
-import React, {useState} from 'react';
+import React from 'react';
 import {datasetsAtom, newModelAtom, newModelStageAtom} from 'store';
 import Dataset from 'types/Dataset';
 import {NewModelStage} from 'types/Model';
@@ -20,7 +19,7 @@ export default function ChooseDataset() {
 
   if (datasets.length === 0) {
     return (
-      <div className="section">
+      <div className="section space-y-2">
         <h2 className="text-xl">Choose Dataset</h2>
         <p>
           No datasets available! A local dataset is needed before creating a

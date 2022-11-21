@@ -1,5 +1,5 @@
 import React from 'react';
-import {newModelStageAtom} from 'store';
+import {newModelAtom, newModelStageAtom} from 'store';
 import {useAtom} from 'jotai';
 import ChooseModelName from 'components/train/ChooseModelName';
 import ChooseTrainingOptions from 'components/train/ChooseTrainingOptions';
@@ -10,6 +10,7 @@ import ChooseModelOptions from 'components/train/ChooseModelOptions';
 
 const NewModelPage: React.FC = () => {
   const [stage] = useAtom(newModelStageAtom);
+  const [model] = useAtom(newModelAtom);
 
   const renderStage = () => {
     switch (stage) {
@@ -26,11 +27,19 @@ const NewModelPage: React.FC = () => {
     }
   };
 
+  const title = () => {
+    const base = 'New Model';
+    if (!model) {
+      return base;
+    }
+    return `${base}: ${model.modelName}`;
+  };
+
   return (
     <div className="container space-y-4 flex space-x-8">
       <NewModelSidebar />
-      <div className="flex-1">
-        <h1 className="title">New Model</h1>
+      <div className="flex-1 space-y-4">
+        <h1 className="title">{title()}</h1>
         <p>Blah</p>
 
         {renderStage()}
