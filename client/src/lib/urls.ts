@@ -1,4 +1,5 @@
-export const server = 'http://localhost:5000';
+export const serverPort = process.env.SERVER_PORT ?? '5001';
+export const server = 'http://localhost:' + serverPort;
 
 export const urls = {
   train: {
