@@ -23,12 +23,39 @@ export default function ChooseTrainingOptions() {
     ...(model?.options ?? DEFAULT_TRAINING_OPTIONS),
   };
 
+  const isValid = () => {
+    if (
+      Object.keys(options).some(
+        key => options[key as keyof TrainingOptions] === undefined
+      )
+    ) {
+      return false;
+    }
+    return (
+      options.batchSize! > 0 &&
+      options.epochs! > 0 &&
+      options.learningRate! > 0 &&
+      options.minDuration! >= 0 &&
+      options.maxDuration! >= options.minDuration! &&
+      options.testSize! > 0 &&
+      options.testSize! < 1 &&
+      options.wordDelimiterToken!.length > 0
+    );
+  };
+
   const updateOption =
     (option: keyof TrainingOptions, isNumber = false) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = isNumber
-        ? Number.parseInt(e.target.value)
-        : e.target.value;
+      let newValue: string | number = e.target.value;
+
+      if (isNumber) {
+        if (newValue.length > 0) {
+          newValue = Number.parseFloat(newValue);
+        } else {
+          newValue = 0;
+        }
+      }
+
       const newOptions = {...options, [option]: newValue};
       setModel({...model!, options: newOptions});
     };
@@ -43,28 +70,29 @@ export default function ChooseTrainingOptions() {
 
   if (!model) return <></>;
 
-  const numberOption = (name: string, option: keyof TrainingOptions) => (
-    <>
-      <label htmlFor={option}>{name}:</label>
-      <input
-        type="number"
-        onChange={updateOption(option, true)}
-        min={0}
-        value={options[option] as number}
-      />
-    </>
-  );
+  const numberOptionData: NumberOptionProps[] = [
+    {name: 'Batch Size', option: 'batchSize'},
+    {name: 'Epochs', option: 'epochs'},
+    {name: 'Learning Rate', option: 'learningRate', step: 0.0001},
+    {name: 'Min epoch duration', option: 'minDuration'},
+    {name: 'Max epoch duration', option: 'maxDuration'},
+    {name: 'Test-set percentage', option: 'testSize', step: 0.01},
+  ]
+    .map(base => ({...base, option: base.option as keyof TrainingOptions}))
+    .map(base => ({
+      ...base,
+      options,
+      onChange: updateOption(base.option as keyof TrainingOptions, true),
+    }));
 
   return (
     <div className="section">
       <h2 className="text-xl">Choose Training Options</h2>
 
       <div className="grid grid-cols-2 gap-2 mt-8 items-center">
-        {numberOption('Batch Size', 'batchSize')}
-        {numberOption('Epochs', 'epochs')}
-        {numberOption('Learning Rate', 'learningRate')}
-        {numberOption('Min epoch duration', 'minDuration')}
-        {numberOption('Max epoch duration', 'maxDuration')}
+        {numberOptionData.map(data => (
+          <NumberOption key={data.name} {...data} />
+        ))}
 
         <label htmlFor="wordDelimiterToken">
           Word Delimiter Token (default &quot; &quot;):
@@ -75,7 +103,6 @@ export default function ChooseTrainingOptions() {
           value={options.wordDelimiterToken as string}
         />
 
-        {numberOption('Test-set percentage', 'testSize')}
         <label htmlFor="freezeFeatureExtractor">
           Freeze Feature Extractor:
         </label>
@@ -97,8 +124,9 @@ export default function ChooseTrainingOptions() {
         </button>
         <button
           className="button"
-          disabled={model?.options === undefined}
+          disabled={!isValid()}
           onClick={() => {
+            setModel({...model!, options});
             setStage(NewModelStage.ModelOptions);
           }}
         >
@@ -108,3 +136,32 @@ export default function ChooseTrainingOptions() {
     </div>
   );
 }
+
+type NumberOptionProps = {
+  name: string;
+  option: keyof TrainingOptions;
+  options: TrainingOptions;
+  onChange(e: React.ChangeEvent<HTMLInputElement>): void;
+  step?: number;
+};
+
+const NumberOption: React.FC<NumberOptionProps> = ({
+  name,
+  option,
+  options,
+  onChange,
+  step = 1,
+}) => {
+  return (
+    <>
+      <label htmlFor={option}>{name}:</label>
+      <input
+        type="number"
+        onChange={onChange}
+        min={0}
+        step={step}
+        value={options[option] as number}
+      />
+    </>
+  );
+};

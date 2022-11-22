@@ -67,7 +67,7 @@ export default function ChooseModelOptions() {
         <button
           className="button"
           onClick={() => {
-            setStage(NewModelStage.Dataset);
+            setStage(NewModelStage.TrainingOptions);
           }}
         >
           Back
