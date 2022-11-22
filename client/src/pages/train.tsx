@@ -51,7 +51,7 @@ const TrainPage: NextPage = () => {
               {models.filter(model => model.status === TrainingStatus.Finished)
                 .length > 0 && (
                 <div>
-                  <Link href={urls.transcriptions.index}>
+                  <Link href={urls.transcriptions.new}>
                     <a>
                       <button className="button">Transcribe Audio</button>
                     </a>

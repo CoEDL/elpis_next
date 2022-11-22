@@ -38,7 +38,7 @@ const DatasetsPage: NextPage = () => {
             </a>
           </Link>
           {datasets.length > 0 && (
-            <Link href={urls.train.index}>
+            <Link href={urls.train.new}>
               <a>
                 <button className="button">Train Model</button>
               </a>
