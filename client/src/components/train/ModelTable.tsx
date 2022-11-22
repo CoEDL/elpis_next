@@ -11,6 +11,7 @@ import {
   Download,
   Check,
   AlertTriangle,
+  Loader,
 } from 'react-feather';
 import {modelsAtom} from 'store';
 import {TrainingStatus} from 'types/Model';
@@ -145,7 +146,7 @@ const ModelStatusIndicator: React.FC<Status> = ({status}) => {
     case TrainingStatus.Waiting:
       return <Target color="green" />;
     case TrainingStatus.Training:
-      return <Target color="#ccc" />;
+      return <Loader color="#ccc" className="animate-spin" />;
     case TrainingStatus.Finished:
       return <Check color="#333" />;
     case TrainingStatus.Error:
