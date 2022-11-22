@@ -62,7 +62,7 @@ export default function ViewTranscriptionPage() {
   return (
     <div className="container space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="title">View Transcription</h1>
+        <h1 className="title">Transcription</h1>
         <Link href={urls.transcriptions.index}>
           <a>
             <button className="button">Back</button>
