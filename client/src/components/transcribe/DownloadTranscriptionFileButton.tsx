@@ -2,17 +2,16 @@ import {getElan, getText} from 'lib/api/transcribe';
 import fileDownload from 'js-file-download';
 import React from 'react';
 import Transcription from 'types/Transcription';
-import {Download} from 'react-feather';
 
 type Props = {
+  children: React.ReactNode;
   fileType: 'elan' | 'text';
   transcription: Transcription;
 };
 
-const DownloadTranscriptionFileButton: React.FC<Props> = ({
-  fileType,
-  transcription,
-}) => {
+const DownloadTranscriptionFileButton: React.FC<
+  Props & React.HTMLAttributes<HTMLButtonElement>
+> = ({fileType, transcription, children, ...other}) => {
   const request = fileType === 'elan' ? getElan : getText;
   const suffix = fileType === 'elan' ? '.eaf' : '.txt';
   const fileName = transcription.audioName + suffix;
@@ -33,8 +32,8 @@ const DownloadTranscriptionFileButton: React.FC<Props> = ({
   }
 
   return (
-    <button className="px-2 py-1" onClick={downloadFile}>
-      <Download />
+    <button className="px-2 py-1" {...other} onClick={downloadFile}>
+      {children}
     </button>
   );
 };

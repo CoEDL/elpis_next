@@ -1,13 +1,15 @@
 import {useAtom} from 'jotai';
 import fileDownload from 'js-file-download';
+import urls from 'lib/urls';
 import {
   deleteTranscription,
   downloadFiles,
   resetTranscriptions,
   transcribe,
 } from 'lib/api/transcribe';
+import Link from 'next/link';
 import React from 'react';
-import {Check, Target, XCircle} from 'react-feather';
+import {Check, Download, Eye, Target, XCircle} from 'react-feather';
 import {transcriptionsAtom} from 'store';
 import Transcription, {TranscriptionStatus} from 'types/Transcription';
 import DownloadTranscriptionFileButton from './DownloadTranscriptionFileButton';
@@ -152,6 +154,7 @@ const DatasetTable: React.FC = () => {
               <th>Text</th>
               <th>Elan</th>
               <th>Transcribe</th>
+              <th>View</th>
               <th>Delete</th>
             </tr>
           </thead>
@@ -166,13 +169,17 @@ const DatasetTable: React.FC = () => {
                   <DownloadTranscriptionFileButton
                     transcription={transcription}
                     fileType="text"
-                  />
+                  >
+                    <Download />
+                  </DownloadTranscriptionFileButton>
                 </td>
                 <td>
                   <DownloadTranscriptionFileButton
                     transcription={transcription}
                     fileType="elan"
-                  />
+                  >
+                    <Download />
+                  </DownloadTranscriptionFileButton>
                 </td>
 
                 <td>
@@ -186,9 +193,18 @@ const DatasetTable: React.FC = () => {
                     {transcription.status === TranscriptionStatus.Finished ? (
                       <Check />
                     ) : (
-                      <Target color="blue" />
+                      <Target color="green" />
                     )}
                   </button>
+                </td>
+                <td>
+                  <Link href={`${urls.transcriptions.view}/${index}`}>
+                    <a>
+                      <button>
+                        <Eye color="blue" />
+                      </button>
+                    </a>
+                  </Link>
                 </td>
                 <td>
                   <button
