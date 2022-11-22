@@ -43,6 +43,10 @@ class Manager(ABC):
     def folder(self) -> Path:
         return self.data_dir / self.name
 
+    @property
+    def cache(self) -> Path:
+        return self.data_dir / "cache"
+
     @abstractmethod
     def serialize(self) -> Any:
         ...

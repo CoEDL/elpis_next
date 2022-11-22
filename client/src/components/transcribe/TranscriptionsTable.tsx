@@ -1,5 +1,6 @@
 import {useAtom} from 'jotai';
 import fileDownload from 'js-file-download';
+import urls from 'lib/urls';
 import {
   deleteTranscription,
   downloadFiles,
@@ -8,10 +9,19 @@ import {
 } from 'lib/api/transcribe';
 import colours from 'lib/colours';
 import React from 'react';
-import {AlertCircle, Check, Loader, Play, Trash2} from 'react-feather';
+import {
+  AlertCircle,
+  Download,
+  Check,
+  Loader,
+  Play,
+  Trash2,
+  Eye,
+} from 'react-feather';
 import {transcriptionsAtom} from 'store';
 import Transcription, {TranscriptionStatus} from 'types/Transcription';
 import DownloadTranscriptionFileButton from './DownloadTranscriptionFileButton';
+import Link from 'next/link';
 
 const DatasetTable: React.FC = () => {
   const [transcriptions, setTranscriptions] = useAtom(transcriptionsAtom);
@@ -153,6 +163,7 @@ const DatasetTable: React.FC = () => {
               <th>Elan</th>
               <th>Status</th>
               <th>Transcribe</th>
+              <th>View</th>
               <th>Delete</th>
             </tr>
           </thead>
@@ -166,13 +177,17 @@ const DatasetTable: React.FC = () => {
                   <DownloadTranscriptionFileButton
                     transcription={transcription}
                     fileType="text"
-                  />
+                  >
+                    <Download />
+                  </DownloadTranscriptionFileButton>
                 </td>
                 <td>
                   <DownloadTranscriptionFileButton
                     transcription={transcription}
                     fileType="elan"
-                  />
+                  >
+                    <Download />
+                  </DownloadTranscriptionFileButton>
                 </td>
 
                 <td>{transcription.status}</td>
@@ -187,6 +202,13 @@ const DatasetTable: React.FC = () => {
                       status={transcription.status}
                     />
                   </button>
+                </td>
+                <td>
+                  <Link href={`${urls.transcriptions.view}/${index}`}>
+                    <a>
+                      <Eye color={colours.info} />
+                    </a>
+                  </Link>
                 </td>
                 <td>
                   <button onClick={() => removeTranscription(index)}>

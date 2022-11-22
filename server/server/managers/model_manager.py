@@ -88,9 +88,10 @@ class ModelManager(Manager):
             logger.info(f"Begin training model: {model_name}")
             job.status = TrainingStatus.TRAINING
             train(
-                job,
+                job=job,
                 output_dir=self.model_folder(model_name),
                 dataset_dir=processed_dataset_path,
+                cache_dir=self.cache,
                 log_file=self.logs_path(model_name),
             )
         except:

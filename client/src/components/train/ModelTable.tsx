@@ -5,7 +5,15 @@ import colours from 'lib/colours';
 import urls from 'lib/urls';
 import Link from 'next/link';
 import React from 'react';
-import {Trash2, Eye, Download, Check, Play} from 'react-feather';
+import {
+  Trash2,
+  Eye,
+  Download,
+  Check,
+  AlertTriangle,
+  Loader,
+  Play,
+} from 'react-feather';
 import {modelsAtom} from 'store';
 import {TrainingStatus} from 'types/Model';
 
@@ -86,14 +94,17 @@ const ModelTable: React.FC = () => {
               </td>
               <td>{model.status}</td>
               <td>
-                {model.status !== TrainingStatus.Training &&
-                model.status !== TrainingStatus.Finished ? (
-                  <button onClick={() => _trainModel(index)}>
-                    <Play color={colours.start} />
-                  </button>
-                ) : (
-                  <Check color={colours.grey} />
-                )}
+                <button
+                  onClick={() => _trainModel(index)}
+                  disabled={
+                    model.status === TrainingStatus.Training ||
+                    model.status === TrainingStatus.Finished
+                  }
+                >
+                  <ModelStatusIndicator
+                    status={model.status ?? TrainingStatus.Waiting}
+                  />
+                </button>
               </td>
               <td>
                 <button
@@ -127,6 +138,23 @@ const ModelTable: React.FC = () => {
       </table>
     </div>
   );
+};
+
+type Status = {
+  status: TrainingStatus;
+};
+
+const ModelStatusIndicator: React.FC<Status> = ({status}) => {
+  switch (status) {
+    case TrainingStatus.Waiting:
+      return <Play color={colours.start} />;
+    case TrainingStatus.Training:
+      return <Loader color={colours.unavailable} className="animate-spin" />;
+    case TrainingStatus.Finished:
+      return <Check color={colours.grey} />;
+    case TrainingStatus.Error:
+      return <AlertTriangle color={colours.warning} />;
+  }
 };
 
 export default ModelTable;
