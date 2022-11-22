@@ -1,7 +1,8 @@
 import {useAtom} from 'jotai';
 import {deleteDataset} from 'lib/api/datasets';
+import colours from 'lib/colours';
 import React from 'react';
-import {XCircle} from 'react-feather';
+import {Trash2} from 'react-feather';
 import {datasetsAtom} from 'store';
 
 const DatasetTable: React.FC = () => {
@@ -38,13 +39,9 @@ const DatasetTable: React.FC = () => {
               <td>{dataset.name}</td>
               <td>Local</td>
               <td>{dataset.files.length}</td>
-
               <td>
-                <button
-                  className="px-2 py-1"
-                  onClick={() => _deleteDataset(dataset.name)}
-                >
-                  <XCircle color="red" />
+                <button onClick={() => _deleteDataset(dataset.name)}>
+                  <Trash2 color={colours.delete} />
                 </button>
               </td>
             </tr>

@@ -1,17 +1,18 @@
 import {useAtom} from 'jotai';
 import fileDownload from 'js-file-download';
 import {deleteModel, downloadModel, trainModel} from 'lib/api/models';
+import colours from 'lib/colours';
 import urls from 'lib/urls';
 import Link from 'next/link';
 import React from 'react';
 import {
-  XCircle,
+  Trash2,
   Eye,
-  Target,
   Download,
   Check,
   AlertTriangle,
   Loader,
+  Play,
 } from 'react-feather';
 import {modelsAtom} from 'store';
 import {TrainingStatus} from 'types/Model';
@@ -112,7 +113,9 @@ const ModelTable: React.FC = () => {
                 >
                   <Download
                     color={
-                      model.status === TrainingStatus.Finished ? '#333' : '#ccc'
+                      model.status === TrainingStatus.Finished
+                        ? colours.grey
+                        : colours.unavailable
                     }
                   />
                 </button>
@@ -120,13 +123,13 @@ const ModelTable: React.FC = () => {
               <td>
                 <Link href={urls.train.view + '/' + model.modelName}>
                   <a>
-                    <Eye color="blue" />
+                    <Eye color={colours.info} />
                   </a>
                 </Link>
               </td>
               <td>
                 <button onClick={() => _deleteModel(model.modelName)}>
-                  <XCircle color="red" />
+                  <Trash2 color={colours.delete} />
                 </button>
               </td>
             </tr>
@@ -144,13 +147,13 @@ type Status = {
 const ModelStatusIndicator: React.FC<Status> = ({status}) => {
   switch (status) {
     case TrainingStatus.Waiting:
-      return <Target color="green" />;
+      return <Play color={colours.start} />;
     case TrainingStatus.Training:
-      return <Loader color="#ccc" className="animate-spin" />;
+      return <Loader color={colours.unavailable} className="animate-spin" />;
     case TrainingStatus.Finished:
-      return <Check color="#333" />;
+      return <Check color={colours.grey} />;
     case TrainingStatus.Error:
-      return <AlertTriangle color="orange" />;
+      return <AlertTriangle color={colours.warning} />;
   }
 };
 

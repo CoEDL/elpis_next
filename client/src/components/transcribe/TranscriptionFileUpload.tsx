@@ -2,8 +2,9 @@ import React from 'react';
 import FileUpload from 'components/FileUpload';
 import {transcriptionFilesAtom} from 'store';
 import {useAtom} from 'jotai';
-import {Check, X, XCircle} from 'react-feather';
+import {Check, X, Trash2} from 'react-feather';
 import {FileType, parseFileType} from 'lib/dataset';
+import colours from 'lib/colours';
 
 export default function TranscriptionFileUpload() {
   const [files, setFiles] = useAtom(transcriptionFilesAtom);
@@ -37,9 +38,9 @@ export default function TranscriptionFileUpload() {
                     <td>{file.name}</td>
                     <td>
                       {parseFileType(file.name) === FileType.Audio ? (
-                        <Check color="green" />
+                        <Check color={colours.success} />
                       ) : (
-                        <X color="red" />
+                        <X color={colours.warning} />
                       )}
                     </td>
                     <td>
@@ -50,7 +51,7 @@ export default function TranscriptionFileUpload() {
                           )
                         }
                       >
-                        <XCircle color="red" />
+                        <Trash2 color={colours.delete} />
                       </button>
                     </td>
                   </tr>
