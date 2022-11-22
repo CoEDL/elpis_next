@@ -6,8 +6,9 @@ import {
   resetTranscriptions,
   transcribe,
 } from 'lib/api/transcribe';
+import colours from 'lib/colours';
 import React from 'react';
-import {Check, Target, XCircle} from 'react-feather';
+import {AlertCircle, Check, Loader, Play, Trash2} from 'react-feather';
 import {transcriptionsAtom} from 'store';
 import Transcription, {TranscriptionStatus} from 'types/Transcription';
 import DownloadTranscriptionFileButton from './DownloadTranscriptionFileButton';
@@ -148,9 +149,9 @@ const DatasetTable: React.FC = () => {
             <tr>
               <th>Model Name</th>
               <th>Audio</th>
-              <th>Status</th>
               <th>Text</th>
               <th>Elan</th>
+              <th>Status</th>
               <th>Transcribe</th>
               <th>Delete</th>
             </tr>
@@ -160,7 +161,6 @@ const DatasetTable: React.FC = () => {
               <tr key={index}>
                 <td>{transcription.modelLocation}</td>
                 <td>{transcription.audioName}.wav</td>
-                <td>{transcription.status}</td>
 
                 <td>
                   <DownloadTranscriptionFileButton
@@ -175,27 +175,22 @@ const DatasetTable: React.FC = () => {
                   />
                 </td>
 
+                <td>{transcription.status}</td>
                 <td>
                   <button
-                    className="px-2 py-1"
                     onClick={() => _transcribe(transcription)}
                     disabled={
                       transcription.status === TranscriptionStatus.Finished
                     }
                   >
-                    {transcription.status === TranscriptionStatus.Finished ? (
-                      <Check />
-                    ) : (
-                      <Target color="blue" />
-                    )}
+                    <TranscriptionStatusIndicator
+                      status={transcription.status}
+                    />
                   </button>
                 </td>
                 <td>
-                  <button
-                    className="px-2 py-1"
-                    onClick={() => removeTranscription(index)}
-                  >
-                    <XCircle color="red" />
+                  <button onClick={() => removeTranscription(index)}>
+                    <Trash2 color={colours.delete} />
                   </button>
                 </td>
               </tr>
@@ -205,6 +200,23 @@ const DatasetTable: React.FC = () => {
       </div>
     </>
   );
+};
+
+type IndicatorProps = {
+  status: TranscriptionStatus;
+};
+
+const TranscriptionStatusIndicator: React.FC<IndicatorProps> = ({status}) => {
+  switch (status) {
+    case TranscriptionStatus.Waiting:
+      return <Play color={colours.start} />;
+    case TranscriptionStatus.Transcribing:
+      return <Loader color={colours.unavailable} className="animate-spin" />;
+    case TranscriptionStatus.Finished:
+      return <Check color={colours.grey} />;
+    case TranscriptionStatus.Error:
+      return <AlertCircle color={colours.error} />;
+  }
 };
 
 export default DatasetTable;

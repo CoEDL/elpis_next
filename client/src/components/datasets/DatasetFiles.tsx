@@ -2,7 +2,7 @@ import FileDropper from 'components/FileUpload';
 import {useAtom} from 'jotai';
 import React from 'react';
 import {filesAtom} from 'store';
-import {XCircle, Check, X, AlertTriangle} from 'react-feather';
+import {Trash2, Check, X, AlertTriangle} from 'react-feather';
 import {FileType, hasMatch, parseFileType} from 'lib/dataset';
 
 const DatasetFiles: React.FC = () => {
@@ -37,7 +37,7 @@ const DatasetFiles: React.FC = () => {
         </td>
         <td>
           <button className="px-2 py-1" onClick={() => deleteFile(file.name)}>
-            <XCircle color="red" />
+            <Trash2 color="red" />
           </button>
         </td>
       </tr>

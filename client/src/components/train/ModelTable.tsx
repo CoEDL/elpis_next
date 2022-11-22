@@ -1,10 +1,11 @@
 import {useAtom} from 'jotai';
 import fileDownload from 'js-file-download';
 import {deleteModel, downloadModel, trainModel} from 'lib/api/models';
+import colours from 'lib/colours';
 import urls from 'lib/urls';
 import Link from 'next/link';
 import React from 'react';
-import {XCircle, Eye, Target, Download, Check} from 'react-feather';
+import {Trash2, Eye, Download, Check, Play} from 'react-feather';
 import {modelsAtom} from 'store';
 import {TrainingStatus} from 'types/Model';
 
@@ -88,10 +89,10 @@ const ModelTable: React.FC = () => {
                 {model.status !== TrainingStatus.Training &&
                 model.status !== TrainingStatus.Finished ? (
                   <button onClick={() => _trainModel(index)}>
-                    <Target color="green" />
+                    <Play color={colours.start} />
                   </button>
                 ) : (
-                  <Check />
+                  <Check color={colours.grey} />
                 )}
               </td>
               <td>
@@ -99,19 +100,25 @@ const ModelTable: React.FC = () => {
                   onClick={() => download(model.modelName)}
                   disabled={model.status !== TrainingStatus.Finished}
                 >
-                  <Download />
+                  <Download
+                    color={
+                      model.status === TrainingStatus.Finished
+                        ? colours.grey
+                        : colours.unavailable
+                    }
+                  />
                 </button>
               </td>
               <td>
                 <Link href={urls.train.view + '/' + model.modelName}>
                   <a>
-                    <Eye color="blue" />
+                    <Eye color={colours.info} />
                   </a>
                 </Link>
               </td>
               <td>
                 <button onClick={() => _deleteModel(model.modelName)}>
-                  <XCircle color="red" />
+                  <Trash2 color={colours.delete} />
                 </button>
               </td>
             </tr>
