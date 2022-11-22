@@ -4,7 +4,14 @@ import {deleteModel, downloadModel, trainModel} from 'lib/api/models';
 import urls from 'lib/urls';
 import Link from 'next/link';
 import React from 'react';
-import {XCircle, Eye, Target, Download, Check} from 'react-feather';
+import {
+  XCircle,
+  Eye,
+  Target,
+  Download,
+  Check,
+  AlertTriangle,
+} from 'react-feather';
 import {modelsAtom} from 'store';
 import {TrainingStatus} from 'types/Model';
 
@@ -85,14 +92,17 @@ const ModelTable: React.FC = () => {
               </td>
               <td>{model.status}</td>
               <td>
-                {model.status !== TrainingStatus.Training &&
-                model.status !== TrainingStatus.Finished ? (
-                  <button onClick={() => _trainModel(index)}>
-                    <Target color="green" />
-                  </button>
-                ) : (
-                  <Check />
-                )}
+                <button
+                  onClick={() => _trainModel(index)}
+                  disabled={
+                    model.status === TrainingStatus.Training ||
+                    model.status === TrainingStatus.Finished
+                  }
+                >
+                  <ModelStatusIndicator
+                    status={model.status ?? TrainingStatus.Waiting}
+                  />
+                </button>
               </td>
               <td>
                 <button
@@ -120,6 +130,23 @@ const ModelTable: React.FC = () => {
       </table>
     </div>
   );
+};
+
+type Status = {
+  status: TrainingStatus;
+};
+
+const ModelStatusIndicator: React.FC<Status> = ({status}) => {
+  switch (status) {
+    case TrainingStatus.Waiting:
+      return <Target color="green" />;
+    case TrainingStatus.Training:
+      return <Target color="grey" />;
+    case TrainingStatus.Finished:
+      return <Check color="green" />;
+    case TrainingStatus.Error:
+      return <AlertTriangle color="orange" />;
+  }
 };
 
 export default ModelTable;
