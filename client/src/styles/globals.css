@@ -40,7 +40,7 @@
   }
 
   .table tr td {
-    @apply first:font-normal items-center;
+    @apply first:font-normal;
   }
 
   .button {
