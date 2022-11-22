@@ -109,7 +109,11 @@ const ModelTable: React.FC = () => {
                   onClick={() => download(model.modelName)}
                   disabled={model.status !== TrainingStatus.Finished}
                 >
-                  <Download />
+                  <Download
+                    color={
+                      model.status === TrainingStatus.Finished ? '#333' : '#ccc'
+                    }
+                  />
                 </button>
               </td>
               <td>
@@ -141,9 +145,9 @@ const ModelStatusIndicator: React.FC<Status> = ({status}) => {
     case TrainingStatus.Waiting:
       return <Target color="green" />;
     case TrainingStatus.Training:
-      return <Target color="grey" />;
+      return <Target color="#ccc" />;
     case TrainingStatus.Finished:
-      return <Check color="green" />;
+      return <Check color="#333" />;
     case TrainingStatus.Error:
       return <AlertTriangle color="orange" />;
   }
