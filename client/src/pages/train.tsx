@@ -7,6 +7,7 @@ import {getModels} from 'lib/api/models';
 import Link from 'next/link';
 import urls from 'lib/urls';
 import {TrainingStatus} from 'types/Model';
+import ClientOnly from 'components/ClientOnly';
 
 const TrainPage: NextPage = () => {
   const [models, setModels] = useAtom(modelsAtom);
@@ -31,7 +32,7 @@ const TrainPage: NextPage = () => {
           <h1 className="title">Train Models</h1>
           <p className="mt-2 text-gray-800">Blah blah blah</p>
 
-          <div className="space-y-4">
+          <ClientOnly className="space-y-4">
             <h2 className="subtitle mt-8 mb-2">Your Models</h2>
             <ModelTable />
             <div className="flex items-center justify-between">
@@ -59,7 +60,7 @@ const TrainPage: NextPage = () => {
                 </div>
               )}
             </div>
-          </div>
+          </ClientOnly>
         </div>
       </div>
     </div>

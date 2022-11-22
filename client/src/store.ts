@@ -1,5 +1,5 @@
 import {atom} from 'jotai';
-import {atomWithReset} from 'jotai/utils';
+import {atomWithReset, atomWithStorage} from 'jotai/utils';
 import {
   Dataset,
   CleaningOptions,
@@ -22,7 +22,7 @@ const DEFAULT_CLEANING_OPTONS: CleaningOptions = {
 };
 const DEFAULT_DATASET_NAME = 'Dataset';
 
-export const datasetsAtom = atom<Dataset[]>([]);
+export const datasetsAtom = atomWithStorage<Dataset[]>('datasets', []);
 export const filesAtom = atomWithReset<File[]>([]);
 export const elanOptionsAtom = atomWithReset<ElanOptions>(DEFAULT_ELAN_OPTIONS);
 export const cleaningOptionsAtom = atomWithReset<CleaningOptions>(
@@ -32,7 +32,7 @@ export const datasetNameAtom = atomWithReset<string>(DEFAULT_DATASET_NAME);
 export const selectedDataset = atom<Dataset | null>(null);
 
 // =========== Models
-export const modelsAtom = atom<Model[]>([]);
+export const modelsAtom = atomWithStorage<Model[]>('models', []);
 
 export const trainingStageAtom = atomWithReset(TrainingStage.CreateDataset);
 export const activeStageAtom = atomWithReset(TrainingStage.CreateDataset);
@@ -46,4 +46,7 @@ export const newModelStageAtom = atomWithReset<NewModelStage>(
 export const modelIsLocalAtom = atom<boolean>(true);
 export const modelLocationAtom = atom<string>('');
 export const transcriptionFilesAtom = atomWithReset<File[]>([]);
-export const transcriptionsAtom = atom<Transcription[]>([]);
+export const transcriptionsAtom = atomWithStorage<Transcription[]>(
+  'transcriptions',
+  []
+);
