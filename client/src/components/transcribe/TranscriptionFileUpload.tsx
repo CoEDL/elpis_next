@@ -40,7 +40,7 @@ export default function TranscriptionFileUpload() {
                       {parseFileType(file.name) === FileType.Audio ? (
                         <Check color={colours.success} />
                       ) : (
-                        <X color={colours.error} />
+                        <X color={colours.warning} />
                       )}
                     </td>
                     <td>

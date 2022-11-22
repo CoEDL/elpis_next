@@ -4,6 +4,7 @@ import React from 'react';
 import {filesAtom} from 'store';
 import {Trash2, Check, X, AlertTriangle} from 'react-feather';
 import {FileType, hasMatch, parseFileType} from 'lib/dataset';
+import colours from 'lib/colours';
 
 const DatasetFiles: React.FC = () => {
   const [files, setFiles] = useAtom(filesAtom);
@@ -30,14 +31,14 @@ const DatasetFiles: React.FC = () => {
             file.name,
             files.map(file => file.name)
           ) ? (
-            <Check color="green" />
+            <Check color={colours.success} />
           ) : (
-            <X color="red" />
+            <X color={colours.warning} />
           )}
         </td>
         <td>
           <button className="px-2 py-1" onClick={() => deleteFile(file.name)}>
-            <Trash2 color="red" />
+            <Trash2 color={colours.delete} />
           </button>
         </td>
       </tr>
@@ -70,7 +71,7 @@ const DatasetFiles: React.FC = () => {
       {unsupportedFiles.length > 0 && (
         <div className="mt-4 p-4 border border-orange-300 rounded">
           <div className="flex space-x-2">
-            <AlertTriangle></AlertTriangle>
+            <AlertTriangle color={colours.warning}></AlertTriangle>
             <p>Unsupported Files:</p>
           </div>
           <div className="mt-2 flex text-sm">
