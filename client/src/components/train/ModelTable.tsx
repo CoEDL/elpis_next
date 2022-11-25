@@ -5,17 +5,10 @@ import colours from 'lib/colours';
 import urls from 'lib/urls';
 import Link from 'next/link';
 import React from 'react';
-import {
-  Trash2,
-  Eye,
-  Download,
-  Check,
-  AlertTriangle,
-  Loader,
-  Play,
-} from 'react-feather';
+import {Trash2, Eye, Download} from 'react-feather';
 import {modelsAtom} from 'store';
 import {TrainingStatus} from 'types/Model';
+import TrainingStatusIndicator from 'components/train/TrainingStatusIndicator';
 
 const ModelTable: React.FC = () => {
   const [models, setModels] = useAtom(modelsAtom);
@@ -101,7 +94,7 @@ const ModelTable: React.FC = () => {
                     model.status === TrainingStatus.Finished
                   }
                 >
-                  <ModelStatusIndicator
+                  <TrainingStatusIndicator
                     status={model.status ?? TrainingStatus.Waiting}
                   />
                 </button>
@@ -138,23 +131,6 @@ const ModelTable: React.FC = () => {
       </table>
     </div>
   );
-};
-
-type Status = {
-  status: TrainingStatus;
-};
-
-const ModelStatusIndicator: React.FC<Status> = ({status}) => {
-  switch (status) {
-    case TrainingStatus.Waiting:
-      return <Play color={colours.start} />;
-    case TrainingStatus.Training:
-      return <Loader color={colours.unavailable} className="animate-spin" />;
-    case TrainingStatus.Finished:
-      return <Check color={colours.grey} />;
-    case TrainingStatus.Error:
-      return <AlertTriangle color={colours.warning} />;
-  }
 };
 
 export default ModelTable;
