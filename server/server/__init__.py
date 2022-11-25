@@ -20,6 +20,8 @@ def init_app():
         supports_credentials=True,
     )
 
+    # TODO setup tensorboard
+
     with app.app_context():
         # import routes and blueprints
         from server.api import api_bp
