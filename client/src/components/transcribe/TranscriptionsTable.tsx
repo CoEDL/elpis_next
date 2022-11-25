@@ -55,15 +55,15 @@ const DatasetTable: React.FC = () => {
     updateTranscription(transcription);
   };
 
-  const transcribeEverything = async () => {
-    const readyTranscriptions = transcriptions.filter(
-      transcription =>
-        ![
-          TranscriptionStatus.Transcribing,
-          TranscriptionStatus.Finished,
-        ].includes(transcription.status)
-    );
+  const readyTranscriptions = transcriptions.filter(
+    transcription =>
+      ![
+        TranscriptionStatus.Transcribing,
+        TranscriptionStatus.Finished,
+      ].includes(transcription.status)
+  );
 
+  const transcribeEverythingAsync = async () => {
     // Group by model and transcribe the first transcription of each model
     // first, to take better advantage of the caching performed by the server.
     // The rest can be transcribed asynchronously
@@ -85,6 +85,12 @@ const DatasetTable: React.FC = () => {
       groupedByModel[modelLocation].slice(1).forEach(_transcribe);
     });
     return await Promise.all(promises);
+  };
+
+  const transcribeEverything = async () => {
+    for (const transcription of readyTranscriptions) {
+      await _transcribe(transcription);
+    }
   };
 
   const removeTranscription = async (index: number) => {
