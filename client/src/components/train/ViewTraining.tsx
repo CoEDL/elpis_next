@@ -3,6 +3,8 @@ import fileDownload from 'js-file-download';
 import React, {useEffect, useRef, useState} from 'react';
 import Model, {TrainingStatus} from 'types/Model';
 import TrainingStatusIndicator from './TrainingStatusIndicator';
+import Link from 'next/link';
+import {tensorboard} from 'lib/urls';
 
 type Props = {
   model: Model;
@@ -69,9 +71,16 @@ const ViewTraining: React.FC<Props> = ({model}) => {
           <p key={index}>{log}</p>
         ))}
       </div>
-      <button className="button" onClick={downloadLogs}>
-        Download Logs
-      </button>
+      <div className="flex space-x-2">
+        <button className="button" onClick={downloadLogs}>
+          Download Logs
+        </button>
+        <Link href={tensorboard}>
+          <a>
+            <button className="button">Tensorboard</button>
+          </a>
+        </Link>
+      </div>
     </div>
   );
 };

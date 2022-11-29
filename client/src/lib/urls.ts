@@ -1,5 +1,10 @@
+export const host = 'http://localhost';
+
 export const serverPort = process.env.SERVER_PORT ?? '5001';
-export const server = 'http://localhost:' + serverPort;
+export const server = `${host}:${serverPort}`;
+
+export const tensorboardPort = process.env.TENSORBOARD_PORT ?? '6006';
+export const tensorboard = `${host}:${tensorboardPort}`;
 
 export const urls = {
   train: {
