@@ -4,7 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 
 
-def init_app():
+def create_server_app():
     """Initialize the core application"""
 
     app = Flask(__name__, instance_relative_config=False)
