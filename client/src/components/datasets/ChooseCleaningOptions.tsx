@@ -36,7 +36,7 @@ const ChooseCleaningOptions: React.FC = () => {
 
   return (
     <div className="p-4 border rounded">
-      <h2 className="text-xl">Choose Cleaning Options</h2>
+      <h2 className="subtitle">Choose Cleaning Options</h2>
 
       <div className="mt-4 space-y-2">
         <div className="space-x-2">
@@ -77,8 +77,11 @@ const ChooseCleaningOptions: React.FC = () => {
       </div>
       <div className="mt-4 flex gap-1">
         {cleaningOptions.wordsToRemove.map(word => (
-          <div key={word} className="border p-1 rounded flex space-x-2">
-            <p>{word}</p>
+          <div
+            key={word}
+            className="shadow bg-purple-50 border border-purple-200 p-1 rounded flex items-center space-x-2"
+          >
+            <p className="text-purple-400">{word}</p>
             <button onClick={() => removeWord(word)}>
               <X />
             </button>

@@ -46,12 +46,12 @@ const DatasetFiles: React.FC = () => {
 
   return (
     <div className="p-4 border rounded">
-      <h2 className="text-xl mb-2">Upload Dataset Files</h2>
+      <h2 className="subtitle mb-4">Upload Dataset Files</h2>
       <FileDropper callback={_files => setFiles([...files, ..._files])} />
       {files.length > 0 && (
-        <div className="p-4 mt-8 rounded border">
-          <p className="text-lg">Uploaded Files:</p>
-          <table className="w-full mt-2">
+        <>
+          <p className="mt-8 text-lg">Files to Upload:</p>
+          <table className="w-full mt-2 table">
             <thead className="text-sm">
               <tr>
                 <th className="text-left">File name</th>
@@ -65,7 +65,7 @@ const DatasetFiles: React.FC = () => {
               {fileRows(audioFiles, 'Audio')}
             </tbody>
           </table>
-        </div>
+        </>
       )}
 
       {unsupportedFiles.length > 0 && (

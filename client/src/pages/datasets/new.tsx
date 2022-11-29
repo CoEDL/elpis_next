@@ -63,15 +63,19 @@ const NewDatasetPage: React.FC = () => {
   return (
     <div className="container py-8 space-y-4">
       <h1 className="text-3xl">New Dataset</h1>
+      <p className="page-description">Some description</p>
+
       <DatasetFiles />
       <ChooseElanOptions />
       <ChooseCleaningOptions />
       <ChooseDatasetName />
+
       <div className="flex justify-end">
         <button className="button" onClick={save} disabled={!canCreate()}>
           Save
         </button>
       </div>
+
       {error && <p className="text-red-400">{error}</p>}
     </div>
   );

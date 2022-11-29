@@ -6,7 +6,7 @@ const Home: NextPage = () => {
   return (
     <div className="container">
       <h1 className="text-center title">ELPIS</h1>
-      <p className="text-center mt-2 text-gray-800">Blah blah blah</p>
+      <p className="page-description text-center mt-2">Blah blah blah</p>
 
       <div className="mt-12">
         <p className="subtitle text-center">Choose a Task</p>

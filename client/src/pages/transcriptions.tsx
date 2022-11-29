@@ -27,7 +27,7 @@ export default function TranscriptionsPage() {
   return (
     <div className="container">
       <h1 className="title">Transcriptions</h1>
-      <p className="mt-2 text-gray-800">Blah blah blah</p>
+      <p className="mt-2 page-description">Blah blah blah</p>
 
       <ClientOnly className="mt-8 space-y-4">
         <h2 className="subtitle">Your Transcriptions</h2>

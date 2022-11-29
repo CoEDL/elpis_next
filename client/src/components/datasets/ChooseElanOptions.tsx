@@ -20,7 +20,7 @@ const ChooseElanOptions: React.FC = () => {
 
   return (
     <div className="p-4 border rounded">
-      <h2 className="text-xl">Choose Elan Options</h2>
+      <h2 className="subtitle">Choose Elan Options</h2>
 
       <div className="mt-4 space-y-2">
         <div className="space-x-2">
