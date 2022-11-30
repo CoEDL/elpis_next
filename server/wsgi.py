@@ -1,8 +1,8 @@
 import os
 
-from server import init_app
+from server import create_server_app
 
-app = init_app()
+app = create_server_app()
 
 
 if __name__ == "__main__":

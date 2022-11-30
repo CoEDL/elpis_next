@@ -3,8 +3,10 @@ __version__ = "0.1.0"
 from flask import Flask
 from flask_cors import CORS
 
+from server.tensorboard import launch_tensorboard
 
-def init_app():
+
+def create_server_app():
     """Initialize the core application"""
 
     app = Flask(__name__, instance_relative_config=False)
@@ -19,6 +21,8 @@ def init_app():
         ],
         supports_credentials=True,
     )
+
+    launch_tensorboard(app)
 
     with app.app_context():
         # import routes and blueprints

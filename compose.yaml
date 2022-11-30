@@ -9,9 +9,11 @@ services:
           memory: 8gb
     ports:
       - 5001:5001
+      - 6006:6006
     environment:
       - DATA_DIR=/data
       - PORT=5001
+      - TENSORBOARD_PORT=6006
     volumes:
       - type: bind
         source: ./data
@@ -27,4 +29,5 @@ services:
       - 3000:3000
     environment:
       - SERVER_PORT=5001
+      - TENSORBOARD_PORT=6006
     restart: on-failure

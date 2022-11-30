@@ -1,13 +1,13 @@
 import pytest
 from flask import Flask
 
-from server import init_app
+from server import create_server_app
 from server.interface import Interface
 
 
 @pytest.fixture()
 def app():
-    app = init_app()
+    app = create_server_app()
     yield app
 
 

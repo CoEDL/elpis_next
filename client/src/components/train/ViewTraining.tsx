@@ -2,6 +2,8 @@ import {getModelLogs} from 'lib/api/models';
 import fileDownload from 'js-file-download';
 import React, {useEffect, useState} from 'react';
 import Model, {TrainingStatus} from 'types/Model';
+import Link from 'next/link';
+import {tensorboard} from 'lib/urls';
 import TrainingStatusIndicator from 'components/train/TrainingStatusIndicator';
 
 type Props = {
@@ -65,9 +67,16 @@ const ViewTraining: React.FC<Props> = ({model}) => {
           <p key={index}>{log}</p>
         ))}
       </div>
-      <button className="button" onClick={downloadLogs}>
-        Download Logs
-      </button>
+      <div className="flex space-x-2">
+        <button className="button" onClick={downloadLogs}>
+          Download Logs
+        </button>
+        <Link href={tensorboard}>
+          <a target="_blank">
+            <button className="button">Tensorboard</button>
+          </a>
+        </Link>
+      </div>
     </div>
   );
 };
