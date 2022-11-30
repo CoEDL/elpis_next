@@ -87,9 +87,9 @@ export default function ChooseTrainingOptions() {
 
   return (
     <div className="section">
-      <h2 className="text-xl">Choose Training Options</h2>
+      <h2 className="subtitle">Choose Training Options</h2>
 
-      <div className="grid grid-cols-2 gap-2 mt-8 items-center">
+      <div className="grid grid-cols-2 gap-2 mt-4 items-center">
         {numberOptionData.map(data => (
           <NumberOption key={data.name} {...data} />
         ))}

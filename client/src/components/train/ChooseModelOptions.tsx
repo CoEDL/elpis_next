@@ -41,9 +41,9 @@ export default function ChooseModelOptions() {
 
   return (
     <div className="section">
-      <h2 className="text-xl">Choose Model Options</h2>
+      <h2 className="subtitle">Choose Model Options</h2>
 
-      <div className="grid grid-cols-2 gap-2 mt-8 items-center">
+      <div className="grid grid-cols-2 gap-2 mt-4 items-center">
         <label htmlFor="baseModel">Base Model:</label>
         <input
           id="baseModel"

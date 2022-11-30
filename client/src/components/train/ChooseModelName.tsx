@@ -16,7 +16,7 @@ export default function ChooseModelName() {
   const hasName = name !== '';
   return (
     <div className="section">
-      <h2 className="text-xl">Choose Model Name</h2>
+      <h2 className="subtitle">Choose Model Name</h2>
 
       <div className="mt-4 space-x-2">
         <label>Name:</label>

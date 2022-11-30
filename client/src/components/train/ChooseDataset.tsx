@@ -20,7 +20,7 @@ export default function ChooseDataset() {
   if (datasets.length === 0) {
     return (
       <div className="section space-y-2">
-        <h2 className="text-xl">Choose Dataset</h2>
+        <h2 className="subtitle">Choose Dataset</h2>
         <p>
           No datasets available! A local dataset is needed before creating a
           model.
@@ -35,7 +35,7 @@ export default function ChooseDataset() {
 
   return (
     <div className="section">
-      <h2 className="text-xl">Choose Dataset</h2>
+      <h2 className="subtitle">Choose Dataset</h2>
 
       <div className="mt-4 space-x-2 flex">
         {datasets.map(dataset => (

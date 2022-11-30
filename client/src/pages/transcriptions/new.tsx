@@ -45,7 +45,7 @@ export default function TranscribePage() {
     <div className="container flex flex-col space-y-4">
       <div>
         <h1 className="title">New Transcriptions</h1>
-        <p className="">blah</p>
+        <p className="page-description mt-2">blah</p>
       </div>
 
       <div className="section space-y-4">

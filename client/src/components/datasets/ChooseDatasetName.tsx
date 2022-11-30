@@ -6,8 +6,8 @@ export default function ChooseDatasetName() {
   const [name, setName] = useAtom(datasetNameAtom);
 
   return (
-    <div className="p-4 border">
-      <h2 className="text-xl">Choose Dataset Name</h2>
+    <div className="section">
+      <h2 className="subtitle">Choose Dataset Name</h2>
 
       <div className="mt-4 space-x-2">
         <label>Name:</label>

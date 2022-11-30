@@ -40,7 +40,7 @@ const NewModelPage: React.FC = () => {
       <NewModelSidebar />
       <div className="flex-1 space-y-4">
         <h1 className="title">{title()}</h1>
-        <p>Blah</p>
+        <p className="page-description">Blah</p>
 
         {renderStage()}
       </div>

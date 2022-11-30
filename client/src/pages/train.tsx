@@ -30,7 +30,7 @@ const TrainPage: NextPage = () => {
       <div className="flex space-x-8">
         <div className="w-full">
           <h1 className="title">Train Models</h1>
-          <p className="mt-2 text-gray-800">Blah blah blah</p>
+          <p className="mt-2 page-description">Blah blah blah</p>
 
           <ClientOnly className="space-y-4">
             <h2 className="subtitle mt-8 mb-2">Your Models</h2>
