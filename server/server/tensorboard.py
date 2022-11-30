@@ -7,10 +7,9 @@ from server.interface import Interface
 
 HOST = "0.0.0.0"
 DEFAULT_TENSORBOARD_PORT = "6006"
-RUNNING = "tensorboard_running"
 
 
-def setup_tensorboard(app: Flask) -> None:
+def launch_tensorboard(app: Flask) -> None:
     interface = Interface.from_app(app)
     model_dir = interface.model_manager.folder
 

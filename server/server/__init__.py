@@ -3,7 +3,7 @@ __version__ = "0.1.0"
 from flask import Flask
 from flask_cors import CORS
 
-from server.tensorboard import setup_tensorboard
+from server.tensorboard import launch_tensorboard
 
 
 def create_server_app():
@@ -22,7 +22,7 @@ def create_server_app():
         supports_credentials=True,
     )
 
-    setup_tensorboard(app)
+    launch_tensorboard(app)
 
     with app.app_context():
         # import routes and blueprints
