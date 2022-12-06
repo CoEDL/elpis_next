@@ -1,12 +1,18 @@
+import React from 'react';
 import urls from 'lib/urls';
 import type {NextPage} from 'next';
 import Link from 'next/link';
+import {useTranslation} from 'next-i18next';
 
 const Home: NextPage = () => {
+  const {t} = useTranslation('common');
+
   return (
     <div className="container">
       <h1 className="text-center title">ELPIS</h1>
-      <p className="page-description text-center mt-2">Blah blah blah</p>
+      <p className="page-description text-center mt-2">
+        {t('welcome.description', 'ahhh')}
+      </p>
 
       <div className="mt-12">
         <p className="subtitle text-center">Choose a Task</p>
