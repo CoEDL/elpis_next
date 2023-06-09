@@ -1,4 +1,6 @@
 # Elpis Next
+This is a slimmer rewrite of the [elpis](https://github.com/CoEDL/elpis) project.
+
 ## Running the client and server
 - First, clone the repo: `git clone https://github.com/CoEDL/elpis_next.git`
 - `cd elpis_next`
