@@ -29,7 +29,7 @@ Make sure you're logged in with credentials:
 - `docker login` (create login through Docker Hub if necessary)
 
 Still an issue?
-- in `~/.docker/config.json`, change `credsStore` to `credStore`
+- in `~/.docker/config.json`, try changing `credsStore` to `credStore` (or the other way around if you're using Docker Desktop)
 
 ##### `docker compose up` runs but doesn't set anything up at localhost:3000
 Remove these lines from `./compose.yaml`:
@@ -87,7 +87,7 @@ python3
 ```
 
 ##### No module named 'poetry.repositories.http_repository'
-[install poetry](https://python-poetry.org/docs/)
+[Install poetry](https://python-poetry.org/docs/)
 
 ##### ERROR: There are no scenarios; must have at least one. (Yarn)
 You've got the wrong `yarn` (`cmdtest` package)---make sure it's through `npm install --global yarn`
@@ -110,17 +110,24 @@ Visit [localhost:3000](http://localhost:3000) and begin your transcription workf
 (It may take a little while to process)
 
 ### Training a model
-- Home > Train a Model OR Datasets > Train Model OR Train > Create New OR Train > Upload Model
+- Navigate to the training page via any of the below routes:
+    - Home > Train a Model
+    - Datasets > Train Model
+    - Train > Create New
+    - Train > Upload Model
 - Enter details as necessary
 - Click the green arrow under the Train column of the table for any pre-existing model
 
 ### Transcribing audio
-- Home > Transcribe Audio > Create New OR Train > Transcribe Audio OR Transcribe > Create New
+- Navigate to transcription page:
+    - Home > Transcribe Audio > Create New
+    - Train > Transcribe Audio
+    - Transcribe > Create New
 - Select trained model
 - Add file for transcription
 - Click Transcribe
 - Click the green arrow under the column labelled Transcribe
 
-### Troubleshooting
+### Runtime Troubleshooting
 #### ffmpeg was not found but is required to load audio files from filename
 Ensure ffmpeg is installed in your environment; restart and try again
