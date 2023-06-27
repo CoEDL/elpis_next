@@ -1,13 +1,15 @@
 import json
+import shutil
 from http import HTTPStatus
 from pathlib import Path
 from typing import List
 
 from elpis.datasets import Dataset
 from elpis.datasets.dataset import CleaningOptions, ElanOptions
+from elpis.datasets.preprocessing import has_finished_processing
 from flask import Blueprint, Response
 from flask import current_app as app
-from flask import jsonify, request
+from flask import jsonify, request, send_file
 from humps.main import camelize, decamelize
 from loguru import logger
 from werkzeug.utils import secure_filename
@@ -17,6 +19,8 @@ from server.interface import Interface
 from server.managers.dataset_manager import FolderType
 
 dataset_bp = Blueprint("dataset_bp", __name__, url_prefix="/datasets")
+
+TEMP_DIR = Path("/tmp")
 
 
 @dataset_bp.route("/", methods=["GET"])
@@ -112,3 +116,25 @@ def delete_dataset(dataset_name: str):
 
     manager.delete_dataset(dataset_name)
     return Response(status=HTTPStatus.NO_CONTENT)
+
+
+@dataset_bp.route("/download/<dataset_name>", methods=["GET"])
+def download_dataset(dataset_name: str):
+    interface = Interface.from_app(app)
+    manager = interface.dataset_manager
+
+    if not manager.is_dataset_processed(dataset_name):
+        return bad_request(f"Dataset {dataset_name} either doesn't exist or hasn't finished processing!")
+
+    zipped_dataset_path = TEMP_DIR / "dataset.zip"
+    zipped_dataset_path.parent.mkdir(exist_ok=True, parents=True)
+    logger.info(f"Creating zipped dataset at path: {zipped_dataset_path}")
+
+    shutil.make_archive(
+        str(zipped_dataset_path.parent / zipped_dataset_path.stem),
+        "zip",
+        manager.dataset_folder(dataset_name, FolderType.Processed),
+    )
+    logger.info(f"Zipped dataset created at path: {zipped_dataset_path}")
+
+    return send_file(zipped_dataset_path, as_attachment=True)
