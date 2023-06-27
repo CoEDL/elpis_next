@@ -6,6 +6,7 @@ from typing import List
 
 from elpis.datasets import Dataset
 from elpis.datasets.dataset import CleaningOptions, ElanOptions
+from elpis.datasets.preprocessing import has_finished_processing
 from flask import Blueprint, Response
 from flask import current_app as app
 from flask import jsonify, request, send_file
@@ -121,6 +122,9 @@ def delete_dataset(dataset_name: str):
 def download_dataset(dataset_name: str):
     interface = Interface.from_app(app)
     manager = interface.dataset_manager
+
+    if not manager.is_dataset_processed(dataset_name):
+        return bad_request(f"Dataset {dataset_name} either doesn't exist or hasn't finished processing!")
 
     zipped_dataset_path = TEMP_DIR / "dataset.zip"
     zipped_dataset_path.parent.mkdir(exist_ok=True, parents=True)
