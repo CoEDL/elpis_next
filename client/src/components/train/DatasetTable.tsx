@@ -1,8 +1,9 @@
 import {useAtom} from 'jotai';
-import {deleteDataset} from 'lib/api/datasets';
+import fileDownload from 'js-file-download';
+import {deleteDataset, downloadDataset} from 'lib/api/datasets';
 import colours from 'lib/colours';
 import React from 'react';
-import {Trash2} from 'react-feather';
+import {Download, Trash2} from 'react-feather';
 import {datasetsAtom} from 'store';
 
 const DatasetTable: React.FC = () => {
@@ -18,6 +19,16 @@ const DatasetTable: React.FC = () => {
     }
   };
 
+  const _downloadDataset = async (datasetName: string) => {
+    const response = await downloadDataset(datasetName);
+    if (response.ok) {
+      const blob = await response.blob();
+      fileDownload(blob, datasetName + '.zip');
+    } else {
+      console.error("Couldn't download dataset :(");
+    }
+  };
+
   if (datasets.length === 0) {
     return <p>No current datasets!</p>;
   }
@@ -30,6 +41,7 @@ const DatasetTable: React.FC = () => {
             <th>Name</th>
             <th>Source</th>
             <th>Number of Files</th>
+            <th>Download</th>
             <th>Delete</th>
           </tr>
         </thead>
@@ -39,6 +51,11 @@ const DatasetTable: React.FC = () => {
               <td>{dataset.name}</td>
               <td>Local</td>
               <td>{dataset.files.length}</td>
+              <td>
+                <button onClick={() => _downloadDataset(dataset.name)}>
+                  <Download color={colours.grey} />
+                </button>
+              </td>
               <td>
                 <button onClick={() => _deleteDataset(dataset.name)}>
                   <Trash2 color={colours.delete} />

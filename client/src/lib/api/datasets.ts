@@ -1,8 +1,10 @@
 import urls, {server} from 'lib/urls';
 import {CleaningOptions, ElanOptions} from 'types/Dataset';
 
+const url = server + urls.api.datasets;
+
 export async function getDatasets(): Promise<Response> {
-  return fetch(server + urls.api.datasets);
+  return fetch(url);
 }
 
 export async function createDataset(
@@ -22,7 +24,7 @@ export async function createDataset(
     formData.append('elanOptions', JSON.stringify(elanOptions));
   }
 
-  return fetch(server + urls.api.datasets, {
+  return fetch(url, {
     method: 'POST',
     mode: 'cors',
     body: formData,
@@ -30,8 +32,12 @@ export async function createDataset(
 }
 
 export async function deleteDataset(name: string): Promise<Response> {
-  return fetch(`${server}${urls.api.datasets}${name}`, {
+  return fetch(`${url}${name}`, {
     mode: 'cors',
     method: 'DELETE',
   });
+}
+
+export async function downloadDataset(name: string): Promise<Response> {
+  return fetch(`${url}download/${name}`);
 }
