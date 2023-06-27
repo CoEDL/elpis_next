@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 from elpis.datasets.dataset import Dataset
-from elpis.datasets.preprocessing import process_batch, has_finished_processing
+from elpis.datasets.preprocessing import has_finished_processing, process_batch
 from typing_extensions import override
 
 from server.managers.manager import Manager, ManagerType, auto_save
@@ -17,7 +17,6 @@ class FolderType(Enum):
 
 
 class DatasetManager(Manager):
-
     _datasets: Dict[str, Dataset] = {}
 
     def __init__(self, data_dir: Path, overwrite: bool = False) -> None:
@@ -61,10 +60,11 @@ class DatasetManager(Manager):
         for folder in [raw_folder, processed_folder]:
             if not folder.exists():
                 return False
-            
+
         return has_finished_processing(
-            list(raw_folder.iterdir()),
-            list(processed_folder.iterdir()))
+            [str(path) for path in raw_folder.iterdir()],
+            [str(path) for path in processed_folder.iterdir()],
+        )
 
     @auto_save
     def add_dataset(self, dataset: Dataset, overwrite=True) -> None:
