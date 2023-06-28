@@ -1,4 +1,4 @@
-# Et memorat terque populi ingrediorque habuisse sub
+# This is just a test page showing some capabilities of mkdocs
 
 ## Non odit avidisque posti arboris distinctus longo
 

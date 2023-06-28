@@ -1,4 +1,4 @@
-# Contributing to Elpis Cloud
+# Contributing to Elpis
 
 <!---
 ## Reporting an Issue
@@ -9,8 +9,8 @@
 
 ## Contributing to the Documentation
 
-To help flesh out our documentation at [docs.elpis.com](https://docs.elpis.com), you'll first need to install
-[mkdocs](https://www.mkdocs.org/getting-started/).
+To help flesh out our [documentation](https://elpis_next.readthedocs.io/en/latest/), 
+you'll first need to install [mkdocs](https://www.mkdocs.org/getting-started/).
 
 The easiest way to do this is with `pip install mkdocs` (or `pip3` for mac users).
 
@@ -49,12 +49,12 @@ For full documentation visit [mkdocs.org](https://www.mkdocs.org).
 
 To be able to contribute code, you'll first need to clone the monorepo:
 
-`git clone https://github.com/CoEDL/elpiscloud.git`
+`git clone https://github.com/CoEDL/elpis_next.git`
 
 Now create a dedicated branch for our work:
 
 ```
-cd elpiscloud
+cd elpis_next
 git checkout -b your_branch_name
 ```
 
@@ -62,7 +62,7 @@ Make sure your branch name is descriptive of the proposed changes.
 
 ### Setting up the Appropriate Dev Environment
 
-The elpiscloud repo is split into 4 main development "sub-projects". You should
+The elpis repo is split into 4 main development "sub-projects". You should
 only setup the parts you'll need to implement your required feature.
 
 #### The Frontend Client
@@ -84,51 +84,22 @@ To start the development server:
 Any changes you make in the frontend should be reflected immediately in your
 browser.
 
-#### Cloud Functions
+#### Server
 
-To prepare the cloud functions devlopment environment, [make sure you have Poetry installed](https://python-poetry.org/docs/),
+To prepare the server devlopment environment, [make sure you have Poetry installed](https://python-poetry.org/docs/),
 and optionally, setup the appropriate Python version with a tool like `asdf` or `pyenv`.
 
-Currently we're using Python 3.10 for our Python functions and services.
+Currently we're using Python version 3.10 
 
-Navigate to the cloud functions folder:
+Navigate to the server folder:
 
-`cd functions`
+`cd server`
 
 And install the Poetry dependencies:
 
 `poetry install`
 
 And you're ready to go!
-
-#### Cloud Run Services
-
-To prepare the services devlopment environment:
-
-- [Make sure you have Poetry installed](https://python-poetry.org/docs/)
-- Optionally, setup the appropriate Python version with a tool like `asdf` or `pyenv`.
-  Currently we're using Python 3.10 for our Python functions and services.
-- If applicable, make sure you have a version of docker to build the container.
-
-Navigate to the relevant service folder:
-
-`cd services/trainer`
-
-or
-
-`cd services/transcriber`
-
-And install the Poetry dependencies:
-
-`poetry install`
-
-And you should be ready to go.
-
-<!--
-TODO
-
-#### Terraform architecture files
--->
 
 ### Write Your Code
 
@@ -159,7 +130,7 @@ and formatting are provided automatically when you're editing a frontend file.
 
 #### Backend Linting/Formatting
 
-All of our Python related components of elpiscloud use [black](https://github.com/psf/black)
+All of our Python related components of elpis use [black](https://github.com/psf/black)
 for formatting/linting.
 
 Within a Poetry folder (`functions` or `services/**`), after you've installed  
@@ -248,7 +219,7 @@ it's time to proceed.
 ### Forking (Public Contributors)
 
 If you're not part of the CoEDL organisation on GitHub, you won't have push
-access to the elpiscloud repository, and therefore won't be able to push your
+access to the elpis repository, and therefore won't be able to push your
 branch directly to the remote before you make a Pull Request.
 
 Instead, what public contributors will have to do is make a _fork_ of the repo
@@ -258,14 +229,14 @@ repository.
 
 The steps to do so are provided below:
 
-First, navigate to the [elpiscloud GitHub repo](https://github.com/CoEDL/elpiscloud)
+First, navigate to the [elpis GitHub repo](https://github.com/CoEDL/elpis_next)
 and click the fork button at the top right of the screen.
 
 On the new page, click **Create Fork**
 
 Now run the following command to add your fork as a remote:
 
-`git remote add fork https://github.com/<your username>/elpiscloud.git`
+`git remote add fork https://github.com/<your username>/elpis_next.git`
 
 Push your feature branch to the forked repository:
 
@@ -282,18 +253,18 @@ fork and can instead run the following:
 git push -u origin your_branch_name
 ```
 
-This will create a new branch on the elpiscloud repo from which you can make  
+This will create a new branch on the elpis repo from which you can make  
 your PR.
 
 ### Opening a PR
 
 Navigate to the repository you just pushed to
-(e.g. https://github.com/your-user-name/elpiscloud) and click on "Pull Requests"
+(e.g. https://github.com/your-user-name/elpis_next) and click on "Pull Requests"
 in the top bar (just above the code). On the next page, click "New pull request"
 in the upper right-hand corner.
 
-- The pull request should target the base repository `CoEDL/elpiscloud` and the branch `main.`
-- The head repository will be your work (`your-user-name/elpiscloud`),
+- The pull request should target the base repository `CoEDL/elpis_next` and the branch `main.`
+- The head repository will be your work (`your-user-name/elpis_next`),
   and the branch will be whatever name you gave your branch.
 
 Click _"Create pull request"_ when you're ready.
