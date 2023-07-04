@@ -1,13 +1,13 @@
 import urls, {server} from 'lib/urls';
 
-const url = server + urls.api.transcriptions;
-
-export async function resetTranscriptions(): Promise<Response> {
-  return fetch(url + 'reset');
-}
+const baseURL = server + urls.api.transcriptions;
 
 export async function getTranscriptions(): Promise<Response> {
-  return fetch(url);
+  return fetch(baseURL);
+}
+
+export async function resetTranscriptions(): Promise<Response> {
+  return fetch(baseURL + '/reset');
 }
 
 export async function deleteTranscription(
@@ -18,7 +18,7 @@ export async function deleteTranscription(
     modelLocation,
     audioName,
   });
-  return fetch(`${url}?${params}`, {
+  return fetch(`${baseURL}?${params}`, {
     method: 'DELETE',
     mode: 'cors',
   });
@@ -35,7 +35,7 @@ export async function createTranscriptionJobs(
   });
   formData.append('modelLocation', modelLocation);
 
-  return fetch(url, {
+  return fetch(baseURL, {
     method: 'POST',
     mode: 'cors',
     body: formData,
@@ -50,7 +50,7 @@ export async function transcribe(
     modelLocation,
     audioName,
   });
-  return fetch(`${url}transcribe?${params}`);
+  return fetch(`${baseURL}/transcribe?${params}`);
 }
 
 export async function getTranscriptionStatus(
@@ -61,7 +61,7 @@ export async function getTranscriptionStatus(
     modelLocation,
     audioName,
   });
-  return fetch(`${url}status?${params}`);
+  return fetch(`${baseURL}/status?${params}`);
 }
 
 export async function getText(
@@ -72,7 +72,7 @@ export async function getText(
     modelLocation,
     audioName,
   });
-  return fetch(`${url}text?${params}`);
+  return fetch(`${baseURL}/text?${params}`);
 }
 
 export async function getElan(
@@ -83,9 +83,9 @@ export async function getElan(
     modelLocation,
     audioName,
   });
-  return fetch(`${url}elan?${params}`);
+  return fetch(`${baseURL}/elan?${params}`);
 }
 
 export async function downloadFiles(): Promise<Response> {
-  return fetch(`${url}download`);
+  return fetch(`${baseURL}/download`);
 }

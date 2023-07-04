@@ -25,9 +25,9 @@ export const urls = {
     view: '/transcriptions/view',
   },
   api: {
-    datasets: '/api/datasets/',
-    models: '/api/models/',
-    transcriptions: '/api/transcriptions/',
+    datasets: '/api/datasets',
+    models: '/api/models',
+    transcriptions: '/api/transcriptions',
   },
 };
 

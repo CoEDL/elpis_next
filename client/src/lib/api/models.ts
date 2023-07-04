@@ -1,14 +1,14 @@
 import urls, {server} from 'lib/urls';
 import Model from 'types/Model';
 
-const url = server + urls.api.models;
+const baseURL = server + urls.api.models;
 
 export async function getModels(): Promise<Response> {
-  return fetch(url);
+  return fetch(baseURL);
 }
 
 export async function createModel(model: Model): Promise<Response> {
-  return fetch(url, {
+  return fetch(baseURL, {
     method: 'POST',
     mode: 'cors',
     body: JSON.stringify(model),
@@ -19,29 +19,29 @@ export async function createModel(model: Model): Promise<Response> {
 }
 
 export async function deleteModel(modelName: string): Promise<Response> {
-  return fetch(`${url}${modelName}`, {
+  return fetch(`${baseURL}/${modelName}`, {
     mode: 'cors',
     method: 'DELETE',
   });
 }
 
 export async function trainModel(modelName: string): Promise<Response> {
-  return fetch(`${url}train/${modelName}`);
+  return fetch(`${baseURL}/train/${modelName}`);
 }
 
 export async function getModelLogs(modelName: string): Promise<Response> {
-  return fetch(`${url}logs/${modelName}`);
+  return fetch(`${baseURL}/logs/${modelName}`);
 }
 
 export async function getModelStatus(modelName: string): Promise<Response> {
-  return fetch(`${url}status/${modelName}`);
+  return fetch(`${baseURL}/status/${modelName}`);
 }
 
 export async function uploadModel(modelZip: File): Promise<Response> {
   const formData = new FormData();
   formData.append('file', modelZip);
 
-  return fetch(`${url}upload`, {
+  return fetch(`${baseURL}/upload`, {
     method: 'POST',
     mode: 'cors',
     body: formData,
@@ -49,5 +49,5 @@ export async function uploadModel(modelZip: File): Promise<Response> {
 }
 
 export async function downloadModel(modelName: string): Promise<Response> {
-  return fetch(`${url}download/${modelName}`);
+  return fetch(`${baseURL}/download/${modelName}`);
 }
