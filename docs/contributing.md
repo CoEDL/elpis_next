@@ -86,7 +86,7 @@ browser.
 
 #### Server
 
-To prepare the server devlopment environment, [make sure you have Poetry installed](https://python-poetry.org/docs/),
+To prepare the server development environment, [make sure you have Poetry installed](https://python-poetry.org/docs/),
 and optionally, setup the appropriate Python version with a tool like `asdf` or `pyenv`.
 
 Currently we're using Python version 3.10 
