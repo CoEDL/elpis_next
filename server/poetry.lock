@@ -191,7 +191,7 @@ graph = ["objgraph (>=1.7.2)"]
 
 [[package]]
 name = "elpis"
-version = "0.1.5"
+version = "0.1.6"
 description = "A library to perform automatic speech recognition with huggingface transformers."
 category = "main"
 optional = false
@@ -1383,8 +1383,8 @@ dill = [
     {file = "dill-0.3.5.1.tar.gz", hash = "sha256:d75e41f3eff1eee599d738e76ba8f4ad98ea229db8b085318aa2b3333a208c86"},
 ]
 elpis = [
-    {file = "elpis-0.1.5-py3-none-any.whl", hash = "sha256:a6b468219220b726d2dcb568abe654734980fd636baea6d25f3573d5fb1c530f"},
-    {file = "elpis-0.1.5.tar.gz", hash = "sha256:e1b98f9848d909f79f2f1452e73e37c2f3598c640fdda044936fb3ca1481a8f2"},
+    {file = "elpis-0.1.6-py3-none-any.whl", hash = "sha256:b49752bbc1bccf310aed5abe90baa04fb387650569c2fb870473337c14ba102c"},
+    {file = "elpis-0.1.6.tar.gz", hash = "sha256:2b2795bc3a55e7dd109bf3e644f2ce30c9acb089171355e8281741c7cd426281"},
 ]
 exceptiongroup = [
     {file = "exceptiongroup-1.0.0rc9-py3-none-any.whl", hash = "sha256:2e3c3fc1538a094aab74fad52d6c33fc94de3dfee3ee01f187c0e0c72aec5337"},
