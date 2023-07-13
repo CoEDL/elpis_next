@@ -1,3 +1,4 @@
+import {Button} from 'components/ui/button';
 import {useAtom} from 'jotai';
 import React from 'react';
 import {newModelAtom, newModelStageAtom} from 'store';
@@ -114,16 +115,15 @@ export default function ChooseTrainingOptions() {
       </div>
 
       <div className="flex items-center justify-between mt-8">
-        <button
-          className="button"
+        <Button
+          variant="secondary"
           onClick={() => {
             setStage(NewModelStage.Dataset);
           }}
         >
           Back
-        </button>
-        <button
-          className="button"
+        </Button>
+        <Button
           disabled={!isValid()}
           onClick={() => {
             setModel({...model!, options});
@@ -131,7 +131,7 @@ export default function ChooseTrainingOptions() {
           }}
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );

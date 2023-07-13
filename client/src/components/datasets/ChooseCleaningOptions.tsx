@@ -1,3 +1,4 @@
+import {Button} from 'components/ui/button';
 import {useAtom} from 'jotai';
 import React, {useState} from 'react';
 import {X} from 'react-feather';
@@ -71,9 +72,7 @@ const ChooseCleaningOptions: React.FC = () => {
           value={nextWord}
           onChange={e => setNextWord(e.target.value)}
         />
-        <button className="button" onClick={addWord}>
-          Add
-        </button>
+        <Button onClick={addWord}>Add</Button>
       </div>
       <div className="mt-4 flex gap-1">
         {cleaningOptions.wordsToRemove.map(word => (

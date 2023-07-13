@@ -7,6 +7,7 @@ import {getDatasets} from 'lib/api/datasets';
 import Link from 'next/link';
 import urls from 'lib/urls';
 import ClientOnly from 'components/ClientOnly';
+import { Button } from 'components/ui/button';
 
 const DatasetsPage: NextPage = () => {
   const [datasets, setDatasets] = useAtom(datasetsAtom);
@@ -35,13 +36,13 @@ const DatasetsPage: NextPage = () => {
         <div className="space-x-2 mt-2 flex justify-between">
           <Link href={urls.datasets.new}>
             <a>
-              <button className="button">Create new</button>
+              <Button>Create new</Button>
             </a>
           </Link>
           {datasets.length > 0 && (
             <Link href={urls.train.new}>
               <a>
-                <button className="button">Train Model</button>
+                <Button variant="secondary">Train Model</Button>
               </a>
             </Link>
           )}

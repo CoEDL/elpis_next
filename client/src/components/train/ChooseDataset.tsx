@@ -1,3 +1,4 @@
+import {Button} from 'components/ui/button';
 import {useAtom} from 'jotai';
 import urls from 'lib/urls';
 import Link from 'next/link';
@@ -51,12 +52,15 @@ export default function ChooseDataset() {
       </div>
 
       <div className="flex items-center justify-between mt-8">
-        <button className="button" onClick={() => setStage(NewModelStage.Name)}>
+        <Button
+          variant="secondary"
+          onClick={() => setStage(NewModelStage.Name)}
+        >
           Back
-        </button>
-        <button className="button" disabled={!hasDataset} onClick={save}>
+        </Button>
+        <Button disabled={!hasDataset} onClick={save}>
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );

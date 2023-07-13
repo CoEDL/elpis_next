@@ -13,6 +13,7 @@ import TranscriptionFileUpload from 'components/transcribe/TranscriptionFileUplo
 import {useRouter} from 'next/router';
 import urls from 'lib/urls';
 import {FileType, parseFileType} from 'lib/dataset';
+import { Button } from 'components/ui/button';
 
 export default function TranscribePage() {
   const router = useRouter();
@@ -67,13 +68,12 @@ export default function TranscribePage() {
       <TranscriptionFileUpload />
 
       <div className="flex justify-end">
-        <button
-          className="button"
+        <Button
           onClick={_createTranscriptions}
           disabled={!canAddTranscriptions}
         >
           Transcribe
-        </button>
+        </Button>
       </div>
 
       {error && <p className="text-red-500">{error}</p>}

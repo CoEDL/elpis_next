@@ -8,6 +8,7 @@ import Link from 'next/link';
 import urls from 'lib/urls';
 import {TrainingStatus} from 'types/Model';
 import ClientOnly from 'components/ClientOnly';
+import {Button} from 'components/ui/button';
 
 const TrainPage: NextPage = () => {
   const [models, setModels] = useAtom(modelsAtom);
@@ -39,12 +40,12 @@ const TrainPage: NextPage = () => {
               <div className="space-x-2">
                 <Link href={urls.train.new}>
                   <a>
-                    <button className="button">Create New</button>
+                    <Button>Create New</Button>
                   </a>
                 </Link>
                 <Link href={urls.train.upload}>
                   <a>
-                    <button className="button">Upload Model</button>
+                    <Button variant="outline">Upload Model</Button>
                   </a>
                 </Link>
               </div>
@@ -54,7 +55,7 @@ const TrainPage: NextPage = () => {
                 <div>
                   <Link href={urls.transcriptions.new}>
                     <a>
-                      <button className="button">Transcribe Audio</button>
+                      <Button variant="outline">Transcribe Audio</Button>
                     </a>
                   </Link>
                 </div>
