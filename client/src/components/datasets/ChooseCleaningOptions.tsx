@@ -1,4 +1,8 @@
+import {Badge} from 'components/ui/badge';
 import {Button} from 'components/ui/button';
+import {Card, CardContent, CardHeader, CardTitle} from 'components/ui/card';
+import {Input} from 'components/ui/input';
+import {Label} from 'components/ui/label';
 import {useAtom} from 'jotai';
 import React, {useState} from 'react';
 import {X} from 'react-feather';
@@ -36,58 +40,62 @@ const ChooseCleaningOptions: React.FC = () => {
   };
 
   return (
-    <div className="section">
-      <h2 className="subtitle">Choose Cleaning Options</h2>
-
-      <div className="mt-4 space-y-2">
-        <div className="space-x-2">
-          <label htmlFor="puncRemove">Punctuation to Remove:</label>
-          <input
-            id="puncRemove"
-            className="rounded"
-            type="text"
-            value={cleaningOptions.punctuationToRemove}
-            onChange={changePunctuation('punctuationToRemove')}
-          />
-        </div>
-      </div>
-      <div className="space-x-2 mt-2">
-        <label htmlFor="puncExplode">Punctuation to Explode:</label>
-        <input
-          id="puncExplode"
-          className="rounded"
-          type="text"
-          value={cleaningOptions.punctuationToExplode}
-          onChange={changePunctuation('punctuationToExplode')}
-        />
-      </div>
-
-      <p className="mt-4 font-semibold">Words to Remove</p>
-      <div className="space-x-2 mt-2">
-        <label htmlFor="word">Add Word: </label>
-        <input
-          id="word"
-          className="rounded"
-          type="text"
-          value={nextWord}
-          onChange={e => setNextWord(e.target.value)}
-        />
-        <Button onClick={addWord}>Add</Button>
-      </div>
-      <div className="mt-4 flex gap-1">
-        {cleaningOptions.wordsToRemove.map(word => (
-          <div
-            key={word}
-            className="shadow bg-purple-50 border border-purple-200 p-1 rounded flex items-center space-x-2"
-          >
-            <p className="text-purple-400">{word}</p>
-            <button onClick={() => removeWord(word)}>
-              <X />
-            </button>
+    <Card>
+      <CardHeader>
+        <CardTitle className="subtitle">Choose Cleaning Options</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-2">
+          <div>
+            <Label htmlFor="puncRemove">Punctuation to Remove</Label>
+            <Input
+              id="puncRemove"
+              type="text"
+              value={cleaningOptions.punctuationToRemove}
+              onChange={changePunctuation('punctuationToRemove')}
+            />
           </div>
-        ))}
-      </div>
-    </div>
+          <div>
+            <Label htmlFor="puncExplode">Punctuation to Explode</Label>
+            <Input
+              id="puncExplode"
+              type="text"
+              value={cleaningOptions.punctuationToExplode}
+              onChange={changePunctuation('punctuationToExplode')}
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="word" className="mt-4">
+              Words to Remove
+            </Label>
+            <div className="w-full flex gap-2 items-center">
+              <Input
+                id="word"
+                type="text"
+                value={nextWord}
+                onChange={e => setNextWord(e.target.value)}
+              />
+              <Button onClick={addWord} className="w-32">
+                Add Word
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="mt-4 flex gap-1">
+          {cleaningOptions.wordsToRemove.map(word => (
+            <Badge
+              variant="secondary"
+              key={word}
+              onClick={() => removeWord(word)}
+              className="cursor-pointer"
+            >
+              {word}
+            </Badge>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

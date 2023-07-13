@@ -1,3 +1,15 @@
+import {Card, CardContent, CardHeader, CardTitle} from 'components/ui/card';
+import {Input} from 'components/ui/input';
+import {Label} from 'components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from 'components/ui/select';
 import {useAtom} from 'jotai';
 import React from 'react';
 import {elanOptionsAtom, filesAtom} from 'store';
@@ -19,40 +31,46 @@ const ChooseElanOptions: React.FC = () => {
   }
 
   return (
-    <div className="section">
-      <h2 className="subtitle">Choose Elan Options</h2>
+    <Card>
+      <CardHeader>
+        <CardTitle>Choose Elan Options</CardTitle>
+      </CardHeader>
 
-      <div className="mt-4 space-y-2">
-        <div className="space-x-2">
-          <label htmlFor="selectionMechanism">Selection Mechanism:</label>
-          <select
-            className="rounded"
-            name="selectionMechanism"
-            id="selectionMechanism"
+      <CardContent className="space-y-2">
+        <div>
+          <Label htmlFor="selectionMechanism">Selection Mechanism</Label>
+          <Select
             value={elanOptions.selectionMechanism}
-            onChange={e => {
-              const mechanism = e.target.value as ElanTierSelector;
+            onValueChange={value => {
+              const mechanism = value as ElanTierSelector;
               setElanOptions({
                 selectionMechanism: mechanism,
                 selectionValue: DEFAULT_VALUES.get(mechanism) ?? 'Phrase',
               });
             }}
           >
-            {[
-              ElanTierSelector.Name,
-              ElanTierSelector.Order,
-              ElanTierSelector.Type,
-            ].map(selector => (
-              <option key={selector} value={selector}>
-                {selector}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Selection Mechanisms</SelectLabel>
+                {[
+                  ElanTierSelector.Name,
+                  ElanTierSelector.Order,
+                  ElanTierSelector.Type,
+                ].map(selector => (
+                  <SelectItem key={selector} value={selector}>
+                    {selector}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
-        <div className="space-x-2">
-          <label htmlFor="selectionValue">Selection Value*:</label>
-          <input
-            className="rounded"
+        <div>
+          <Label htmlFor="selectionValue">Selection Value</Label>
+          <Input
             type={
               elanOptions.selectionMechanism === ElanTierSelector.Order
                 ? 'number'
@@ -66,8 +84,8 @@ const ChooseElanOptions: React.FC = () => {
             }
           />
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
