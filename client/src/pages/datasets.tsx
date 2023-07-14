@@ -7,7 +7,8 @@ import {getDatasets} from 'lib/api/datasets';
 import Link from 'next/link';
 import urls from 'lib/urls';
 import ClientOnly from 'components/ClientOnly';
-import { Button } from 'components/ui/button';
+import {Button} from 'components/ui/button';
+import {Plus} from 'lucide-react';
 
 const DatasetsPage: NextPage = () => {
   const [datasets, setDatasets] = useAtom(datasetsAtom);
@@ -31,12 +32,13 @@ const DatasetsPage: NextPage = () => {
       <p className="mt-2 page-description">Blah blah blah</p>
 
       <ClientOnly className="mt-8 space-y-4">
-        <p className="subtitle">Your Datasets</p>
-        <DatasetTable />
-        <div className="space-x-2 mt-2 flex justify-between">
+        <div className="space-x-2 mt-2 flex">
           <Link href={urls.datasets.new}>
             <a>
-              <Button>Create new</Button>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Create new
+              </Button>
             </a>
           </Link>
           {datasets.length > 0 && (
@@ -47,6 +49,8 @@ const DatasetsPage: NextPage = () => {
             </Link>
           )}
         </div>
+        <p className="subtitle">Your Datasets</p>
+        <DatasetTable />
       </ClientOnly>
     </div>
   );

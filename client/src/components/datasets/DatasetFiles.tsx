@@ -6,6 +6,13 @@ import {Trash2, Check, X, AlertTriangle} from 'react-feather';
 import {FileType, hasMatch, parseFileType} from 'lib/dataset';
 import colours from 'lib/colours';
 import {Card, CardContent, CardHeader, CardTitle} from 'components/ui/card';
+import DataTable, {Section} from 'components/DataTable';
+import {Button} from 'components/ui/button';
+
+type DatasetFile = {
+  file: File;
+  type: string;
+};
 
 const DatasetFiles: React.FC = () => {
   const [files, setFiles] = useAtom(filesAtom);
@@ -22,75 +29,69 @@ const DatasetFiles: React.FC = () => {
   const deleteFile = (name: string) =>
     setFiles(files.filter(file => file.name !== name));
 
-  const fileRows = (selectedFiles: File[], type: string) =>
-    selectedFiles.map((file, index) => (
-      <tr key={index} className="text-gray-600 text-sm">
-        <td>{file.name}</td>
-        <td>{type}</td>
-        <td>
-          {hasMatch(
-            file.name,
-            files.map(file => file.name)
-          ) ? (
-            <Check color={colours.success} />
-          ) : (
-            <X color={colours.warning} />
-          )}
-        </td>
-        <td>
-          <button className="px-2 py-1" onClick={() => deleteFile(file.name)}>
-            <Trash2 color={colours.delete} />
-          </button>
-        </td>
-      </tr>
-    ));
+  const data = [
+    ...transcriptionFiles.map(file => ({file, type: 'Transcription'})),
+    ...audioFiles.map(file => ({file, type: 'Audio'})),
+  ];
+
+  const sections: Section<DatasetFile>[] = [
+    {name: 'File name', display: item => item.file.name},
+    {name: 'Type', display: item => item.type},
+    {
+      name: 'Has match',
+      display: item =>
+        hasMatch(
+          item.file.name,
+          files.map(file => file.name)
+        ) ? (
+          <Check color={colours.success} />
+        ) : (
+          <X color={colours.warning} />
+        ),
+    },
+    {
+      name: 'Delete',
+      display: item => (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => deleteFile(item.file.name)}
+        >
+          <Trash2 color={colours.delete} />
+        </Button>
+      ),
+    },
+  ];
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Upload Dataset Files</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <FileDropper callback={_files => setFiles([...files, ..._files])} />
-        {files.length > 0 && (
-          <>
-            <p className="mt-8 text-lg">Files to Upload:</p>
-            <table className="w-full mt-2 table">
-              <thead className="text-sm">
-                <tr>
-                  <th className="text-left">File name</th>
-                  <th className="text-left">Type</th>
-                  <th className="text-left">Has match</th>
-                  <th className="text-left">Delete</th>
-                </tr>
-              </thead>
-              <tbody>
-                {fileRows(transcriptionFiles, 'Transcription')}
-                {fileRows(audioFiles, 'Audio')}
-              </tbody>
-            </table>
-          </>
-        )}
+        {files.length > 0 && <DataTable data={data} sections={sections} />}
 
         {unsupportedFiles.length > 0 && (
-          <div className="mt-4 p-4 border border-orange-300 rounded">
+          <div className="mt-4 p-4 border border-orange-300 rounded space-y-4">
             <div className="flex space-x-2">
               <AlertTriangle color={colours.warning}></AlertTriangle>
-              <p>Unsupported Files:</p>
+              <p className="text-amber-500 font-bold">Unsupported Files</p>
             </div>
             <div className="mt-2 flex text-sm">
               {unsupportedFiles.map(file => (
-                <p key={file.name}>{file.name}</p>
+                <code key={file.name}>{file.name}</code>
               ))}
             </div>
-            <button
-              className="mt-4 button text-sm"
+            <Button
+              className="mt-2"
+              variant="destructive"
               onClick={() =>
                 unsupportedFiles.forEach(file => deleteFile(file.name))
               }
             >
               Delete all Unsupported
-            </button>
+            </Button>
           </div>
         )}
       </CardContent>

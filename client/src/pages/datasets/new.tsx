@@ -66,10 +66,10 @@ const NewDatasetPage: React.FC = () => {
       <h1 className="text-3xl">New Dataset</h1>
       <p className="page-description">Some description</p>
 
+      <ChooseDatasetName />
       <DatasetFiles />
       <ChooseElanOptions />
       <ChooseCleaningOptions />
-      <ChooseDatasetName />
 
       <div className="flex justify-end">
         <Button onClick={save} disabled={!canCreate()}>

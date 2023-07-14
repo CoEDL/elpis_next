@@ -1,10 +1,12 @@
 import {useAtom} from 'jotai';
 import fileDownload from 'js-file-download';
 import {deleteDataset, downloadDataset} from 'lib/api/datasets';
-import colours from 'lib/colours';
 import React from 'react';
-import {Download, Trash2} from 'react-feather';
+import {Download, Trash2} from 'lucide-react';
 import {datasetsAtom} from 'store';
+import DataTable, {Section} from 'components/DataTable';
+import Dataset from 'types/Dataset';
+import {Button} from 'components/ui/button';
 
 const DatasetTable: React.FC = () => {
   const [datasets, setDatasets] = useAtom(datasetsAtom);
@@ -29,44 +31,44 @@ const DatasetTable: React.FC = () => {
     }
   };
 
+  const sections: Section<Dataset>[] = [
+    {
+      name: 'Name',
+      display: dataset => <span className="font-semibold">{dataset.name}</span>,
+    },
+    {name: 'Source', display: () => 'Local'},
+    {name: 'File Count', display: dataset => dataset.files.length},
+    {
+      name: 'Download',
+      display: dataset => (
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={() => _downloadDataset(dataset.name)}
+        >
+          <Download />
+        </Button>
+      ),
+    },
+    {
+      name: 'Delete',
+      display: dataset => (
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={() => _deleteDataset(dataset.name)}
+        >
+          <Trash2 />
+        </Button>
+      ),
+    },
+  ];
+
   if (datasets.length === 0) {
     return <p>No current datasets!</p>;
   }
 
-  return (
-    <div className="text-left w-full">
-      <table className="w-full table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Source</th>
-            <th>Number of Files</th>
-            <th>Download</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {datasets.map((dataset, index) => (
-            <tr key={index}>
-              <td>{dataset.name}</td>
-              <td>Local</td>
-              <td>{dataset.files.length}</td>
-              <td>
-                <button onClick={() => _downloadDataset(dataset.name)}>
-                  <Download color={colours.grey} />
-                </button>
-              </td>
-              <td>
-                <button onClick={() => _deleteDataset(dataset.name)}>
-                  <Trash2 color={colours.delete} />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+  return <DataTable data={datasets} sections={sections} />;
 };
 
 export default DatasetTable;
