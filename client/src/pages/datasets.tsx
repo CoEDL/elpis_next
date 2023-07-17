@@ -30,10 +30,9 @@ const DatasetsPage: NextPage = () => {
   return (
     <div className="container">
       <h1 className="title">Datasets</h1>
-      <p className="mt-2 page-description">Blah blah blah</p>
 
-      <ClientOnly className="mt-8 space-y-4">
-        <div className="space-x-2 mt-2 flex justify-between">
+      <ClientOnly className="mt-4">
+        <div className="space-x-2 mb-8 flex justify-between">
           <Link href={urls.datasets.new}>
             <a>
               <Button>
@@ -53,8 +52,10 @@ const DatasetsPage: NextPage = () => {
             </Link>
           )}
         </div>
-        <p className="subtitle">Your Datasets</p>
-        <DatasetTable />
+        <section className="space-y-4">
+          <h2 className="subtitle">Your Datasets</h2>
+          <DatasetTable />
+        </section>
       </ClientOnly>
     </div>
   );
