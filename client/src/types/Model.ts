@@ -1,4 +1,14 @@
 export const BASE_MODEL = 'facebook/wav2vec2-base-960h';
+export const DEFAULT_TRAINING_OPTIONS: TrainingOptions = {
+  batchSize: 4,
+  epochs: 2,
+  learningRate: 1e-4,
+  minDuration: 0,
+  maxDuration: 60,
+  wordDelimiterToken: ' ',
+  testSize: 0.2,
+  freezeFeatureExtractor: true,
+};
 
 export enum TrainingStatus {
   Waiting = 'waiting',
