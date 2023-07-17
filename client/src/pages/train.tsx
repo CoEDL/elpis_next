@@ -9,6 +9,7 @@ import urls from 'lib/urls';
 import {TrainingStatus} from 'types/Model';
 import ClientOnly from 'components/ClientOnly';
 import {Button} from 'components/ui/button';
+import {ArrowRight, Plus, Upload} from 'lucide-react';
 
 const TrainPage: NextPage = () => {
   const [models, setModels] = useAtom(modelsAtom);
@@ -33,19 +34,23 @@ const TrainPage: NextPage = () => {
           <h1 className="title">Train Models</h1>
           <p className="mt-2 page-description">Blah blah blah</p>
 
-          <ClientOnly className="space-y-4">
-            <h2 className="subtitle mt-8 mb-2">Your Models</h2>
-            <ModelTable />
+          <ClientOnly className="mt-8 space-y-4">
             <div className="flex items-center justify-between">
-              <div className="space-x-2">
+              <div className="space-x-2 flex items-center">
                 <Link href={urls.train.new}>
                   <a>
-                    <Button>Create New</Button>
+                    <Button>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Create New
+                    </Button>
                   </a>
                 </Link>
                 <Link href={urls.train.upload}>
                   <a>
-                    <Button variant="outline">Upload Model</Button>
+                    <Button variant="outline">
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload Model
+                    </Button>
                   </a>
                 </Link>
               </div>
@@ -55,12 +60,17 @@ const TrainPage: NextPage = () => {
                 <div>
                   <Link href={urls.transcriptions.new}>
                     <a>
-                      <Button variant="outline">Transcribe Audio</Button>
+                      <Button variant="link">
+                        Transcribe Audio
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
                     </a>
                   </Link>
                 </div>
               )}
             </div>
+            <h2 className="subtitle mt-8 mb-2">Your Models</h2>
+            <ModelTable />
           </ClientOnly>
         </div>
       </div>

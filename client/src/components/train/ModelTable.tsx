@@ -7,8 +7,9 @@ import Link from 'next/link';
 import React from 'react';
 import {Trash2, Eye, Download} from 'react-feather';
 import {modelsAtom} from 'store';
-import {TrainingStatus} from 'types/Model';
+import Model, {TrainingStatus} from 'types/Model';
 import TrainingStatusIndicator from 'components/train/TrainingStatusIndicator';
+import DataTable, {Section} from 'components/DataTable';
 
 const ModelTable: React.FC = () => {
   const [models, setModels] = useAtom(modelsAtom);
@@ -56,79 +57,82 @@ const ModelTable: React.FC = () => {
     }
   };
 
+  const sections: Section<Model>[] = [
+    {name: 'Model Name', display: model => model.modelName},
+    {name: 'Dataset Name', display: model => model.datasetName},
+    {
+      name: 'Base Model',
+      display: model =>
+        model.baseModel ? (
+          <a href={'https://huggingface.co/' + model.baseModel}>
+            {model.baseModel}
+          </a>
+        ) : (
+          <span>Unknown</span>
+        ),
+    },
+    {name: 'Status', display: model => model.status},
+    {
+      name: 'Train',
+      display: (model, index) => (
+        <button
+          onClick={() => _trainModel(index)}
+          disabled={
+            model.status === TrainingStatus.Training ||
+            model.status === TrainingStatus.Finished
+          }
+        >
+          <TrainingStatusIndicator
+            status={model.status ?? TrainingStatus.Waiting}
+          />
+        </button>
+      ),
+    },
+
+    {
+      name: 'Download',
+      display: model => (
+        <button
+          onClick={() => download(model.modelName)}
+          disabled={model.status !== TrainingStatus.Finished}
+        >
+          <Download
+            color={
+              model.status === TrainingStatus.Finished
+                ? colours.grey
+                : colours.unavailable
+            }
+          />
+        </button>
+      ),
+    },
+    {
+      name: 'View',
+      display: model => (
+        <Link href={urls.train.view + '/' + model.modelName}>
+          <a>
+            <Eye color={colours.info} />
+          </a>
+        </Link>
+      ),
+    },
+    {
+      name: 'Delete',
+      display: model => (
+        <button onClick={() => _deleteModel(model.modelName)}>
+          <Trash2 color={colours.delete} />
+        </button>
+      ),
+    },
+  ];
+
   if (models.length === 0) {
     return <p>No current models!</p>;
   }
 
   return (
     <div className="text-left w-full">
-      <table className="w-full table">
-        <thead>
-          <tr>
-            <th>Model Name</th>
-            <th>Dataset Name</th>
-            <th>Base Model</th>
-            <th>Status</th>
-            <th>Train</th>
-            <th>Download</th>
-            <th>View</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {models.map((model, index) => (
-            <tr key={index}>
-              <td>{model.modelName}</td>
-              <td>{model.datasetName}</td>
-              <td className="text-blue-500 hover:underline">
-                <a href={'https://huggingface.co/' + model.baseModel}>
-                  {model.baseModel ?? 'unknown'}
-                </a>
-              </td>
-              <td>{model.status}</td>
-              <td>
-                <button
-                  onClick={() => _trainModel(index)}
-                  disabled={
-                    model.status === TrainingStatus.Training ||
-                    model.status === TrainingStatus.Finished
-                  }
-                >
-                  <TrainingStatusIndicator
-                    status={model.status ?? TrainingStatus.Waiting}
-                  />
-                </button>
-              </td>
-              <td>
-                <button
-                  onClick={() => download(model.modelName)}
-                  disabled={model.status !== TrainingStatus.Finished}
-                >
-                  <Download
-                    color={
-                      model.status === TrainingStatus.Finished
-                        ? colours.grey
-                        : colours.unavailable
-                    }
-                  />
-                </button>
-              </td>
-              <td>
-                <Link href={urls.train.view + '/' + model.modelName}>
-                  <a>
-                    <Eye color={colours.info} />
-                  </a>
-                </Link>
-              </td>
-              <td>
-                <button onClick={() => _deleteModel(model.modelName)}>
-                  <Trash2 color={colours.delete} />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <DataTable data={models} sections={sections} />
     </div>
   );
 };

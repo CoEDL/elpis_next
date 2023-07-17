@@ -9,6 +9,7 @@ import urls from 'lib/urls';
 import ClientOnly from 'components/ClientOnly';
 import {Button} from 'components/ui/button';
 import {Plus} from 'lucide-react';
+import {ArrowRight} from 'react-feather';
 
 const DatasetsPage: NextPage = () => {
   const [datasets, setDatasets] = useAtom(datasetsAtom);
@@ -32,7 +33,7 @@ const DatasetsPage: NextPage = () => {
       <p className="mt-2 page-description">Blah blah blah</p>
 
       <ClientOnly className="mt-8 space-y-4">
-        <div className="space-x-2 mt-2 flex">
+        <div className="space-x-2 mt-2 flex justify-between">
           <Link href={urls.datasets.new}>
             <a>
               <Button>
@@ -44,7 +45,10 @@ const DatasetsPage: NextPage = () => {
           {datasets.length > 0 && (
             <Link href={urls.train.new}>
               <a>
-                <Button variant="secondary">Train Model</Button>
+                <Button variant="link">
+                  Train Model
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
               </a>
             </Link>
           )}
