@@ -17,12 +17,13 @@ import {
   Play,
   Trash2,
   Eye,
-} from 'react-feather';
+} from 'lucide-react';
 import {transcriptionsAtom} from 'store';
 import Transcription, {TranscriptionStatus} from 'types/Transcription';
 import DownloadTranscriptionFileButton from './DownloadTranscriptionFileButton';
 import Link from 'next/link';
 import {Button} from 'components/ui/button';
+import DataTable, {Section} from 'components/DataTable';
 
 const DatasetTable: React.FC = () => {
   const [transcriptions, setTranscriptions] = useAtom(transcriptionsAtom);
@@ -127,22 +128,73 @@ const DatasetTable: React.FC = () => {
     }
   };
 
+  const sections: Section<Transcription>[] = [
+    {name: 'Model Name', display: transcription => transcription.modelLocation},
+    {
+      name: 'Audio Name',
+      display: transcription => `${transcription.audioName}.wav`,
+    },
+    {
+      name: 'Text',
+      display: transcription => (
+        <DownloadTranscriptionFileButton
+          transcription={transcription}
+          fileType="text"
+        >
+          <Download />
+        </DownloadTranscriptionFileButton>
+      ),
+    },
+    {
+      name: 'Elan',
+      display: transcription => (
+        <DownloadTranscriptionFileButton
+          transcription={transcription}
+          fileType="elan"
+        >
+          <Download />
+        </DownloadTranscriptionFileButton>
+      ),
+    },
+    {
+      name: 'Status',
+      display: transcription => transcription.status,
+    },
+
+    {
+      name: 'Transcribe',
+      display: transcription => (
+        <button
+          onClick={() => _transcribe(transcription)}
+          disabled={transcription.status === TranscriptionStatus.Finished}
+        >
+          <TranscriptionStatusIndicator status={transcription.status} />
+        </button>
+      ),
+    },
+    {
+      name: 'View',
+      display: (_, index) => (
+        <Link href={`${urls.transcriptions.view}/${index}`}>
+          <a>
+            <Eye color={colours.info} />
+          </a>
+        </Link>
+      ),
+    },
+    {
+      name: 'Delete',
+      display: (_, index) => (
+        <button onClick={() => removeTranscription(index)}>
+          <Trash2 color={colours.delete} />
+        </button>
+      ),
+    },
+  ];
+
   return (
     <>
       <div className="mt-2 text-sm flex justify-between">
-        <Button
-          size="sm"
-          variant="outline"
-          disabled={
-            transcriptions.filter(
-              transcription =>
-                transcription.status === TranscriptionStatus.Finished
-            ).length === 0
-          }
-          onClick={downloadAllTranscriptions}
-        >
-          Download All Transcriptions
-        </Button>
         <div className="space-x-2">
           <Button
             size="sm"
@@ -155,79 +207,31 @@ const DatasetTable: React.FC = () => {
               ).length === 0
             }
           >
+            <Play className="h-4 w-4 mr-2" />
             Transcribe All
           </Button>
-          <Button size="sm" variant="outline" onClick={removeAll}>
-            Delete All
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={
+              transcriptions.filter(
+                transcription =>
+                  transcription.status === TranscriptionStatus.Finished
+              ).length === 0
+            }
+            onClick={downloadAllTranscriptions}
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Download All
           </Button>
         </div>
+        <Button size="sm" variant="outline" onClick={removeAll}>
+          <Trash2 className="h-4 w-4 mr-2" />
+          Delete All
+        </Button>
       </div>
       <div className="text-left w-full">
-        <table className="w-full table">
-          <thead>
-            <tr>
-              <th>Model Name</th>
-              <th>Audio</th>
-              <th>Text</th>
-              <th>Elan</th>
-              <th>Status</th>
-              <th>Transcribe</th>
-              <th>View</th>
-              <th>Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transcriptions.map((transcription, index) => (
-              <tr key={index}>
-                <td>{transcription.modelLocation}</td>
-                <td>{transcription.audioName}.wav</td>
-
-                <td>
-                  <DownloadTranscriptionFileButton
-                    transcription={transcription}
-                    fileType="text"
-                  >
-                    <Download />
-                  </DownloadTranscriptionFileButton>
-                </td>
-                <td>
-                  <DownloadTranscriptionFileButton
-                    transcription={transcription}
-                    fileType="elan"
-                  >
-                    <Download />
-                  </DownloadTranscriptionFileButton>
-                </td>
-
-                <td>{transcription.status}</td>
-                <td>
-                  <button
-                    onClick={() => _transcribe(transcription)}
-                    disabled={
-                      transcription.status === TranscriptionStatus.Finished
-                    }
-                  >
-                    <TranscriptionStatusIndicator
-                      status={transcription.status}
-                    />
-                  </button>
-                </td>
-                <td>
-                  <Link href={`${urls.transcriptions.view}/${index}`}>
-                    <a>
-                      <Eye color={colours.info} />
-                    </a>
-                  </Link>
-                </td>
-                <td>
-                  <button onClick={() => removeTranscription(index)}>
-                    <Trash2 color={colours.delete} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <DataTable data={transcriptions} sections={sections} />
       </div>
     </>
   );
