@@ -1,4 +1,13 @@
 import {Button} from 'components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from 'components/ui/card';
+import {Input} from 'components/ui/input';
+import {Label} from 'components/ui/label';
 import {useAtom} from 'jotai';
 import React, {useState} from 'react';
 import {newModelAtom, newModelStageAtom} from 'store';
@@ -16,27 +25,29 @@ export default function ChooseModelName() {
 
   const hasName = name !== '';
   return (
-    <div className="section">
-      <h2 className="subtitle">Choose Model Name</h2>
+    <Card>
+      <CardHeader>
+        <CardTitle>Choose Model Name</CardTitle>
+      </CardHeader>
 
-      <div className="mt-4 space-x-2">
-        <label>Name:</label>
-        <input
+      <CardContent>
+        <Label htmlFor="modelName">Name</Label>
+        <Input
           type="text"
+          id="modelName"
           value={name}
           onChange={e => setName(e.target.value)}
           className="rounded"
         />
-      </div>
-
-      <div className="flex items-center justify-between mt-8">
+      </CardContent>
+      <CardFooter className="flex items-center justify-between">
         <Button variant="outline" disabled>
           Back
         </Button>
         <Button className="button" disabled={!hasName} onClick={save}>
           Next
         </Button>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 }
