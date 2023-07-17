@@ -13,7 +13,7 @@ import TranscriptionFileUpload from 'components/transcribe/TranscriptionFileUplo
 import {useRouter} from 'next/router';
 import urls from 'lib/urls';
 import {FileType, parseFileType} from 'lib/dataset';
-import { Button } from 'components/ui/button';
+import {Button} from 'components/ui/button';
 
 export default function TranscribePage() {
   const router = useRouter();

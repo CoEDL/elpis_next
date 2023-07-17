@@ -16,7 +16,7 @@
   }
 
   .title {
-    @apply text-3xl text-secondary;
+    @apply font-bold text-3xl xl:text-4xl text-secondary;
   }
 
   .page-description {
