@@ -22,6 +22,7 @@ import {transcriptionsAtom} from 'store';
 import Transcription, {TranscriptionStatus} from 'types/Transcription';
 import DownloadTranscriptionFileButton from './DownloadTranscriptionFileButton';
 import Link from 'next/link';
+import {Button} from 'components/ui/button';
 
 const DatasetTable: React.FC = () => {
   const [transcriptions, setTranscriptions] = useAtom(transcriptionsAtom);
@@ -129,8 +130,9 @@ const DatasetTable: React.FC = () => {
   return (
     <>
       <div className="mt-2 text-sm flex justify-between">
-        <button
-          className="button"
+        <Button
+          size="sm"
+          variant="outline"
           disabled={
             transcriptions.filter(
               transcription =>
@@ -140,10 +142,11 @@ const DatasetTable: React.FC = () => {
           onClick={downloadAllTranscriptions}
         >
           Download All Transcriptions
-        </button>
+        </Button>
         <div className="space-x-2">
-          <button
-            className="button"
+          <Button
+            size="sm"
+            variant="outline"
             onClick={transcribeEverything}
             disabled={
               transcriptions.filter(
@@ -153,10 +156,10 @@ const DatasetTable: React.FC = () => {
             }
           >
             Transcribe All
-          </button>
-          <button className="button" onClick={removeAll}>
+          </Button>
+          <Button size="sm" variant="outline" onClick={removeAll}>
             Delete All
-          </button>
+          </Button>
         </div>
       </div>
       <div className="text-left w-full">

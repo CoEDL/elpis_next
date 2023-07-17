@@ -7,6 +7,7 @@ import Link from 'next/link';
 import urls from 'lib/urls';
 import Transcription from 'types/Transcription';
 import ClientOnly from 'components/ClientOnly';
+import {Button} from 'components/ui/button';
 
 export default function TranscriptionsPage() {
   const [, setTranscriptions] = useAtom(transcriptionsAtom);
@@ -36,7 +37,7 @@ export default function TranscriptionsPage() {
       <div className="mt-4">
         <Link href={urls.transcriptions.new}>
           <a>
-            <button className="button">Create New</button>
+            <Button>Create New</Button>
           </a>
         </Link>
       </div>

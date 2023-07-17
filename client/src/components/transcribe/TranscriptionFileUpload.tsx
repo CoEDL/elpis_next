@@ -5,6 +5,7 @@ import {useAtom} from 'jotai';
 import {Check, X, Trash2} from 'react-feather';
 import {FileType, parseFileType} from 'lib/dataset';
 import colours from 'lib/colours';
+import {Button} from 'components/ui/button';
 
 export default function TranscriptionFileUpload() {
   const [files, setFiles] = useAtom(transcriptionFilesAtom);
@@ -44,7 +45,9 @@ export default function TranscriptionFileUpload() {
                       )}
                     </td>
                     <td>
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() =>
                           setFiles(
                             files.filter((_, _index) => index !== _index)
@@ -52,7 +55,7 @@ export default function TranscriptionFileUpload() {
                         }
                       >
                         <Trash2 color={colours.delete} />
-                      </button>
+                      </Button>
                     </td>
                   </tr>
                 ))}
@@ -60,11 +63,11 @@ export default function TranscriptionFileUpload() {
             </table>
           </div>
           <div className="flex space-x-2 items-center justify-between">
-            <button className="button block" onClick={() => setFiles([])}>
+            <Button variant="secondary" onClick={() => setFiles([])}>
               Reset
-            </button>
-            <button
-              className="button block"
+            </Button>
+            <Button
+              variant="secondary"
               onClick={removeUnsupported}
               disabled={
                 files.filter(
@@ -73,7 +76,7 @@ export default function TranscriptionFileUpload() {
               }
             >
               Remove Unsupported Files
-            </button>
+            </Button>
           </div>
         </>
       )}

@@ -1,5 +1,6 @@
 import ViewModelInfo from 'components/train/ViewModelInfo';
 import ViewTraining from 'components/train/ViewTraining';
+import {Button} from 'components/ui/button';
 import {useAtom} from 'jotai';
 import urls from 'lib/urls';
 import Link from 'next/link';
@@ -32,7 +33,7 @@ export default function ViewModelPage() {
         </p>
         <Link href={urls.train.index}>
           <a>
-            <button className="button mt-4">Models Page</button>
+            <Button>Models Page</Button>
           </a>
         </Link>
       </div>
@@ -43,14 +44,18 @@ export default function ViewModelPage() {
     <div className="container">
       <h1 className="title mb-4">View Model: {modelName}</h1>
 
+      <Button
+        variant="secondary"
+        className="mb-2"
+        onClick={() => setShowInfo(!showInfo)}
+      >
+        {showInfo ? 'Hide Model Info' : 'Show Model Info'}
+      </Button>
+
       {/** Model info section */}
       <div className={'section space-y-4 ' + (!showInfo && 'hidden')}>
         <ViewModelInfo model={model} />
       </div>
-
-      <button className="button mt-2" onClick={() => setShowInfo(!showInfo)}>
-        {showInfo ? 'Hide Model Info' : 'Show Model Info'}
-      </button>
 
       <ViewTraining model={model} />
     </div>

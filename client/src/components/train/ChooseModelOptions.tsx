@@ -6,6 +6,7 @@ import React from 'react';
 import {newModelAtom, newModelStageAtom} from 'store';
 import {useResetAtom} from 'jotai/utils';
 import {BASE_MODEL, NewModelStage} from 'types/Model';
+import {Button} from 'components/ui/button';
 
 export default function ChooseModelOptions() {
   const router = useRouter();
@@ -64,17 +65,17 @@ export default function ChooseModelOptions() {
       </div>
 
       <div className="flex items-center justify-between mt-8">
-        <button
-          className="button"
+        <Button
+          variant="secondary"
           onClick={() => {
             setStage(NewModelStage.TrainingOptions);
           }}
         >
           Back
-        </button>
-        <button className="button" disabled={!isValid()} onClick={save}>
+        </Button>
+        <Button disabled={!isValid()} onClick={save}>
           Save
-        </button>
+        </Button>
       </div>
     </div>
   );

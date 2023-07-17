@@ -15,6 +15,7 @@ import {createDataset} from 'lib/api/datasets';
 import {useRouter} from 'next/router';
 import urls from 'lib/urls';
 import {isValidForDataset} from 'lib/dataset';
+import {Button} from 'components/ui/button';
 
 const NewDatasetPage: React.FC = () => {
   const router = useRouter();
@@ -65,15 +66,15 @@ const NewDatasetPage: React.FC = () => {
       <h1 className="text-3xl">New Dataset</h1>
       <p className="page-description">Some description</p>
 
+      <ChooseDatasetName />
       <DatasetFiles />
       <ChooseElanOptions />
       <ChooseCleaningOptions />
-      <ChooseDatasetName />
 
       <div className="flex justify-end">
-        <button className="button" onClick={save} disabled={!canCreate()}>
+        <Button onClick={save} disabled={!canCreate()}>
           Save
-        </button>
+        </Button>
       </div>
 
       {error && <p className="text-red-400">{error}</p>}

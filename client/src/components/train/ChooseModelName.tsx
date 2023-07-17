@@ -1,3 +1,4 @@
+import {Button} from 'components/ui/button';
 import {useAtom} from 'jotai';
 import React, {useState} from 'react';
 import {newModelAtom, newModelStageAtom} from 'store';
@@ -29,12 +30,12 @@ export default function ChooseModelName() {
       </div>
 
       <div className="flex items-center justify-between mt-8">
-        <button className="button" disabled>
+        <Button variant="outline" disabled>
           Back
-        </button>
-        <button className="button" disabled={!hasName} onClick={save}>
+        </Button>
+        <Button className="button" disabled={!hasName} onClick={save}>
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );

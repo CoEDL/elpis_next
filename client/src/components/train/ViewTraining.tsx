@@ -5,6 +5,8 @@ import Model, {TrainingStatus} from 'types/Model';
 import Link from 'next/link';
 import {tensorboard} from 'lib/urls';
 import TrainingStatusIndicator from 'components/train/TrainingStatusIndicator';
+import {Button} from 'components/ui/button';
+import {Download} from 'react-feather';
 
 type Props = {
   model: Model;
@@ -68,12 +70,17 @@ const ViewTraining: React.FC<Props> = ({model}) => {
         ))}
       </div>
       <div className="flex space-x-2">
-        <button className="button" onClick={downloadLogs}>
-          Download Logs
-        </button>
+        <Button
+          variant="secondary"
+          className="space-x-2"
+          onClick={downloadLogs}
+        >
+          <Download size={20} />
+          <span>Download Logs</span>
+        </Button>
         <Link href={tensorboard}>
           <a target="_blank">
-            <button className="button">Tensorboard</button>
+            <Button variant="link">Tensorboard</Button>
           </a>
         </Link>
       </div>
