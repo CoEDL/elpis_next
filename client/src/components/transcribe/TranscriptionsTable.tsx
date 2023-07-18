@@ -138,22 +138,20 @@ const DatasetTable: React.FC = () => {
       name: 'Text',
       display: transcription => (
         <DownloadTranscriptionFileButton
+          variant="icon"
           transcription={transcription}
           fileType="text"
-        >
-          <Download />
-        </DownloadTranscriptionFileButton>
+        />
       ),
     },
     {
       name: 'Elan',
       display: transcription => (
         <DownloadTranscriptionFileButton
+          variant="icon"
           transcription={transcription}
           fileType="elan"
-        >
-          <Download />
-        </DownloadTranscriptionFileButton>
+        />
       ),
     },
     {
