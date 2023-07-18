@@ -1,4 +1,18 @@
-import {useAtom} from 'jotai';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from 'components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'components/ui/select';
+import {useAtom, useSetAtom} from 'jotai';
 import urls from 'lib/urls';
 import Link from 'next/link';
 import React from 'react';
@@ -7,43 +21,54 @@ import {TrainingStatus} from 'types/Model';
 
 export default function ChooseModel() {
   const [models] = useAtom(modelsAtom);
-  const [modelLocation, setModelLocation] = useAtom(modelLocationAtom);
+  const setModelLocation = useSetAtom(modelLocationAtom);
 
   if (!models.some(model => model.status === TrainingStatus.Finished)) {
     return (
-      <div className="space-y-2">
-        <h2 className="text-lg font-light">Choose Trained Model</h2>
-        <p>
-          No trained models available! Before performing inference on an audio
-          file, you must create and train a model.
-        </p>
+      <Card>
+        <CardHeader>
+          <CardTitle>Select Trained Model</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <h2 className="text-lg font-light">Choose Trained Model</h2>
+          <p>
+            No trained models available! Before performing inference on an audio
+            file, you must create and train a model.
+          </p>
 
-        <Link href={urls.train.index}>
-          <button className="button">Models Home</button>
-        </Link>
-      </div>
+          <Link href={urls.train.index}>
+            <button className="button">Models Home</button>
+          </Link>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div>
-      <h2 className="text-lg font-light">Select Trained Model</h2>
-      <p className="mt-2 text-sm text-gray-700 italic">
-        This only displays models which have finished training.
-      </p>
-      <div className="mt-4 flex space-x-4">
-        {models
-          .filter(model => model.status === TrainingStatus.Finished)
-          .map(model => (
-            <ModelSelector
-              key={model.modelName}
-              modelName={model.modelName}
-              isSelected={modelLocation === model.modelName}
-              onClick={() => setModelLocation(model.modelName)}
-            />
-          ))}
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Select Trained Model</CardTitle>
+        <CardDescription>
+          This only displays the local models which have finished training.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Select onValueChange={setModelLocation}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select a trained model." />
+          </SelectTrigger>
+          <SelectContent>
+            {models
+              .filter(model => model.status === TrainingStatus.Finished)
+              .map(model => (
+                <SelectItem key={model.modelName} value={model.modelName}>
+                  {model.modelName}
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
+      </CardContent>
+    </Card>
   );
 }
 
