@@ -32,10 +32,9 @@ const TrainPage: NextPage = () => {
       <div className="flex space-x-8">
         <div className="w-full">
           <h1 className="title">Train Models</h1>
-          <p className="mt-2 page-description">Blah blah blah</p>
 
-          <ClientOnly className="mt-8 space-y-4">
-            <div className="flex items-center justify-between">
+          <ClientOnly className="mt-4 space-y-4">
+            <div className="mb-8 flex items-center justify-between">
               <div className="space-x-2 flex items-center">
                 <Link href={urls.train.new}>
                   <a>
@@ -69,8 +68,10 @@ const TrainPage: NextPage = () => {
                 </div>
               )}
             </div>
-            <h2 className="subtitle mt-8 mb-2">Your Models</h2>
-            <ModelTable />
+            <section className="space-y-4">
+              <h2 className="subtitle mt-8 mb-2">Your Models</h2>
+              <ModelTable />
+            </section>
           </ClientOnly>
         </div>
       </div>

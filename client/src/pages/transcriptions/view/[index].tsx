@@ -4,10 +4,20 @@ import {getText} from 'lib/api/transcribe';
 import urls from 'lib/urls';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
-import React, {useEffect, useState} from 'react';
-import {Download} from 'react-feather';
+import React, {FC, useEffect, useState} from 'react';
+import {Dot, Download, FileAudio2, FileBox, Home, Icon} from 'lucide-react';
 import {transcriptionsAtom} from 'store';
 import Transcription, {TranscriptionStatus} from 'types/Transcription';
+import {Button} from 'components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from 'components/ui/card';
+import {Label} from 'components/ui/label';
+import {Edit2, ExternalLink} from 'lucide-react';
 
 export default function ViewTranscriptionPage() {
   const [transcriptions] = useAtom(transcriptionsAtom);
@@ -65,56 +75,85 @@ export default function ViewTranscriptionPage() {
         <h1 className="title">Transcription</h1>
         <Link href={urls.transcriptions.index}>
           <a>
-            <button className="button">Back</button>
+            <Button variant="secondary">Back</Button>
           </a>
         </Link>
       </div>
-      <div className="grid grid-cols-2 section">
-        <p className="font-semibold">Model Name:</p>
-        <p>
-          {transcription.isLocal ? (
-            transcription.modelLocation
-          ) : (
-            <a
-              className="text-blue-500"
-              href={`https://huggingface.co/${transcription.modelLocation}`}
-            >
-              {transcription.modelLocation}
-            </a>
-          )}
-        </p>
 
-        <p className="font-semibold">Audio Name:</p>
-        <p>{transcription.audioName}.wav</p>
-        <p className="font-semibold">Is Local:</p>
-        <p>{transcription.isLocal ? 'True' : 'False'}</p>
-        <p className="font-semibold">Status:</p>
-        <p>{transcription.status}</p>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Info</CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-2 gap-4 font-light text-base">
+          <InfoSection name="Audio Name" icon={FileAudio2}>
+            <p>{transcription.audioName}.wav</p>
+          </InfoSection>
+          <InfoSection name="Model Name" icon={FileBox}>
+            <p>
+              {transcription.isLocal ? (
+                transcription.modelLocation
+              ) : (
+                <a
+                  className="text-blue-500"
+                  href={`https://huggingface.co/${transcription.modelLocation}`}
+                >
+                  {transcription.modelLocation}
+                </a>
+              )}
+            </p>
+          </InfoSection>
+          <InfoSection name="Is Local" icon={Home}>
+            <p>{transcription.isLocal ? 'True' : 'False'}</p>
+          </InfoSection>
+          <InfoSection name="Status" icon={Dot}>
+            <p>{transcription.status}</p>
+          </InfoSection>
+        </CardContent>
+      </Card>
       {transcription.status === TranscriptionStatus.Finished && (
-        <>
-          <div className="section">
-            <h2 className="font-semibold mb-2">Transcript:</h2>
-            <p className="text-gray-700">{text}</p>
-          </div>
-          <div className="flex space-x-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Transcript</CardTitle>
+          </CardHeader>
+          <CardContent>{text}</CardContent>
+          <CardFooter className="flex space-x-2">
             <DownloadTranscriptionFileButton
               transcription={transcription}
               fileType="text"
-              className="button"
             >
-              Download Text
+              <Download className="h-4 w-4 mr-2" />
+              <span>Download Text</span>
             </DownloadTranscriptionFileButton>
             <DownloadTranscriptionFileButton
               transcription={transcription}
               fileType="elan"
-              className="button"
             >
-              Download Elan
+              <Download className="h-4 w-4 mr-2" />
+              <span>Download Elan</span>
             </DownloadTranscriptionFileButton>
-          </div>
-        </>
+          </CardFooter>
+        </Card>
       )}
     </div>
   );
 }
+
+type InfoSectionProps = {
+  name: string;
+  icon: Icon;
+  children: React.ReactNode;
+};
+
+const InfoSection: FC<InfoSectionProps> = ({name, icon, children}) => {
+  const SectionIcon = icon;
+
+  return (
+    <div className="flex items-center space-x-2">
+      <SectionIcon className="h-8 w-8" strokeWidth={1} />
+      <div>
+        <Label>{name}</Label>
+        <div className="text-sm">{children}</div>
+      </div>
+    </div>
+  );
+};

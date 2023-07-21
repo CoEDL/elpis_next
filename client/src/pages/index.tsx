@@ -6,8 +6,6 @@ const Home: NextPage = () => {
   return (
     <div className="container">
       <h1 className="text-center title">ELPIS</h1>
-      <p className="page-description text-center mt-2">Blah blah blah</p>
-
       <div className="mt-12">
         <p className="subtitle text-center">Choose a Task</p>
         <div className="flex space-x-2 items-center justify-center mt-4">
