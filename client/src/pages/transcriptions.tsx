@@ -8,6 +8,7 @@ import urls from 'lib/urls';
 import Transcription from 'types/Transcription';
 import ClientOnly from 'components/ClientOnly';
 import {Button} from 'components/ui/button';
+import {Plus} from 'lucide-react';
 
 export default function TranscriptionsPage() {
   const [, setTranscriptions] = useAtom(transcriptionsAtom);
@@ -28,19 +29,21 @@ export default function TranscriptionsPage() {
   return (
     <div className="container">
       <h1 className="title">Transcriptions</h1>
-      <p className="mt-2 page-description">Blah blah blah</p>
+      <div className="mt-4">
+        <Link href={urls.transcriptions.new}>
+          <a>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Create New
+            </Button>
+          </a>
+        </Link>
+      </div>
 
       <ClientOnly className="mt-8 space-y-4">
         <h2 className="subtitle">Your Transcriptions</h2>
         <TranscriptionsTable />
       </ClientOnly>
-      <div className="mt-4">
-        <Link href={urls.transcriptions.new}>
-          <a>
-            <Button>Create New</Button>
-          </a>
-        </Link>
-      </div>
     </div>
   );
 }
