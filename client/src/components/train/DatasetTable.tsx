@@ -7,6 +7,8 @@ import {datasetsAtom} from 'store';
 import DataTable, {Section} from 'components/DataTable';
 import Dataset from 'types/Dataset';
 import {Button} from 'components/ui/button';
+import ConfirmDelete from 'components/ConfirmDelete';
+import colours from 'lib/colours';
 
 const DatasetTable: React.FC = () => {
   const [datasets, setDatasets] = useAtom(datasetsAtom);
@@ -53,13 +55,15 @@ const DatasetTable: React.FC = () => {
     {
       name: 'Delete',
       display: dataset => (
-        <Button
-          size="icon"
-          variant="ghost"
-          onClick={() => _deleteDataset(dataset.name)}
+        <ConfirmDelete
+          title={`Delete ${dataset.name}?`}
+          description="Once deleted, the local dataset cannot be recovered."
+          action={() => _deleteDataset(dataset.name)}
         >
-          <Trash2 />
-        </Button>
+          <button title="Delete this dataset">
+            <Trash2 color={colours.delete} />
+          </button>
+        </ConfirmDelete>
       ),
     },
   ];

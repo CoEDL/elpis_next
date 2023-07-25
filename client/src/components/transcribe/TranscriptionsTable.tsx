@@ -24,6 +24,7 @@ import DownloadTranscriptionFileButton from './DownloadTranscriptionFileButton';
 import Link from 'next/link';
 import {Button} from 'components/ui/button';
 import DataTable, {Section} from 'components/DataTable';
+import ConfirmDelete from 'components/ConfirmDelete';
 
 const DatasetTable: React.FC = () => {
   const [transcriptions, setTranscriptions] = useAtom(transcriptionsAtom);
@@ -182,10 +183,16 @@ const DatasetTable: React.FC = () => {
     },
     {
       name: 'Delete',
-      display: (_, index) => (
-        <button onClick={() => removeTranscription(index)}>
-          <Trash2 color={colours.delete} />
-        </button>
+      display: (transcription, index) => (
+        <ConfirmDelete
+          title="Delete transcription?"
+          description={`Once deleted, the transcription for ${transcription.audioName}.wav will not be recoverable.`}
+          action={() => removeTranscription(index)}
+        >
+          <button>
+            <Trash2 color={colours.delete} />
+          </button>
+        </ConfirmDelete>
       ),
     },
   ];
