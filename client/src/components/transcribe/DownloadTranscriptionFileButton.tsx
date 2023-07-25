@@ -3,7 +3,8 @@ import fileDownload from 'js-file-download';
 import React, {useState} from 'react';
 import Transcription from 'types/Transcription';
 import {Button} from 'components/ui/button';
-import {Download} from 'lucide-react';
+import {Download, Loader} from 'lucide-react';
+import clsx from 'clsx';
 
 type Props = {
   variant?: 'full' | 'icon';
@@ -18,7 +19,6 @@ const DownloadTranscriptionFileButton: React.FC<
   const suffix = fileType === 'elan' ? '.eaf' : '.txt';
   const fileName = transcription.audioName + suffix;
   const text = fileType === 'elan' ? 'Download Elan' : 'Download Text';
-
   const [downloading, setDownloading] = useState(false);
 
   const downloadFile = async () => {
@@ -28,28 +28,35 @@ const DownloadTranscriptionFileButton: React.FC<
       transcription.modelLocation,
       transcription.audioName
     );
-    setDownloading(false);
     if (response.ok) {
       const blob = await response.blob();
       fileDownload(blob, fileName);
     }
+    setDownloading(false);
   };
 
   if (transcription.status !== 'finished') {
     return null;
   }
 
+  const Icon = downloading ? Loader : Download;
+
   if (variant === 'icon') {
     return (
       <button {...other} onClick={downloadFile} disabled={downloading}>
-        <Download />
+        <Icon className={clsx({'animate-spin': downloading})} />
       </button>
     );
   }
 
   return (
-    <Button variant="secondary" {...other} onClick={downloadFile}>
-      <Download className="h-4 w-4 mr-2" />
+    <Button
+      variant="secondary"
+      {...other}
+      onClick={downloadFile}
+      disabled={downloading}
+    >
+      <Icon className={clsx('h-4 w-4 mr-2', {'animate-spin': downloading})} />
       {text}
     </Button>
   );
