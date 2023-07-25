@@ -1,6 +1,6 @@
 import FileDropper from 'components/FileUpload';
 import {useAtom} from 'jotai';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {filesAtom} from 'store';
 import {Trash2, Check, X, AlertTriangle} from 'react-feather';
 import {FileType, hasMatch, parseFileType} from 'lib/dataset';
@@ -16,6 +16,7 @@ type DatasetFile = {
 
 const DatasetFiles: React.FC = () => {
   const [files, setFiles] = useAtom(filesAtom);
+  const fileNames = useMemo(() => files.map(file => file.name), [files]);
 
   const fileTypes: FileType[] = [
     FileType.Audio,
@@ -29,6 +30,14 @@ const DatasetFiles: React.FC = () => {
   const deleteFile = (name: string) =>
     setFiles(files.filter(file => file.name !== name));
 
+  const deleteMismatchedFiles = () => {
+    setFiles(files.filter(file => hasMatch(file.name, fileNames)));
+  };
+
+  const hasMismatchedFiles = useMemo(() => {
+    return files.some(file => !hasMatch(file.name, fileNames));
+  }, [files, fileNames]);
+
   const data = [
     ...transcriptionFiles.map(file => ({file, type: 'Transcription'})),
     ...audioFiles.map(file => ({file, type: 'Audio'})),
@@ -40,10 +49,7 @@ const DatasetFiles: React.FC = () => {
     {
       name: 'Has match',
       display: item =>
-        hasMatch(
-          item.file.name,
-          files.map(file => file.name)
-        ) ? (
+        hasMatch(item.file.name, fileNames) ? (
           <Check color={colours.success} />
         ) : (
           <X color={colours.warning} />
@@ -70,6 +76,11 @@ const DatasetFiles: React.FC = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <FileDropper callback={_files => setFiles([...files, ..._files])} />
+        {hasMismatchedFiles && (
+          <Button size="sm" variant="outline" onClick={deleteMismatchedFiles}>
+            Delete Mismatched Files
+          </Button>
+        )}
         {files.length > 0 && <DataTable data={data} sections={sections} />}
 
         {unsupportedFiles.length > 0 && (
