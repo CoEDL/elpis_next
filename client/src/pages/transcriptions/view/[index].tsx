@@ -17,7 +17,6 @@ import {
   CardTitle,
 } from 'components/ui/card';
 import {Label} from 'components/ui/label';
-import {Edit2, ExternalLink} from 'lucide-react';
 
 export default function ViewTranscriptionPage() {
   const [transcriptions] = useAtom(transcriptionsAtom);
@@ -120,6 +119,7 @@ export default function ViewTranscriptionPage() {
             <DownloadTranscriptionFileButton
               transcription={transcription}
               fileType="text"
+              variant="secondary"
             >
               <Download className="h-4 w-4 mr-2" />
               <span>Download Text</span>
@@ -127,6 +127,7 @@ export default function ViewTranscriptionPage() {
             <DownloadTranscriptionFileButton
               transcription={transcription}
               fileType="elan"
+              variant="secondary"
             >
               <Download className="h-4 w-4 mr-2" />
               <span>Download Elan</span>

@@ -1,5 +1,4 @@
 import {useAtom} from 'jotai';
-import fileDownload from 'js-file-download';
 import urls from 'lib/urls';
 import {
   deleteTranscription,
@@ -8,16 +7,8 @@ import {
   transcribe,
 } from 'lib/api/transcribe';
 import colours from 'lib/colours';
-import React, {useState} from 'react';
-import {
-  AlertCircle,
-  Download,
-  Check,
-  Loader,
-  Play,
-  Trash2,
-  Eye,
-} from 'lucide-react';
+import React from 'react';
+import {AlertCircle, Check, Loader, Play, Trash2, Eye} from 'lucide-react';
 import {transcriptionsAtom} from 'store';
 import Transcription, {TranscriptionStatus} from 'types/Transcription';
 import DownloadTranscriptionFileButton from './DownloadTranscriptionFileButton';
@@ -25,10 +16,12 @@ import Link from 'next/link';
 import {Button} from 'components/ui/button';
 import DataTable, {Section} from 'components/DataTable';
 import ConfirmDelete from 'components/ConfirmDelete';
+import DownloadFileButton from 'components/DownloadFileButton';
+
+const TRANSCRIPTION_FILES_FILENAME = 'transcription_files.zip';
 
 const DatasetTable: React.FC = () => {
   const [transcriptions, setTranscriptions] = useAtom(transcriptionsAtom);
-  const [downloading, setDownloading] = useState(false);
 
   if (transcriptions.length === 0) {
     return <p>No current transcriptions!</p>;
@@ -124,19 +117,6 @@ const DatasetTable: React.FC = () => {
     }
   };
 
-  const downloadAllTranscriptions = async () => {
-    if (downloading) return;
-    setDownloading(true);
-    const response = await downloadFiles();
-    if (response.ok) {
-      const blob = await response.blob();
-      fileDownload(blob, 'transcription_files.zip');
-    } else {
-      console.error('Error downloading transcription files');
-    }
-    setDownloading(false);
-  };
-
   const sections: Section<Transcription>[] = [
     {name: 'Model Name', display: transcription => transcription.modelLocation},
     {
@@ -147,7 +127,7 @@ const DatasetTable: React.FC = () => {
       name: 'Text',
       display: transcription => (
         <DownloadTranscriptionFileButton
-          variant="icon"
+          isIcon
           transcription={transcription}
           fileType="text"
         />
@@ -157,7 +137,7 @@ const DatasetTable: React.FC = () => {
       name: 'Elan',
       display: transcription => (
         <DownloadTranscriptionFileButton
-          variant="icon"
+          isIcon
           transcription={transcription}
           fileType="elan"
         />
@@ -228,25 +208,19 @@ const DatasetTable: React.FC = () => {
             )}
             Transcribe All
           </Button>
-          <Button
+          <DownloadFileButton
+            filename={TRANSCRIPTION_FILES_FILENAME}
+            downloadFile={downloadFiles}
+            text="Download All"
             size="sm"
             variant="outline"
             disabled={
-              downloading ||
               transcriptions.filter(
                 transcription =>
                   transcription.status === TranscriptionStatus.Finished
               ).length === 0
             }
-            onClick={downloadAllTranscriptions}
-          >
-            {downloading ? (
-              <Loader className="h-4 w-4 mr-2 animate-spin" />
-            ) : (
-              <Download className="h-4 w-4 mr-2" />
-            )}
-            Download All
-          </Button>
+          />
         </div>
         <ConfirmDelete
           title="Delete all Transcriptions?"
