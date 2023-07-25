@@ -1,11 +1,6 @@
 import {useAtom} from 'jotai';
 import React, {useState} from 'react';
-import {
-  modelIsLocalAtom,
-  modelLocationAtom,
-  modelsAtom,
-  transcriptionFilesAtom,
-} from 'store';
+import {modelLocationAtom, modelsAtom, transcriptionFilesAtom} from 'store';
 import {createTranscriptionJobs} from 'lib/api/transcribe';
 import ChooseModel from 'components/transcribe/ChooseModel';
 import ChooseHuggingFaceModel from 'components/transcribe/ChooseHuggingFaceModel';
@@ -16,6 +11,7 @@ import {FileType, parseFileType} from 'lib/dataset';
 import {Button} from 'components/ui/button';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from 'components/ui/tabs';
 import ClientOnly from 'components/ClientOnly';
+import {Loader} from 'lucide-react';
 
 type ModelType = 'local' | 'huggingface';
 
@@ -26,8 +22,11 @@ export default function TranscribePage() {
   const [models] = useAtom(modelsAtom);
   const [error, setError] = useState('');
   const [type, setType] = useState<ModelType>('local');
+  const [saving, setSaving] = useState(false);
 
   const _createTranscriptions = async () => {
+    if (saving) return;
+    setSaving(true);
     const response = await createTranscriptionJobs(files, modelLocation);
     if (response.ok) {
       setModelLocation('');
@@ -38,6 +37,7 @@ export default function TranscribePage() {
       setError(text);
       console.error(text);
     }
+    setSaving(false);
   };
 
   const canAddTranscriptions =
@@ -78,9 +78,10 @@ export default function TranscribePage() {
       <div className="flex justify-end">
         <Button
           onClick={_createTranscriptions}
-          disabled={!canAddTranscriptions}
+          disabled={!canAddTranscriptions || saving}
         >
-          Transcribe
+          {saving && <Loader className="mr-2 animate-spin" />}
+          {saving ? 'Saving' : 'Add Transcription Jobs'}
         </Button>
       </div>
 

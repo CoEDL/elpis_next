@@ -35,11 +35,13 @@ import Link from 'next/link';
 import urls from 'lib/urls';
 import {createModel} from 'lib/api/models';
 import {useRouter} from 'next/router';
+import {Loader} from 'lucide-react';
 
 const NewModelPage = () => {
   const datasets = useAtomValue(datasetsAtom);
   const router = useRouter();
   const [showOptions, setShowOptions] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const modelFormSchema = z.object({
     modelName: z.string().min(1).max(20),
@@ -68,6 +70,9 @@ const NewModelPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof modelFormSchema>) => {
+    if (saving) return;
+    setSaving(true);
+
     const {
       modelName,
       datasetName,
@@ -111,6 +116,7 @@ const NewModelPage = () => {
       const data = await response.json();
       console.error(data);
     }
+    setSaving(false);
   };
 
   return (
@@ -374,8 +380,9 @@ const NewModelPage = () => {
             </section>
           )}
 
-          <Button type="submit" className="mt-8">
-            Submit
+          <Button type="submit" className="mt-8" disabled={saving}>
+            {saving && <Loader className="mr-2 animate-spin" />}
+            {saving ? 'Saving' : 'Submit'}
           </Button>
         </form>
       </Form>
