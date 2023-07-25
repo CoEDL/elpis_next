@@ -16,6 +16,7 @@ import {useRouter} from 'next/router';
 import urls from 'lib/urls';
 import {isValidForDataset} from 'lib/dataset';
 import {Button} from 'components/ui/button';
+import {Loader} from 'lucide-react';
 
 const NewDatasetPage: React.FC = () => {
   const router = useRouter();
@@ -25,6 +26,7 @@ const NewDatasetPage: React.FC = () => {
   const [cleaningOptions] = useAtom(cleaningOptionsAtom);
   const [elanOptions] = useAtom(elanOptionsAtom);
   const [name] = useAtom(datasetNameAtom);
+  const [saving, setSaving] = useState(false);
 
   const resetFiles = useResetAtom(filesAtom);
   const resetElanOptions = useResetAtom(elanOptionsAtom);
@@ -43,7 +45,8 @@ const NewDatasetPage: React.FC = () => {
   };
 
   const save = async () => {
-    if (!canCreate()) return;
+    if (!canCreate() || saving) return;
+    setSaving(true);
 
     const response = await createDataset(
       name,
@@ -51,6 +54,7 @@ const NewDatasetPage: React.FC = () => {
       cleaningOptions,
       elanOptions
     );
+
     if (response.ok) {
       resetDataset();
       router.push(urls.datasets.index);
@@ -59,12 +63,12 @@ const NewDatasetPage: React.FC = () => {
       console.error(data);
       setError(data.error);
     }
+    setSaving(false);
   };
 
   return (
     <div className="container py-8 space-y-4">
       <h1 className="text-3xl">New Dataset</h1>
-      <p className="page-description">Some description</p>
 
       <ChooseDatasetName />
       <DatasetFiles />
@@ -72,11 +76,11 @@ const NewDatasetPage: React.FC = () => {
       <ChooseCleaningOptions />
 
       <div className="flex justify-end">
-        <Button onClick={save} disabled={!canCreate()}>
-          Save
+        <Button onClick={save} disabled={!canCreate() || saving}>
+          {saving && <Loader className="mr-2 animate-spin" />}
+          {saving ? 'Saving' : 'Save'}
         </Button>
       </div>
-
       {error && <p className="text-red-400">{error}</p>}
     </div>
   );
