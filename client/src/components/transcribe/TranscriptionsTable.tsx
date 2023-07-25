@@ -230,10 +230,16 @@ const DatasetTable: React.FC = () => {
             Download All
           </Button>
         </div>
-        <Button size="sm" variant="outline" onClick={removeAll}>
-          <Trash2 className="h-4 w-4 mr-2" />
-          Delete All
-        </Button>
+        <ConfirmDelete
+          title="Delete all Transcriptions?"
+          description="Once deleted, these transcriptions will not be recoverable."
+          action={removeAll}
+        >
+          <Button size="sm" variant="outline">
+            <Trash2 className="h-4 w-4 mr-2" />
+            Delete All
+          </Button>
+        </ConfirmDelete>
       </div>
       <div className="text-left w-full">
         <DataTable data={transcriptions} sections={sections} />
