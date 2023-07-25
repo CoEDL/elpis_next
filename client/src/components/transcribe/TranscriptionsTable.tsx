@@ -8,7 +8,7 @@ import {
   transcribe,
 } from 'lib/api/transcribe';
 import colours from 'lib/colours';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   AlertCircle,
   Download,
@@ -28,6 +28,7 @@ import ConfirmDelete from 'components/ConfirmDelete';
 
 const DatasetTable: React.FC = () => {
   const [transcriptions, setTranscriptions] = useAtom(transcriptionsAtom);
+  const [downloading, setDownloading] = useState(false);
 
   if (transcriptions.length === 0) {
     return <p>No current transcriptions!</p>;
@@ -64,6 +65,10 @@ const DatasetTable: React.FC = () => {
         TranscriptionStatus.Transcribing,
         TranscriptionStatus.Finished,
       ].includes(transcription.status)
+  );
+
+  const isTranscribing = transcriptions.some(
+    transcription => transcription.status === TranscriptionStatus.Transcribing
   );
 
   const transcribeEverythingAsync = async () => {
@@ -120,6 +125,8 @@ const DatasetTable: React.FC = () => {
   };
 
   const downloadAllTranscriptions = async () => {
+    if (downloading) return;
+    setDownloading(true);
     const response = await downloadFiles();
     if (response.ok) {
       const blob = await response.blob();
@@ -127,6 +134,7 @@ const DatasetTable: React.FC = () => {
     } else {
       console.error('Error downloading transcription files');
     }
+    setDownloading(false);
   };
 
   const sections: Section<Transcription>[] = [
@@ -206,19 +214,25 @@ const DatasetTable: React.FC = () => {
             variant="outline"
             onClick={transcribeEverything}
             disabled={
+              isTranscribing ||
               transcriptions.filter(
                 transcription =>
                   transcription.status !== TranscriptionStatus.Finished
               ).length === 0
             }
           >
-            <Play className="h-4 w-4 mr-2" />
+            {isTranscribing ? (
+              <Loader className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Play className="h-4 w-4 mr-2" />
+            )}
             Transcribe All
           </Button>
           <Button
             size="sm"
             variant="outline"
             disabled={
+              downloading ||
               transcriptions.filter(
                 transcription =>
                   transcription.status === TranscriptionStatus.Finished
@@ -226,7 +240,11 @@ const DatasetTable: React.FC = () => {
             }
             onClick={downloadAllTranscriptions}
           >
-            <Download className="h-4 w-4 mr-2" />
+            {downloading ? (
+              <Loader className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4 mr-2" />
+            )}
             Download All
           </Button>
         </div>
