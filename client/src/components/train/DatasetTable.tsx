@@ -1,14 +1,13 @@
 import {useAtom} from 'jotai';
-import fileDownload from 'js-file-download';
 import {deleteDataset, downloadDataset} from 'lib/api/datasets';
 import React from 'react';
-import {Download, Trash2} from 'lucide-react';
+import {Trash2} from 'lucide-react';
 import {datasetsAtom} from 'store';
 import DataTable, {Section} from 'components/DataTable';
 import Dataset from 'types/Dataset';
-import {Button} from 'components/ui/button';
 import ConfirmDelete from 'components/ConfirmDelete';
 import colours from 'lib/colours';
+import DownloadFileButton from 'components/DownloadFileButton';
 
 const DatasetTable: React.FC = () => {
   const [datasets, setDatasets] = useAtom(datasetsAtom);
@@ -23,16 +22,6 @@ const DatasetTable: React.FC = () => {
     }
   };
 
-  const _downloadDataset = async (datasetName: string) => {
-    const response = await downloadDataset(datasetName);
-    if (response.ok) {
-      const blob = await response.blob();
-      fileDownload(blob, datasetName + '.zip');
-    } else {
-      console.error("Couldn't download dataset :(");
-    }
-  };
-
   const sections: Section<Dataset>[] = [
     {
       name: 'Name',
@@ -43,13 +32,10 @@ const DatasetTable: React.FC = () => {
     {
       name: 'Download',
       display: dataset => (
-        <Button
-          size="icon"
-          variant="ghost"
-          onClick={() => _downloadDataset(dataset.name)}
-        >
-          <Download />
-        </Button>
+        <DownloadFileButton
+          downloadFile={() => downloadDataset(dataset.name)}
+          filename={`${dataset.name}.zip`}
+        />
       ),
     },
     {
