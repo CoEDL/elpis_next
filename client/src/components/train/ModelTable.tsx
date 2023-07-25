@@ -11,6 +11,7 @@ import Model, {TrainingStatus} from 'types/Model';
 import TrainingStatusIndicator from 'components/train/TrainingStatusIndicator';
 import DataTable, {Section} from 'components/DataTable';
 import ConfirmDelete from 'components/ConfirmDelete';
+import DownloadFileButton from 'components/DownloadFileButton';
 
 const ModelTable: React.FC = () => {
   const [models, setModels] = useAtom(modelsAtom);
@@ -33,16 +34,6 @@ const ModelTable: React.FC = () => {
       nextModel,
       ...models.slice(index + 1),
     ]);
-  };
-
-  const download = async (modelName: string) => {
-    const response = await downloadModel(modelName);
-    if (response.ok) {
-      const blob = await response.blob();
-      fileDownload(blob, modelName + '.zip');
-    } else {
-      console.error("Couldn't download model :(");
-    }
   };
 
   const _trainModel = async (index: number) => {
@@ -93,18 +84,12 @@ const ModelTable: React.FC = () => {
     {
       name: 'Download',
       display: model => (
-        <button
-          onClick={() => download(model.modelName)}
+        <DownloadFileButton
+          filename={`${model.modelName}.zip`}
+          errorText={"Couldn't download model :("}
+          downloadFile={() => downloadModel(model.modelName)}
           disabled={model.status !== TrainingStatus.Finished}
-        >
-          <Download
-            color={
-              model.status === TrainingStatus.Finished
-                ? colours.grey
-                : colours.unavailable
-            }
-          />
-        </button>
+        />
       ),
     },
     {
