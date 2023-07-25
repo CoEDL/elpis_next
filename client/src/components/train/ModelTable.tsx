@@ -10,6 +10,7 @@ import {modelsAtom} from 'store';
 import Model, {TrainingStatus} from 'types/Model';
 import TrainingStatusIndicator from 'components/train/TrainingStatusIndicator';
 import DataTable, {Section} from 'components/DataTable';
+import ConfirmDelete from 'components/ConfirmDelete';
 
 const ModelTable: React.FC = () => {
   const [models, setModels] = useAtom(modelsAtom);
@@ -119,9 +120,15 @@ const ModelTable: React.FC = () => {
     {
       name: 'Delete',
       display: model => (
-        <button onClick={() => _deleteModel(model.modelName)}>
-          <Trash2 color={colours.delete} />
-        </button>
+        <ConfirmDelete
+          title={`Delete ${model.modelName}?`}
+          description="Once deleted, the model cannot be recovered."
+          action={() => _deleteModel(model.modelName)}
+        >
+          <button>
+            <Trash2 color={colours.delete} />
+          </button>
+        </ConfirmDelete>
       ),
     },
   ];
