@@ -8,7 +8,7 @@ const Home: NextPage = () => {
       <h1 className="text-center title">ELPIS</h1>
       <div className="mt-12">
         <div className="flex space-x-2 items-center justify-center mt-4">
-        <TaskButton
+          <TaskButton
             url={urls.datasets.index}
             title={'Build a dataset'}
             cardClassName="bg-primary text-white"
