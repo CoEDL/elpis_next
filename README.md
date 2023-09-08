@@ -1,4 +1,9 @@
 # Elpis Next
+
+```
+This software is currently in development. Stay tuned for a stable release.
+```
+
 This is a slimmer rewrite of the [elpis](https://github.com/CoEDL/elpis) project.
 
 ## Running the client and server
