@@ -1,21 +1,24 @@
+import json
 import os
 import shutil
 from functools import wraps
 from http import HTTPStatus
 from pathlib import Path
-from typing import Callable
+from typing import Any, Callable, Dict
 
-from elpis.trainer import TrainingJob, TrainingOptions, TrainingStatus
+from elpis.models import DataArguments, Job, ModelArguments
 from flask import Blueprint, Response
 from flask import current_app as app
 from flask import jsonify, request, send_file
 from humps.main import camelize, decamelize
 from loguru import logger
+from transformers import TrainingArguments
 from werkzeug.utils import secure_filename
 
 from server.api.utils import bad_request
 from server.interface import Interface
 from server.managers.dataset_manager import FolderType
+from server.named_job import JobStatus, NamedJob
 
 model_bp = Blueprint("model_bp", __name__, url_prefix="/models")
 
@@ -56,20 +59,39 @@ def create_model():
     data = request.get_json(silent=True)
     if data is None:
         return bad_request("Request not json.")
-    logger.info(decamelize(data))
 
+    data = decamelize(data)
+    logger.info(f"Request Data: {data}")
     if not isinstance(data, dict):
-        return bad_request("Request data should be a model dictionary.")
+        return bad_request("Request data should be a dictionary.")
+
+    interface = Interface.from_app(app)
+
+    # Resolve local datasets
+    if data.get("is_dataset_local"):
+        if "job" not in data:
+            return bad_request(f"Missing `job` in data.")
+
+        job = data.get("job", {})
+        dataset_name: str = job.get("dataset_name_or_path", "")
+
+        if dataset_name not in interface.dataset_manager:
+            return bad_request(f"Couldn't find dataset: {dataset_name}.")
+
+        dataset_folder = interface.dataset_manager.dataset_folder(
+            dataset_name, FolderType.Processed
+        )
+        data["job"]["dataset_name_or_path"] = str(dataset_folder.absolute())
+
+    # TODO: Resolve local models as well in the future.
 
     try:
-        job = TrainingJob.from_dict(decamelize(data))
+        job = NamedJob.from_dict(data)
     except Exception as e:
         logger.error(e)
         return bad_request("Failed to deserialize model")
 
-    interface = Interface.from_app(app)
-    manager = interface.model_manager
-    manager.add_job(job)
+    interface.model_manager.add_job(job)
     return Response(status=HTTPStatus.NO_CONTENT)
 
 
@@ -85,12 +107,7 @@ def delete_model(model_name: str):
 @requires_model
 def train_model(model_name: str):
     interface = Interface.from_app(app)
-    job = interface.model_manager.models[model_name]
-
-    processed_path = interface.dataset_manager.dataset_folder(
-        job.dataset_name, FolderType.Processed
-    )
-    interface.model_manager.train(model_name, processed_path)
+    interface.model_manager.train(model_name)
     return Response(status=HTTPStatus.NO_CONTENT)
 
 
@@ -132,7 +149,28 @@ def save_model(model_name: str):
 
 @model_bp.route("/evaluate/<model_name>", methods=["GET"])
 def evaluate_model(model_name: str):
-    return ""
+    interface = Interface.from_app(app)
+
+    status = interface.model_manager.status(model_name)
+    if status is None:
+        return Response("Missing model.", status=HTTPStatus.NOT_FOUND)
+
+    if status is not JobStatus.FINISHED:
+        return Response("Model not finished training.", status=HTTPStatus.NOT_FOUND)
+
+    # Pull out the evaluation results file
+    folder = interface.model_manager.model_folder(model_name)
+    file_name = "eval_results.json"
+    results = folder / file_name
+
+    if not results.exists():
+        return Response(
+            f"Error locating {file_name} within model folder.",
+            status=HTTPStatus.NOT_FOUND,
+        )
+
+    with open(results) as results_file:
+        return jsonify(json.load(results_file))
 
 
 @model_bp.route("/upload", methods=["POST"])
@@ -169,11 +207,15 @@ def upload_model():
         folder_path.rmdir()
 
     # Create a dummy job to add
-    job = TrainingJob(
-        model_name=model_name,
-        dataset_name="",
-        options=TrainingOptions(),
-        status=TrainingStatus.FINISHED,
+    # TODO should save Job args in model folder when training.
+    job = NamedJob(
+        name=model_name,
+        job=Job(
+            ModelArguments(str(model_folder)),
+            DataArguments(""),
+            TrainingArguments(str(model_folder)),
+        ),
+        status=JobStatus.FINISHED,
     )
     manager.add_job(job)
 
@@ -186,7 +228,7 @@ def download_model(model_name: str):
     interface = Interface.from_app(app)
     manager = interface.model_manager
 
-    if manager.status(model_name) != TrainingStatus.FINISHED:
+    if manager.status(model_name) != JobStatus.FINISHED:
         return bad_request(f"Model {model_name} hasn't finished training!")
 
     zipped_model_path = TEMP_DIR / "model.zip"

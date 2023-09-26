@@ -3,16 +3,18 @@ import shutil
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from elpis.trainer import TrainingJob, TrainingStatus, train
+from elpis.trainer import run_job
 from loguru import logger
 from typing_extensions import override
 
 from server.managers.manager import Manager, ManagerType, auto_save
+from server.named_job import JobStatus, NamedJob
+
+LOGS_FILE = "logs.txt"
 
 
 class ModelManager(Manager):
-
-    _models: Dict[str, TrainingJob] = {}
+    _models: Dict[str, NamedJob] = {}
 
     def __init__(
         self,
@@ -25,16 +27,16 @@ class ModelManager(Manager):
         return model_name in self.models
 
     @property
-    def models(self) -> Dict[str, TrainingJob]:
+    def models(self) -> Dict[str, NamedJob]:
         return ModelManager._models
 
     @models.setter
-    def models(self, value: Dict[str, TrainingJob]):
+    def models(self, value: Dict[str, NamedJob]):
         ModelManager._models = value
 
     @override
     def serialize(self):
-        return {job.model_name: job.to_dict() for job in self.models.values()}
+        return {job.name: job.to_dict() for job in self.models.values()}
 
     @override
     def load_state(self, state_file: Path) -> None:
@@ -42,7 +44,7 @@ class ModelManager(Manager):
             raw_models: Dict[str, Dict[str, Any]] = json.load(state)
 
         self.models = {
-            name: TrainingJob.from_dict(job) for (name, job) in raw_models.items()
+            name: NamedJob.from_dict(job) for (name, job) in raw_models.items()
         }
 
     @override
@@ -54,16 +56,16 @@ class ModelManager(Manager):
         return self.folder / model_name
 
     def logs_path(self, model_name: str) -> Path:
-        return self.model_folder(model_name) / "logs.txt"
+        return self.model_folder(model_name) / LOGS_FILE
 
     @auto_save
-    def add_job(self, job: TrainingJob, overwrite=True) -> None:
-        if overwrite and job.model_name in self:
+    def add_job(self, job: NamedJob, overwrite=True) -> None:
+        if overwrite and job.name in self:
             return
 
         # Make sure folders exist
-        self.model_folder(job.model_name).mkdir(exist_ok=True, parents=True)
-        self.models[job.model_name] = job
+        self.model_folder(job.name).mkdir(exist_ok=True, parents=True)
+        self.models[job.name] = job
 
     @auto_save
     def delete_model(self, model_name: str) -> None:
@@ -75,34 +77,32 @@ class ModelManager(Manager):
             self.models.pop(model_name)
 
     @auto_save
-    def train(self, model_name: str, processed_dataset_path: Path) -> None:
+    def train(self, model_name: str) -> None:
         if model_name not in self.models:
             return
 
         job = self.models[model_name]
-        if job.status == TrainingStatus.TRAINING:
+        if job.status == JobStatus.TRAINING:
             logger.info(f"Model: {model_name} is already training!")
             return
 
         try:
             logger.info(f"Begin training model: {model_name}")
-            job.status = TrainingStatus.TRAINING
-            train(
-                job=job,
-                output_dir=self.model_folder(model_name),
-                dataset_dir=processed_dataset_path,
-                cache_dir=self.cache,
+            job.status = JobStatus.TRAINING
+            run_job(
+                job=job.job,
                 log_file=self.logs_path(model_name),
             )
-        except:
-            logger.error(f"Error in training model: {model_name}")
-            job.status = TrainingStatus.ERROR
+        except Exception as e:
+            logger.error(f"Error training model: {model_name}")
+            logger.error(f"Error: {e}")
+            job.status = JobStatus.ERROR
             return
 
         logger.success(f"Finished training model: {model_name}")
-        job.status = TrainingStatus.FINISHED
+        job.status = JobStatus.FINISHED
 
-    def status(self, model_name: str) -> Optional[TrainingStatus]:
+    def status(self, model_name: str) -> Optional[JobStatus]:
         if model_name not in self.models:
             return None
 

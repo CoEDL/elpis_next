@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "server"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Harry Keightley <harrykeightley@outlook.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.11"
+python = "^3.10"
 Flask = "^2.2.2"
-elpis = "^0.1.1"
+elpis = "^0.2.2"
 Flask-Cors = "^3.0.10"
 pyhumps = "^3.8.0"
 gunicorn = "^20.1.0"

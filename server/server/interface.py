@@ -31,7 +31,7 @@ class Interface:
         )
 
     @classmethod
-    def from_app(cls, app: Flask):
+    def from_app(cls, app: Flask) -> "Interface":
         interface: cls = app.config.get(INTERFACE_KEY, cls(FALLBACK_PATH))
         return interface
 
