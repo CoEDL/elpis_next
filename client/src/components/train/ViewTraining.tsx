@@ -20,7 +20,7 @@ const ViewTraining: React.FC<Props> = ({model}) => {
   // Continuously pull model logs if it's training.
   useEffect(() => {
     const fetchModelLogs = async () => {
-      const response = await getModelLogs(model.modelName);
+      const response = await getModelLogs(model.name);
       if (response.ok) {
         const blob = await response.blob();
         const logs = await blob.text();
@@ -39,13 +39,13 @@ const ViewTraining: React.FC<Props> = ({model}) => {
         : undefined;
 
     return () => clearInterval(interval);
-  }, [model.status, model.modelName]);
+  }, [model.status, model.name]);
 
   const downloadLogs = async () => {
-    const response = await getModelLogs(model.modelName);
+    const response = await getModelLogs(model.name);
     if (response.ok) {
       const blob = await response.blob();
-      fileDownload(blob, `${model.modelName}_training_logs.txt`);
+      fileDownload(blob, `${model.name}_training_logs.txt`);
     }
   };
 

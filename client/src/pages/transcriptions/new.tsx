@@ -45,7 +45,7 @@ export default function TranscribePage() {
     files.every(file => parseFileType(file.name) === FileType.Audio) &&
     modelLocation.length > 0 &&
     (type === 'huggingface' ||
-      models.map(model => model.modelName).includes(modelLocation));
+      models.map(model => model.name).includes(modelLocation));
 
   return (
     <div className="container flex flex-col space-y-4">

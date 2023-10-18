@@ -102,7 +102,7 @@ const NewModelPage = () => {
       : DEFAULT_TRAINING_OPTIONS;
 
     const model: Model = {
-      modelName,
+      name,
       datasetName,
       samplingRate,
       baseModel,

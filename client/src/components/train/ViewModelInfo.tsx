@@ -12,7 +12,7 @@ const ViewModelInfo: React.FC<Props> = ({model}) => {
       <h2 className="text-xl">Model Information</h2>
       <div className="grid grid-cols-2 text-sm">
         <p className="info">Model Name:</p>
-        <p>{model.modelName}</p>
+        <p>{model.name}</p>
 
         <p className="info">Dataset Name:</p>
         <p>

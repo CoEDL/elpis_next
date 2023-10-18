@@ -1,3 +1,4 @@
+import {serializeModel} from 'lib/models';
 import urls, {serverRoute} from 'lib/urls';
 import Model from 'types/Model';
 
@@ -11,7 +12,7 @@ export async function createModel(model: Model): Promise<Response> {
   return fetch(serverRoute(route.index), {
     method: 'POST',
     mode: 'cors',
-    body: JSON.stringify(model),
+    body: JSON.stringify(serializeModel(model)),
     headers: {
       'Content-Type': 'application/json',
     },

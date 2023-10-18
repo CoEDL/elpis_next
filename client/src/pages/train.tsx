@@ -10,6 +10,7 @@ import {TrainingStatus} from 'types/Model';
 import ClientOnly from 'components/ClientOnly';
 import {Button} from 'components/ui/button';
 import {ArrowRight, Plus, Upload} from 'lucide-react';
+import {deserializeModel} from 'lib/models';
 
 const TrainPage: NextPage = () => {
   const [models, setModels] = useAtom(modelsAtom);
@@ -19,7 +20,7 @@ const TrainPage: NextPage = () => {
       const response = await getModels();
       if (response.ok) {
         const models = await response.json();
-        setModels(models);
+        setModels(models.map(deserializeModel));
       } else {
         console.error("Couldn't download models!");
       }

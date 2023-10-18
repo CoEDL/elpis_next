@@ -19,7 +19,7 @@ const ModelTable: React.FC = () => {
   const _deleteModel = async (name: string) => {
     const response = await deleteModel(name);
     if (response.ok) {
-      setModels(models.filter(model => model.modelName !== name));
+      setModels(models.filter(model => model.name !== name));
     } else {
       const error = await response.json();
       console.log(error);
@@ -38,7 +38,7 @@ const ModelTable: React.FC = () => {
 
   const _trainModel = async (index: number) => {
     setModelStatus(index, TrainingStatus.Training);
-    const response = await trainModel(models[index].modelName);
+    const response = await trainModel(models[index].name);
     if (response.ok) {
       setModelStatus(index, TrainingStatus.Finished);
     } else {
@@ -50,7 +50,7 @@ const ModelTable: React.FC = () => {
   };
 
   const sections: Section<Model>[] = [
-    {name: 'Model Name', display: model => model.modelName},
+    {name: 'Model Name', display: model => model.name},
     {name: 'Dataset Name', display: model => model.datasetName},
     {
       name: 'Base Model',
@@ -85,9 +85,9 @@ const ModelTable: React.FC = () => {
       name: 'Download',
       display: model => (
         <DownloadFileButton
-          filename={`${model.modelName}.zip`}
+          filename={`${model.name}.zip`}
           errorText={"Couldn't download model :("}
-          downloadFile={() => downloadModel(model.modelName)}
+          downloadFile={() => downloadModel(model.name)}
           disabled={model.status !== TrainingStatus.Finished}
         />
       ),
@@ -95,7 +95,7 @@ const ModelTable: React.FC = () => {
     {
       name: 'View',
       display: model => (
-        <Link href={urls.train.view + '/' + model.modelName}>
+        <Link href={urls.train.view + '/' + model.name}>
           <a>
             <Eye color={colours.info} />
           </a>
@@ -106,9 +106,9 @@ const ModelTable: React.FC = () => {
       name: 'Delete',
       display: model => (
         <ConfirmDelete
-          title={`Delete ${model.modelName}?`}
+          title={`Delete ${model.name}?`}
           description="Once deleted, the model cannot be recovered."
-          action={() => _deleteModel(model.modelName)}
+          action={() => _deleteModel(model.name)}
         >
           <button>
             <Trash2 color={colours.delete} />

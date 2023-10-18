@@ -61,8 +61,8 @@ export default function ChooseModel() {
             {models
               .filter(model => model.status === TrainingStatus.Finished)
               .map(model => (
-                <SelectItem key={model.modelName} value={model.modelName}>
-                  {model.modelName}
+                <SelectItem key={model.name} value={model.name}>
+                  {model.name}
                 </SelectItem>
               ))}
           </SelectContent>

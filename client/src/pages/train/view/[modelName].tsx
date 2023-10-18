@@ -22,7 +22,7 @@ export default function ViewModelPage() {
     );
   }
 
-  const model = models.find(model => model.modelName === modelName);
+  const model = models.find(model => model.name === modelName);
   if (!model) {
     return (
       <div className="container space-y-2">
