@@ -81,6 +81,7 @@ export type Model = {
   dataArgs: DataArguments;
   trainingArgs: TrainingArguments;
   status: TrainingStatus;
+  isDatasetLocal: boolean;
 };
 
 export type RawModel = Omit<

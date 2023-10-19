@@ -7,6 +7,7 @@ import Model, {
   RawModel,
   TrainingArguments,
 } from 'types/Model';
+import {omit, pick} from './manipulate';
 
 export const BASE_MODEL = 'facebook/wav2vec2-base';
 export const DEFAULT_MODEL_ARGS: KeyInfo<ModelArguments> = {
@@ -204,25 +205,6 @@ export const serializeModel = (model: Model) => {
     job,
     status,
   };
-};
-
-/**
- * Returns a copy of the object, only containing the specified keys.
- */
-export const pick = <K extends Object, T extends K>(
-  keys: (keyof K)[],
-  mother: T
-): Partial<K> =>
-  keys.reduce((result, key) => ({...result, [key]: mother[key]}), {});
-
-/**
- * Opposite of @see pick, returns an object without the supplied keys
- */
-export const omit = <T extends Object>(keys: (keyof T)[], mother: T) => {
-  const validKeys = (Object.keys(mother) as (keyof T)[]).filter(
-    key => !keys.includes(key)
-  );
-  return pick(validKeys, mother);
 };
 
 const extractModelArgs = R.partial(pick, Object.keys(DEFAULT_MODEL_ARGS));

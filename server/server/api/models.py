@@ -67,6 +67,9 @@ def create_model():
 
     interface = Interface.from_app(app)
 
+    if "job" not in data:
+        return bad_request(f"Missing `job` in data.")
+
     # Resolve local datasets
     if data.get("is_dataset_local"):
         if "job" not in data:
@@ -78,12 +81,21 @@ def create_model():
         if dataset_name not in interface.dataset_manager:
             return bad_request(f"Couldn't find dataset: {dataset_name}.")
 
-        dataset_folder = interface.dataset_manager.dataset_folder(
-            dataset_name, FolderType.Processed
+        dataset_folder = str(
+            interface.dataset_manager.dataset_folder(
+                dataset_name, FolderType.Processed
+            ).absolute()
         )
         data["job"]["dataset_name_or_path"] = str(dataset_folder.absolute())
 
     # TODO: Resolve local models as well in the future.
+
+    if "name" not in data:
+        return bad_request(f"Missing `name` in data.")
+
+    # Add would-be model dir to job
+    model_dir = interface.model_manager.model_folder(data["name"])
+    data["job"]["output_dir"] = str(model_dir.absolute())
 
     try:
         job = NamedJob.from_dict(data)
