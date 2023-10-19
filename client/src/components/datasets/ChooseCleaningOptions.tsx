@@ -5,7 +5,6 @@ import {Input} from 'components/ui/input';
 import {Label} from 'components/ui/label';
 import {useAtom} from 'jotai';
 import React, {useState} from 'react';
-import {X} from 'react-feather';
 import {cleaningOptionsAtom} from 'store';
 import {CleaningOptions} from 'types/Dataset';
 
