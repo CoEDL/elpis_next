@@ -51,13 +51,13 @@ const ModelTable: React.FC = () => {
 
   const sections: Section<Model>[] = [
     {name: 'Model Name', display: model => model.name},
-    {name: 'Dataset Name', display: model => model.datasetName},
+    {name: 'Dataset Name', display: model => model.dataArgs.datasetNameOrPath},
     {
       name: 'Base Model',
       display: model =>
-        model.baseModel ? (
-          <a href={'https://huggingface.co/' + model.baseModel}>
-            {model.baseModel}
+        model.modelArgs.modelNameOrPath ? (
+          <a href={'https://huggingface.co/' + model.modelArgs.modelNameOrPath}>
+            {model.modelArgs.modelNameOrPath}
           </a>
         ) : (
           <span>Unknown</span>

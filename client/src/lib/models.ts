@@ -95,7 +95,7 @@ export const DEFAULT_DATA_ARGS: KeyInfo<DataArguments> = {
   maxTrainSamples: {},
   maxEvalSamples: {},
   doClean: {
-    default: true,
+    default: false,
     description: 'True iff the dataset should be cleaned before use.',
   },
   wordsToRemove: {},

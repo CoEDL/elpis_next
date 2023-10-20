@@ -39,6 +39,7 @@ import {
 } from 'lib/models';
 import {getDefaults} from 'types/KeyInfo';
 import ListInput from 'components/ListInput';
+import {capitalise} from 'lib/utils';
 
 const NewModelPage = () => {
   const datasets = useAtomValue(datasetsAtom);
@@ -153,6 +154,7 @@ const NewModelPage = () => {
       <h1 className="title">Create New Model</h1>
       <div className="flex items-center space-x-2 pb-4">
         <Switch
+          className="bg-fuchsia-50"
           checked={showAdvanced}
           onCheckedChange={setShowAdvanced}
         ></Switch>
@@ -168,7 +170,7 @@ const NewModelPage = () => {
               name="name"
               render={({field}) => (
                 <FormItem>
-                  <FormLabel>Model Name</FormLabel>
+                  <FormLabel>Model Name *</FormLabel>
                   <FormControl>
                     <Input placeholder="New Model" {...field} />
                   </FormControl>
@@ -181,7 +183,7 @@ const NewModelPage = () => {
               name="modelArgs.modelNameOrPath"
               render={({field}) => (
                 <FormItem>
-                  <FormLabel>Base Model</FormLabel>
+                  <FormLabel>Base Model *</FormLabel>
                   <FormControl>
                     <Input placeholder="New Model" {...field} />
                   </FormControl>
@@ -198,6 +200,289 @@ const NewModelPage = () => {
                 </FormItem>
               )}
             />
+
+            {showAdvanced && (
+              <div className="p-4 bg-fuchsia-50 rounded-xl space-y-8">
+                <FormField
+                  control={form.control}
+                  name="modelArgs.tokenizerNameOrPath"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormLabel>Tokenizer Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="HF Tokenizer Path..." {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Only necessary if you want the tokenizer to differ from
+                        the base model&apos;s default.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="modelArgs.freezeFeatureEncoder"
+                  render={({field}) => (
+                    <FormItem className="flex flex-row items-center space-x-2">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={v => {
+                            form.resetField('dataArgs.datasetNameOrPath');
+                            field.onChange(v);
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel>Freeze Feature Encoder</FormLabel>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="modelArgs.attentionDropout"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Attention Dropout</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="modelArgs.activationDropout"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Activation Dropout</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="modelArgs.featProjDropout"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Feat Proj Dropout</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="modelArgs.hiddenDropout"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Hidden Dropout</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="modelArgs.finalDropout"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Final Dropout</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="modelArgs.maskTimeProb"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Mask Time Probability</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="modelArgs.maskTimeLength"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Mask Time Length</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="modelArgs.maskFeatureProb"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Mask Feature Probability</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="modelArgs.maskFeatureLength"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Mask Feature Length</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="modelArgs.layerdrop"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Layerdrop</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="modelArgs.ctcLossReduction"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>CTC Loss Reduction</FormLabel>
+                        <Select
+                          onValueChange={(v: 'mean' | 'sum') =>
+                            field.onChange(v)
+                          }
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a loss reduction strategy" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {['mean', 'sum'].map(strategy => (
+                              <SelectItem key={strategy} value={strategy}>
+                                {strategy}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="modelArgs.ctcZeroInfinity"
+                  render={({field}) => (
+                    <FormItem className="flex flex-row items-center space-x-2">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={v => {
+                            form.resetField('dataArgs.datasetNameOrPath');
+                            field.onChange(v);
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel>CTC Zero Infinity</FormLabel>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
           </section>
 
           <section className="pt-8 space-y-4">
@@ -217,7 +502,7 @@ const NewModelPage = () => {
                       }}
                     />
                   </FormControl>
-                  <FormLabel>Use Local Dataset?</FormLabel>
+                  <FormLabel>Use Local Dataset</FormLabel>
                   <FormMessage />
                 </FormItem>
               )}
@@ -361,42 +646,6 @@ const NewModelPage = () => {
                 />
               </div>
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="dataArgs.maxTrainSamples"
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel>Max Training Samples</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={e => field.onChange(e.target.valueAsNumber)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="dataArgs.maxEvalSamples"
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel>Max Eval Samples</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={e => field.onChange(e.target.valueAsNumber)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
 
             <FormField
               control={form.control}
@@ -556,42 +805,180 @@ const NewModelPage = () => {
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="dataArgs.minDurationInSeconds"
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel>Min Audio Duration (s)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={e => field.onChange(e.target.valueAsNumber)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="dataArgs.maxDurationInSeconds"
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel>Max Audio Duration (s)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={e => field.onChange(e.target.valueAsNumber)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            {showAdvanced && (
+              <div className="p-4 bg-fuchsia-50 rounded-xl space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="dataArgs.maxTrainSamples"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Max Training Samples</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="dataArgs.maxEvalSamples"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Max Eval Samples</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="dataArgs.minDurationInSeconds"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Min Audio Duration (s)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="dataArgs.maxDurationInSeconds"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Max Audio Duration (s)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="dataArgs.unkToken"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>UNK Token</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            onChange={e => field.onChange(e.target.value)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="dataArgs.padToken"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>PAD Token</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            onChange={e => field.onChange(e.target.value)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="dataArgs.wordDelimiterToken"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Word Delimiter Token</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            onChange={e => field.onChange(e.target.value)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                        <FormDescription>
+                          Defaults to a single space.
+                        </FormDescription>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="dataArgs.phonemeLanguage"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Phoneme Language</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            onChange={e => field.onChange(e.target.value)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                        <FormDescription>
+                          The target language that should be used be passed to
+                          the tokenizer for tokenization. Note that this is only
+                          relevant if the model classifies the input audio to a
+                          sequence of phoneme sequences.
+                        </FormDescription>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="dataArgs.token"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormLabel>Huggingface Token</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          onChange={e => field.onChange(e.target.value)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
           </section>
 
           <section className="pt-8 space-y-4">
@@ -600,25 +987,7 @@ const NewModelPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="batchSize"
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel>Batch Size</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={e => field.onChange(e.target.valueAsNumber)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="epochs"
+                name="trainingArgs.numTrainEpochs"
                 render={({field}) => (
                   <FormItem>
                     <FormLabel>Epochs</FormLabel>
@@ -636,9 +1005,9 @@ const NewModelPage = () => {
 
               <FormField
                 control={form.control}
-                name="learningRate"
+                name="trainingArgs.learningRate"
                 render={({field}) => (
-                  <FormItem className="md:col-span-2">
+                  <FormItem className="">
                     <FormLabel>Learning Rate</FormLabel>
                     <FormControl>
                       <Input
@@ -653,28 +1022,10 @@ const NewModelPage = () => {
               />
               <FormField
                 control={form.control}
-                name="minDuration"
+                name="trainingArgs.perDeviceTrainBatchSize"
                 render={({field}) => (
                   <FormItem>
-                    <FormLabel>Minimum Epoch Duration (s)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={e => field.onChange(e.target.valueAsNumber)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="maxDuration"
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel>Maximum Epoch Duration (s)</FormLabel>
+                    <FormLabel>Training Batch Size</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -688,31 +1039,10 @@ const NewModelPage = () => {
               />
               <FormField
                 control={form.control}
-                name="wordDelimiterToken"
+                name="trainingArgs.perDeviceEvalBatchSize"
                 render={({field}) => (
                   <FormItem>
-                    <FormLabel>Word Delimiter Token</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        onChange={e => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Supply a string which with to split input. Defaults to a
-                      single space (&quot; &quot;).
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="testSize"
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel>Test Set Size</FormLabel>
+                    <FormLabel>Eval Batch Size</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -720,31 +1050,218 @@ const NewModelPage = () => {
                         onChange={e => field.onChange(e.target.valueAsNumber)}
                       />
                     </FormControl>
-                    <FormDescription>
-                      The percentage of the dataset to reserve for testing.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
-            <FormField
-              control={form.control}
-              name="freezeFeatureExtractor"
-              render={({field}) => (
-                <FormItem className="flex flex-row items-center space-x-2">
-                  <FormLabel>Freeze Feature Extractor</FormLabel>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
+            {showAdvanced && (
+              <div className="p-4 bg-fuchsia-50 rounded-xl space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="trainingArgs.gradientAccumulationSteps"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Gradient Accumulation Steps</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="trainingArgs.weightDecay"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Weight Decay</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {(
+                    ['evaluation', 'logging', 'save'] as (
+                      | 'evaluation'
+                      | 'logging'
+                      | 'save'
+                    )[]
+                  ).map(strategy => (
+                    <FormField
+                      key={strategy}
+                      control={form.control}
+                      name={`trainingArgs.${strategy}Strategy`}
+                      render={({field}) => (
+                        <FormItem>
+                          <FormLabel>{capitalise(strategy)} Strategy</FormLabel>
+                          <Select
+                            onValueChange={(v: 'no' | 'steps' | 'epoch') =>
+                              field.onChange(v)
+                            }
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a loss reduction strategy" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {['no', 'steps', 'epoch'].map(strategy => (
+                                <SelectItem key={strategy} value={strategy}>
+                                  {strategy}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                  ))}
+
+                  {(
+                    ['max', 'warmup', 'logging', 'save', 'eval'] as (
+                      | 'max'
+                      | 'warmup'
+                      | 'logging'
+                      | 'save'
+                      | 'eval'
+                    )[]
+                  ).map(strategy => (
+                    <FormField
+                      key={strategy}
+                      control={form.control}
+                      name={`trainingArgs.${strategy}Steps`}
+                      render={({field}) => (
+                        <FormItem>
+                          <FormLabel>{capitalise(strategy)} Steps</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              onChange={e =>
+                                field.onChange(e.target.valueAsNumber)
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+
+                  <FormField
+                    control={form.control}
+                    name="trainingArgs.saveTotalLimit"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Save Total Limit</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="trainingArgs.seed"
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Seed</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={e =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="trainingArgs.greaterIsBetter"
+                  render={({field}) => (
+                    <FormItem className="flex flex-row items-center space-x-2">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel>Greater is Better</FormLabel>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/*
+                <FormField
+                  control={form.control}
+                  name="trainingArgs.pushToHub"
+                  render={({field}) => (
+                    <FormItem className="flex flex-row items-center space-x-2">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel>Push to Hub</FormLabel>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                */}
+                <FormField
+                  control={form.control}
+                  name="trainingArgs.dataloaderDropLast"
+                  render={({field}) => (
+                    <FormItem className="flex flex-row items-center space-x-2">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel>Dataloader Drop Last</FormLabel>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
           </section>
 
           <Button type="submit" className="mt-8" disabled={saving}>
