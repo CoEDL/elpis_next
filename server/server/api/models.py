@@ -4,7 +4,7 @@ import shutil
 from functools import wraps
 from http import HTTPStatus
 from pathlib import Path
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Optional
 
 from elpis.models import DataArguments, Job, ModelArguments
 from flask import Blueprint, Response
@@ -67,35 +67,11 @@ def create_model():
 
     interface = Interface.from_app(app)
 
-    if "job" not in data:
-        return bad_request(f"Missing `job` in data.")
+    error = validate_raw_model(interface, data)
+    if error is not None:
+        return bad_request(error)
 
-    # Resolve local datasets
-    if data.get("is_dataset_local"):
-        if "job" not in data:
-            return bad_request(f"Missing `job` in data.")
-
-        job = data.get("job", {})
-        dataset_name: str = job.get("dataset_name_or_path", "")
-
-        if dataset_name not in interface.dataset_manager:
-            return bad_request(f"Couldn't find dataset: {dataset_name}.")
-
-        dataset_folder = str(
-            interface.dataset_manager.dataset_folder(
-                dataset_name, FolderType.Processed
-            ).absolute()
-        )
-        data["job"]["dataset_name_or_path"] = str(dataset_folder.absolute())
-
-    # TODO: Resolve local models as well in the future.
-
-    if "name" not in data:
-        return bad_request(f"Missing `name` in data.")
-
-    # Add would-be model dir to job
-    model_dir = interface.model_manager.model_folder(data["name"])
-    data["job"]["output_dir"] = str(model_dir.absolute())
+    data = correct_raw_model(interface, data)
 
     try:
         job = NamedJob.from_dict(data)
@@ -105,6 +81,50 @@ def create_model():
 
     interface.model_manager.add_job(job)
     return Response(status=HTTPStatus.NO_CONTENT)
+
+
+def validate_raw_model(interface: Interface, data: Dict[str, Any]) -> Optional[str]:
+    """Returns the string of the error, if encountered, else None."""
+
+    required_fields = "name", "job"
+    for field in required_fields:
+        if field not in data:
+            return f"Missing `{field}` in data"
+
+    # Check local dataset exists
+    if data.get("is_dataset_local"):
+        job = data.get("job", {})
+        dataset_name: str = job.get("dataset_name_or_path", "")
+
+        if dataset_name not in interface.dataset_manager:
+            return f"Couldn't find dataset: {dataset_name}."
+
+
+def correct_raw_model(interface: Interface, data: Dict[str, Any]) -> Dict[str, Any]:
+    """Adds some extra information to the raw incoming model for it to
+    play nicely with the model and dataset managers.
+
+    Injects the model dir and dataset dirs if necessary.
+    """
+    # Resolve local datasets
+    if data.get("is_dataset_local"):
+        dataset_name: str = data["job"]["dataset_name_or_path"]
+        dataset_folder = str(
+            interface.dataset_manager.dataset_folder(
+                dataset_name, FolderType.Processed
+            ).absolute()
+        )
+        data["job"]["dataset_name_or_path"] = dataset_folder
+
+        # Correct text and audio columns
+        data["job"]["text_column_name"] = "transcript"
+        data["job"]["audio_column_name"] = "audio"
+
+    # Add would-be model dir to job
+    model_dir = interface.model_manager.model_folder(data["name"])
+    data["job"]["output_dir"] = str(model_dir.absolute())
+
+    return data
 
 
 @model_bp.route("/<model_name>", methods=["DELETE"])

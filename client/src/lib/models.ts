@@ -7,7 +7,7 @@ import Model, {
   RawModel,
   TrainingArguments,
 } from 'types/Model';
-import {omit, pick} from './manipulate';
+import {omit, pick} from 'lib/manipulate';
 
 export const BASE_MODEL = 'facebook/wav2vec2-base';
 export const DEFAULT_MODEL_ARGS: KeyInfo<ModelArguments> = {
@@ -198,12 +198,11 @@ export const DEFAULT_TRAINING_ARGS: KeyInfo<TrainingArguments> = {
 } as const;
 
 export const serializeModel = (model: Model) => {
-  const {name, status, trainingArgs, dataArgs, modelArgs} = model;
+  const {trainingArgs, dataArgs, modelArgs, ...rest} = model;
   const job = {...trainingArgs, ...dataArgs, ...modelArgs};
   return {
-    name,
     job,
-    status,
+    ...rest,
   };
 };
 

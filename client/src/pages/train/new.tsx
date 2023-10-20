@@ -212,8 +212,8 @@ const NewModelPage = () => {
                     <Switch
                       checked={field.value}
                       onCheckedChange={v => {
-                        field.onChange(v);
                         form.resetField('dataArgs.datasetNameOrPath');
+                        field.onChange(v);
                       }}
                     />
                   </FormControl>
