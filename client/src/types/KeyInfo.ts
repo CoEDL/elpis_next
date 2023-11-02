@@ -16,6 +16,6 @@ export type KeyInfo<T extends Object> = {
 
 export const getDefaults = <T extends Object>(info: KeyInfo<T>): Partial<T> => {
   const hasDefault: ObjPred<KeyInfo<T>> = (_, v) => v.default !== undefined;
-  const withDefaults = pickWhere<KeyInfo<T>>(hasDefault, info);
-  return R.map(v => v.default, withDefaults);
+  const withDefaults = pickWhere<typeof info>(hasDefault, info);
+  return R.map(v => v, withDefaults);
 };

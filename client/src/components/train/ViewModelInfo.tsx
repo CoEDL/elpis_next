@@ -16,18 +16,18 @@ const ViewModelInfo: React.FC<Props> = ({model}) => {
 
         <p className="info">Dataset Name:</p>
         <p>
-          {(model.datasetName?.length ?? 0) > 0
-            ? model.datasetName
+          {(model.dataArgs.datasetNameOrPath.length ?? 0) > 0
+            ? model.dataArgs.datasetNameOrPath
             : 'N/A Uploaded From Zip'}
         </p>
 
         <p className="info">Base Model:</p>
-        <p>{model.baseModel ?? 'N/A Uploaded from Zip'}</p>
+        <p>{model.modelArgs.modelNameOrPath ?? 'N/A Uploaded from Zip'}</p>
 
         <p className="info">Model Status:</p>
         <p>{model.status ?? TrainingStatus.Error}</p>
       </div>
-      {model.options && <ViewTrainingOptions options={model.options} />}
+      <ViewTrainingOptions model={model} />
     </>
   );
 };

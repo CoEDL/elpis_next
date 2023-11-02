@@ -2,14 +2,14 @@ import * as R from 'ramda';
 
 export const t = R.always(true);
 
-export type ObjEntry<T extends Object> = [k: keyof T, v: T[keyof T]];
+export type ObjEntry<T> = [k: keyof T, v: T[keyof T]];
 
 /**
  * A predicate function to run on a (key, value) item within an object.
  */
 export type ObjPred<T> = (k: keyof T, v: T[keyof T]) => boolean;
 
-export const pickWhere = <T extends Object>(
+export const pickWhere = <T>(
   pred: ObjPred<T>,
   mother: Readonly<T>
 ): Partial<T> => {

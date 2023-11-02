@@ -1,38 +1,26 @@
 import React from 'react';
-import {TrainingOptions} from 'types/Model';
+import {Model} from 'types/Model';
 
 type Props = {
-  options: TrainingOptions;
+  model: Model;
 };
 
-const ViewTrainingOptions: React.FC<Props> = ({options}) => {
+const ViewTrainingOptions: React.FC<Props> = ({model}) => {
   return (
     <div>
       <p className="text-xl mb-2">Training Options</p>
       <div className="text-sm grid grid-cols-2">
         <p className="info">Epochs:</p>
-        <p>{options.epochs}</p>
+        <p>{model.trainingArgs.numTrainEpochs}</p>
 
-        <p className="info">Batch Size:</p>
-        <p>{options.batchSize}</p>
+        <p className="info">Training Batch Size:</p>
+        <p>{model.trainingArgs.perDeviceTrainBatchSize}</p>
+
+        <p className="info">Eval Batch Size:</p>
+        <p>{model.trainingArgs.perDeviceEvalBatchSize}</p>
 
         <p className="info">Learning Rate:</p>
-        <p>{options.learningRate}</p>
-
-        <p className="info">Min Duration:</p>
-        <p>{options.minDuration}</p>
-
-        <p className="info">Max Duration:</p>
-        <p>{options.maxDuration}</p>
-
-        <p className="info">Test set Size:</p>
-        <p>{options.testSize}</p>
-
-        <p className="info">Word Delimiter Token:</p>
-        <p>&quot;{options.wordDelimiterToken}&quot;</p>
-
-        <p className="info">Freeze Feature Extractor:</p>
-        <p>{options.freezeFeatureExtractor ? 'True' : 'False'}</p>
+        <p>{model.trainingArgs.learningRate}</p>
       </div>
     </div>
   );

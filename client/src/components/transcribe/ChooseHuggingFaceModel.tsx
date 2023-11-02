@@ -12,7 +12,7 @@ import {useAtom} from 'jotai';
 import {RotateCcw} from 'lucide-react';
 import React from 'react';
 import {modelLocationAtom} from 'store';
-import {BASE_MODEL} from 'types/Model';
+import {BASE_MODEL} from 'lib/models';
 
 export default function ChooseHuggingFaceModel() {
   const [modelLocation, setModelLocation] = useAtom(modelLocationAtom);
