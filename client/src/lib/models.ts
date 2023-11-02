@@ -206,9 +206,11 @@ export const serializeModel = (model: Model) => {
   };
 };
 
-const extractModelArgs = R.partial(pick, Object.keys(DEFAULT_MODEL_ARGS));
-const extractDataArgs = R.partial(pick, Object.keys(DEFAULT_DATA_ARGS));
-const extractTrainingArgs = R.partial(pick, Object.keys(DEFAULT_TRAINING_ARGS));
+const extractModelArgs = R.partial(pick, [Object.keys(DEFAULT_MODEL_ARGS)]);
+const extractDataArgs = R.partial(pick, [Object.keys(DEFAULT_DATA_ARGS)]);
+const extractTrainingArgs = R.partial(pick, [
+  Object.keys(DEFAULT_TRAINING_ARGS),
+]);
 
 export const deserializeModel = (raw: RawModel): Model => {
   const modelArgs = extractModelArgs(raw.job) as ModelArguments;
