@@ -10,8 +10,8 @@ type ListInputProps = {
   onRemove: (word: string) => void;
 };
 
-const ListInput: FC<ListInputProps & InputProps> = ({
-  value,
+const ListInput: FC<ListInputProps & Omit<InputProps, 'value'>> = ({
+  value = [],
   buttonText,
   onAdd,
   onRemove,
@@ -21,13 +21,13 @@ const ListInput: FC<ListInputProps & InputProps> = ({
 
   const addWord = () => {
     if (word.length === 0) return;
-    if ((value ?? []).includes(word)) return;
+    if (value.includes(word)) return;
     onAdd(word);
     setWord('');
   };
 
   const removeWord = (word: string) => {
-    if (!(value ?? []).includes(word)) return;
+    if (!value.includes(word)) return;
     onRemove(word);
   };
 
@@ -40,7 +40,7 @@ const ListInput: FC<ListInputProps & InputProps> = ({
         </Button>
       </div>
       <div className="mt-2 space-x-1">
-        {(value ?? []).map(word => (
+        {value.map(word => (
           <Badge
             key={word}
             variant="secondary"

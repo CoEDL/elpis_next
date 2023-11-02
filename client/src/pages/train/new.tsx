@@ -674,8 +674,8 @@ const NewModelPage = () => {
                       <FormLabel>Words to Remove</FormLabel>
                       <FormControl>
                         <ListInput
-                          buttonText="Add Word"
                           {...field}
+                          buttonText="Add Word"
                           onAdd={word =>
                             form.setValue('dataArgs.wordsToRemove', [
                               ...(field.value ?? []),
@@ -704,8 +704,8 @@ const NewModelPage = () => {
                       <FormLabel>Characters to Remove</FormLabel>
                       <FormControl>
                         <ListInput
-                          buttonText="Add Character"
                           {...field}
+                          buttonText="Add Character"
                           onAdd={word =>
                             form.setValue('dataArgs.charsToRemove', [
                               ...(field.value ?? []),
@@ -735,8 +735,8 @@ const NewModelPage = () => {
                       <FormLabel>Characters to Explode</FormLabel>
                       <FormControl>
                         <ListInput
-                          buttonText="Add Character"
                           {...field}
+                          buttonText="Add Character"
                           onAdd={word =>
                             form.setValue('dataArgs.charsToExplode', [
                               ...(field.value ?? []),
@@ -784,8 +784,8 @@ const NewModelPage = () => {
                   <FormLabel>Evaluation Metrics</FormLabel>
                   <FormControl>
                     <ListInput
-                      buttonText="Add Metric"
                       {...field}
+                      buttonText="Add Metric"
                       onAdd={word =>
                         form.setValue('dataArgs.evalMetrics', [
                           ...(field.value ?? []),

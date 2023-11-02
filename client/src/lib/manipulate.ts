@@ -23,7 +23,7 @@ export const pickWhere = <T>(
 /**
  * Returns a copy of the object, only containing the specified keys.
  */
-export const pick = <T extends Object>(
+export const pick = <T extends object>(
   keys: (keyof T)[],
   mother: Readonly<T>
 ) => pickWhere(k => keys.includes(k), mother);
@@ -31,5 +31,13 @@ export const pick = <T extends Object>(
 /**
  * Opposite of @see pick, returns an object without the supplied keys
  */
-export const omit = <T extends Object>(keys: (keyof T)[], mother: T) =>
+export const omit = <T extends object>(keys: (keyof T)[], mother: T) =>
   pickWhere(k => !keys.includes(k), mother);
+
+export const mapObj = <A extends object, B>(
+  f: (entry: ObjEntry<A>) => B,
+  m: A
+) => {
+  const entries = Object.entries(m) as ObjEntry<A>[];
+  return entries.map(f);
+};
